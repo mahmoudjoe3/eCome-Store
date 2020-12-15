@@ -1,0 +1,373 @@
+h(polygon);
+                ymin = Math.min(ymin, polygon.ymin);
+                ymax = Math.max(ymax, polygon.ymax);
+            }
+        }
+
+        if(inside) {
+            // constrain ymin/max to the visible plot, so the label goes
+            // at the middle of the piece you can see
+            ymin = Math.max(ymin, 0);
+            ymax = Math.min(ymax, ya._length);
+
+            // find the overall left-most and right-most points of the
+            // polygon(s) we're inside at their combined vertical midpoint.
+            // This is where we will draw the hover label.
+            // Note that this might not be the vertical midpoint of the
+            // whole trace, if it's disjoint.
+            var yAvg = (ymin + ymax) / 2;
+            for(i = 0; i < polygonsIn.length; i++) {
+                pts = polygonsIn[i].pts;
+                for(j = 1; j < pts.length; j++) {
+                    y0 = pts[j - 1][1];
+                    y1 = pts[j][1];
+                    if((y0 > yAvg) !== (y1 >= yAvg)) {
+                        x0 = pts[j - 1][0];
+                        x1 = pts[j][0];
+                        if(y1 - y0) {
+                            xCross = x0 + (x1 - x0) * (yAvg - y0) / (y1 - y0);
+                            xmin = Math.min(xmin, xCross);
+                            xmax = Math.max(xmax, xCross);
+                        }
+                    }
+                }
+            }
+
+            // constrain xmin/max to the visible plot now too
+            xmin = Math.max(xmin, 0);
+            xmax = Math.min(xmax, xa._length);
+
+            // get only fill or line color for the hover color
+            var color = Color.defaultLine;
+            if(Color.opacity(trace.fillcolor)) color = trace.fillcolor;
+            else if(Color.opacity((trace.line || {}).color)) {
+                color = trace.line.color;
+            }
+
+            Lib.extendFlat(pointData, {
+                // never let a 2D override 1D type as closest point
+                // also: no spikeDistance, it's not allowed for fills
+                distance: pointData.maxHoverDistance,
+                x0: xmin,
+                x1: xmax,
+                y0: yAvg,
+                y1: yAvg,
+                color: color,
+                hovertemplate: '%{name}'
+            });
+
+            delete pointData.index;
+
+            if(trace.text && !Array.isArray(trace.text)) {
+                pointData.text = String(trace.text);
+            }
+            else pointData.text = trace.name;
+
+            return [pointData];
+        }
+    }
+};
+
+},{"../../components/color":571,"../../components/fx":610,"../../lib":694,"../../registry":825,"./fill_hover_text":1055,"./get_trace_color":1057}],1059:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+
+'use strict';
+
+var Scatter = {};
+
+var subtypes = _dereq_('./subtypes');
+Scatter.hasLines = subtypes.hasLines;
+Scatter.hasMarkers = subtypes.hasMarkers;
+Scatter.hasText = subtypes.hasText;
+Scatter.isBubble = subtypes.isBubble;
+
+Scatter.attributes = _dereq_('./attributes');
+Scatter.supplyDefaults = _dereq_('./defaults');
+Scatter.crossTraceDefaults = _dereq_('./cross_trace_defaults');
+Scatter.calc = _dereq_('./calc').calc;
+Scatter.crossTraceCalc = _dereq_('./cross_trace_calc');
+Scatter.arraysToCalcdata = _dereq_('./arrays_to_calcdata');
+Scatter.plot = _dereq_('./plot');
+Scatter.colorbar = _dereq_('./marker_colorbar');
+Scatter.style = _dereq_('./style').style;
+Scatter.styleOnSelect = _dereq_('./style').styleOnSelect;
+Scatter.hoverPoints = _dereq_('./hover');
+Scatter.selectPoints = _dereq_('./select');
+Scatter.animatable = true;
+
+Scatter.moduleType = 'trace';
+Scatter.name = 'scatter';
+Scatter.basePlotModule = _dereq_('../../plots/cartesian');
+Scatter.categories = [
+    'cartesian', 'svg', 'symbols', 'errorBarsOK', 'showLegend', 'scatter-like',
+    'zoomScale'
+];
+Scatter.meta = {
+    
+};
+
+module.exports = Scatter;
+
+},{"../../plots/cartesian":754,"./arrays_to_calcdata":1046,"./attributes":1047,"./calc":1048,"./cross_trace_calc":1052,"./cross_trace_defaults":1053,"./defaults":1054,"./hover":1058,"./marker_colorbar":1065,"./plot":1067,"./select":1068,"./style":1070,"./subtypes":1071}],1060:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+'use strict';
+
+var isArrayOrTypedArray = _dereq_('../../lib').isArrayOrTypedArray;
+var hasColorscale = _dereq_('../../components/colorscale/helpers').hasColorscale;
+var colorscaleDefaults = _dereq_('../../components/colorscale/defaults');
+
+module.exports = function lineDefaults(traceIn, traceOut, defaultColor, layout, coerce, opts) {
+    var markerColor = (traceIn.marker || {}).color;
+
+    coerce('line.color', defaultColor);
+
+    if(hasColorscale(traceIn, 'line')) {
+        colorscaleDefaults(traceIn, traceOut, layout, coerce, {prefix: 'line.', cLetter: 'c'});
+    } else {
+        var lineColorDflt = (isArrayOrTypedArray(markerColor) ? false : markerColor) || defaultColor;
+        coerce('line.color', lineColorDflt);
+    }
+
+    coerce('line.width');
+    if(!(opts || {}).noDash) coerce('line.dash');
+};
+
+},{"../../components/colorscale/defaults":581,"../../components/colorscale/helpers":582,"../../lib":694}],1061:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+
+'use strict';
+
+var numConstants = _dereq_('../../constants/numerical');
+var BADNUM = numConstants.BADNUM;
+var LOG_CLIP = numConstants.LOG_CLIP;
+var LOG_CLIP_PLUS = LOG_CLIP + 0.5;
+var LOG_CLIP_MINUS = LOG_CLIP - 0.5;
+var Lib = _dereq_('../../lib');
+var segmentsIntersect = Lib.segmentsIntersect;
+var constrain = Lib.constrain;
+var constants = _dereq_('./constants');
+
+
+module.exports = function linePoints(d, opts) {
+    var xa = opts.xaxis;
+    var ya = opts.yaxis;
+    var xLog = xa.type === 'log';
+    var yLog = ya.type === 'log';
+    var xLen = xa._length;
+    var yLen = ya._length;
+    var connectGaps = opts.connectGaps;
+    var baseTolerance = opts.baseTolerance;
+    var shape = opts.shape;
+    var linear = shape === 'linear';
+    var segments = [];
+    var minTolerance = constants.minTolerance;
+    var pts = new Array(d.length);
+    var pti = 0;
+
+    var i;
+
+    // pt variables are pixel coordinates [x,y] of one point
+    // these four are the outputs of clustering on a line
+    var clusterStartPt, clusterEndPt, clusterHighPt, clusterLowPt;
+
+    // "this" is the next point we're considering adding to the cluster
+    var thisPt;
+
+    // did we encounter the high point first, then a low point, or vice versa?
+    var clusterHighFirst;
+
+    // the first two points in the cluster determine its unit vector
+    // so the second is always in the "High" direction
+    var clusterUnitVector;
+
+    // the pixel delta from clusterStartPt
+    var thisVector;
+
+    // val variables are (signed) pixel distances along the cluster vector
+    var clusterRefDist, clusterHighVal, clusterLowVal, thisVal;
+
+    // deviation variables are (signed) pixel distances normal to the cluster vector
+    var clusterMinDeviation, clusterMaxDeviation, thisDeviation;
+
+    // turn one calcdata point into pixel coordinates
+    function getPt(index) {
+        var di = d[index];
+        if(!di) return false;
+        var x = xa.c2p(di.x);
+        var y = ya.c2p(di.y);
+
+        // if non-positive log values, set them VERY far off-screen
+        // so the line looks essentially straight from the previous point.
+        if(x === BADNUM) {
+            if(xLog) x = xa.c2p(di.x, true);
+            if(x === BADNUM) return false;
+            // If BOTH were bad log values, make the line follow a constant
+            // exponent rather than a constant slope
+            if(yLog && y === BADNUM) {
+                x *= Math.abs(xa._m * yLen * (xa._m > 0 ? LOG_CLIP_PLUS : LOG_CLIP_MINUS) /
+                    (ya._m * xLen * (ya._m > 0 ? LOG_CLIP_PLUS : LOG_CLIP_MINUS)));
+            }
+            x *= 1000;
+        }
+        if(y === BADNUM) {
+            if(yLog) y = ya.c2p(di.y, true);
+            if(y === BADNUM) return false;
+            y *= 1000;
+        }
+        return [x, y];
+    }
+
+    function crossesViewport(xFrac0, yFrac0, xFrac1, yFrac1) {
+        var dx = xFrac1 - xFrac0;
+        var dy = yFrac1 - yFrac0;
+        var dx0 = 0.5 - xFrac0;
+        var dy0 = 0.5 - yFrac0;
+        var norm2 = dx * dx + dy * dy;
+        var dot = dx * dx0 + dy * dy0;
+        if(dot > 0 && dot < norm2) {
+            var cross = dx0 * dy - dy0 * dx;
+            if(cross * cross < norm2) return true;
+        }
+    }
+
+    var latestXFrac, latestYFrac;
+    // if we're off-screen, increase tolerance over baseTolerance
+    function getTolerance(pt, nextPt) {
+        var xFrac = pt[0] / xLen;
+        var yFrac = pt[1] / yLen;
+        var offScreenFraction = Math.max(0, -xFrac, xFrac - 1, -yFrac, yFrac - 1);
+        if(offScreenFraction && (latestXFrac !== undefined) &&
+            crossesViewport(xFrac, yFrac, latestXFrac, latestYFrac)
+        ) {
+            offScreenFraction = 0;
+        }
+        if(offScreenFraction && nextPt &&
+            crossesViewport(xFrac, yFrac, nextPt[0] / xLen, nextPt[1] / yLen)
+        ) {
+            offScreenFraction = 0;
+        }
+
+        return (1 + constants.toleranceGrowth * offScreenFraction) * baseTolerance;
+    }
+
+    function ptDist(pt1, pt2) {
+        var dx = pt1[0] - pt2[0];
+        var dy = pt1[1] - pt2[1];
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    // last bit of filtering: clip paths that are VERY far off-screen
+    // so we don't get near the browser's hard limit (+/- 2^29 px in Chrome and FF)
+
+    var maxScreensAway = constants.maxScreensAway;
+
+    // find the intersections between the segment from pt1 to pt2
+    // and the large rectangle maxScreensAway around the viewport
+    // if one of pt1 and pt2 is inside and the other outside, there
+    // will be only one intersection.
+    // if both are outside there will be 0 or 2 intersections
+    // (or 1 if it's right at a corner - we'll treat that like 0)
+    // returns an array of intersection pts
+    var xEdge0 = -xLen * maxScreensAway;
+    var xEdge1 = xLen * (1 + maxScreensAway);
+    var yEdge0 = -yLen * maxScreensAway;
+    var yEdge1 = yLen * (1 + maxScreensAway);
+    var edges = [
+        [xEdge0, yEdge0, xEdge1, yEdge0],
+        [xEdge1, yEdge0, xEdge1, yEdge1],
+        [xEdge1, yEdge1, xEdge0, yEdge1],
+        [xEdge0, yEdge1, xEdge0, yEdge0]
+    ];
+    var xEdge, yEdge, lastXEdge, lastYEdge, lastFarPt, edgePt;
+
+    // for linear line shape, edge intersections should be linearly interpolated
+    // spline uses this too, which isn't precisely correct but is actually pretty
+    // good, because Catmull-Rom weights far-away points less in creating the curvature
+    function getLinearEdgeIntersections(pt1, pt2) {
+        var out = [];
+        var ptCount = 0;
+        for(var i = 0; i < 4; i++) {
+            var edge = edges[i];
+            var ptInt = segmentsIntersect(pt1[0], pt1[1], pt2[0], pt2[1],
+                edge[0], edge[1], edge[2], edge[3]);
+            if(ptInt && (!ptCount ||
+                Math.abs(ptInt.x - out[0][0]) > 1 ||
+                Math.abs(ptInt.y - out[0][1]) > 1
+            )) {
+                ptInt = [ptInt.x, ptInt.y];
+                // if we have 2 intersections, make sure the closest one to pt1 comes first
+                if(ptCount && ptDist(ptInt, pt1) < ptDist(out[0], pt1)) out.unshift(ptInt);
+                else out.push(ptInt);
+                ptCount++;
+            }
+        }
+        return out;
+    }
+
+    function onlyConstrainedPoint(pt) {
+        if(pt[0] < xEdge0 || pt[0] > xEdge1 || pt[1] < yEdge0 || pt[1] > yEdge1) {
+            return [constrain(pt[0], xEdge0, xEdge1), constrain(pt[1], yEdge0, yEdge1)];
+        }
+    }
+
+    function sameEdge(pt1, pt2) {
+        if(pt1[0] === pt2[0] && (pt1[0] === xEdge0 || pt1[0] === xEdge1)) return true;
+        if(pt1[1] === pt2[1] && (pt1[1] === yEdge0 || pt1[1] === yEdge1)) return true;
+    }
+
+    // for line shapes hv and vh, movement in the two dimensions is decoupled,
+    // so all we need to do is constrain each dimension independently
+    function getHVEdgeIntersections(pt1, pt2) {
+        var out = [];
+        var ptInt1 = onlyConstrainedPoint(pt1);
+        var ptInt2 = onlyConstrainedPoint(pt2);
+        if(ptInt1 && ptInt2 && sameEdge(ptInt1, ptInt2)) return out;
+
+        if(ptInt1) out.push(ptInt1);
+        if(ptInt2) out.push(ptInt2);
+        return out;
+    }
+
+    // hvh and vhv we sometimes have to move one of the intersection points
+    // out BEYOND the clipping rect, by a maximum of a factor of 2, so that
+    // the midpoint line is drawn in the right place
+    function getABAEdgeIntersections(dim, limit0, limit1) {
+        return function(pt1, pt2) {
+            var ptInt1 = onlyConstrainedPoint(pt1);
+            var ptInt2 = onlyConstrainedPoint(pt2);
+
+            var out = [];
+            if(ptInt1 && ptInt2 && sameEdge(ptInt1, ptInt2)) return out;
+
+            if(ptInt1) out.push(ptInt1);
+            if(ptInt2) out.push(ptInt2);
+
+            var midShift = 2 * Lib.constrain((pt1[dim] + pt2[dim]) / 2, limit0, limit1) -
+                ((ptInt1 || pt1)[dim] + (ptInt2 || pt2)[dim]);
+            if(midShift) {
+                var ptToAlter;
+                if(ptInt1 && ptInt2) {
+                    ptToAlter = (midShift > 0 === ptInt1[dim] > ptInt2[dim]) ? ptInt1 : ptInt2;
+                }
+                e

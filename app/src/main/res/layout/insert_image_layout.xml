@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:id="@+id/hintImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:text="* Add Product Photos"
+        android:textSize="@dimen/_10ssp" />
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="100dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/img1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="2dp" />
+
+                <ImageButton
+                    android:id="@+id/add_img1"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="#00ffffff"
+                    android:padding="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/add_image" />
+
+                <ImageButton
+                    android:id="@+id/remove_img1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="#00ffffff"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/x_button"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="100dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/img2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="3dp" />
+
+                <ImageButton
+                    android:id="@+id/add_img2"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="#00ffffff"
+                    android:padding="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/add_image" />
+
+                <ImageButton
+                    android:id="@+id/remove_img2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="#00ffffff"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/x_button"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="100dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/img3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="4dp" />
+
+                <ImageButton
+                    android:id="@+id/add_img3"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="#00ffffff"
+                    android:padding="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/add_image" />
+
+                <ImageButton
+                    android:id="@+id/remove_img3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="#00ffffff"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/x_button"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="100dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/img4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="7dp" />
+
+                <ImageButton
+                    android:id="@+id/add_img4"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="#00ffffff"
+                    android:padding="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/add_image" />
+
+                <ImageButton
+                    android:id="@+id/remove_img4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="#00ffffff"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/x_button"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+</merge>

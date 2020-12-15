@@ -1,0 +1,411 @@
+n be sure to avoid infinite loops if something
+        // is backwards:
+        n1 = bounds[0];
+        n2 = bounds[1];
+
+        for(n = n1; n <= n2; n++) {
+            value = axis.tick0 + axis.dtick * n;
+
+            gridlines.push(extendFlat(constructValueGridline(value), {
+                color: axis.gridcolor,
+                width: axis.gridwidth
+            }));
+        }
+
+        for(n = n1 - 1; n < n2 + 1; n++) {
+            value = axis.tick0 + axis.dtick * n;
+
+            for(i = 0; i < axis.minorgridcount; i++) {
+                v = value + axis.dtick * (i + 1) / (axis.minorgridcount + 1);
+                if(v < data[0] || v > data[data.length - 1]) continue;
+                minorgridlines.push(extendFlat(constructValueGridline(v), {
+                    color: axis.minorgridcolor,
+                    width: axis.minorgridwidth
+                }));
+            }
+        }
+
+        if(axis.startline) {
+            boundarylines.push(extendFlat(constructValueGridline(data[0]), {
+                color: axis.startlinecolor,
+                width: axis.startlinewidth
+            }));
+        }
+
+        if(axis.endline) {
+            boundarylines.push(extendFlat(constructValueGridline(data[data.length - 1]), {
+                color: axis.endlinecolor,
+                width: axis.endlinewidth
+            }));
+        }
+    }
+};
+
+},{"../../lib/extend":684,"../../plots/cartesian/axes":742}],883:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+'use strict';
+
+var Axes = _dereq_('../../plots/cartesian/axes');
+var extendFlat = _dereq_('../../lib/extend').extendFlat;
+
+module.exports = function calcLabels(trace, axis) {
+    var i, tobj, prefix, suffix, gridline;
+
+    var labels = axis._labels = [];
+    var gridlines = axis._gridlines;
+
+    for(i = 0; i < gridlines.length; i++) {
+        gridline = gridlines[i];
+
+        if(['start', 'both'].indexOf(axis.showticklabels) !== -1) {
+            tobj = Axes.tickText(axis, gridline.value);
+
+            extendFlat(tobj, {
+                prefix: prefix,
+                suffix: suffix,
+                endAnchor: true,
+                xy: gridline.xy(0),
+                dxy: gridline.dxy(0, 0),
+                axis: gridline.axis,
+                length: gridline.crossAxis.length,
+                font: gridline.axis.tickfont,
+                isFirst: i === 0,
+                isLast: i === gridlines.length - 1
+            });
+
+            labels.push(tobj);
+        }
+
+        if(['end', 'both'].indexOf(axis.showticklabels) !== -1) {
+            tobj = Axes.tickText(axis, gridline.value);
+
+            extendFlat(tobj, {
+                endAnchor: false,
+                xy: gridline.xy(gridline.crossLength - 1),
+                dxy: gridline.dxy(gridline.crossLength - 2, 1),
+                axis: gridline.axis,
+                length: gridline.crossAxis.length,
+                font: gridline.axis.tickfont,
+                isFirst: i === 0,
+                isLast: i === gridlines.length - 1
+            });
+
+            labels.push(tobj);
+        }
+    }
+};
+
+},{"../../lib/extend":684,"../../plots/cartesian/axes":742}],884:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+'use strict';
+
+/*
+ * Compute the tangent vector according to catmull-rom cubic splines (centripetal,
+ * I think). That differs from the control point in two ways:
+ *   1. It is a vector, not a position relative to the point
+ *   2. the vector is longer than the position relative to p1 by a factor of 3
+ *
+ * Close to the boundaries, we'll use these as *quadratic control points, so that
+ * to make a nice grid, we'll need to divide the tangent by 2 instead of 3. (The
+ * math works out this way if you work through the bezier derivatives)
+ */
+var CatmullRomExp = 0.5;
+module.exports = function makeControlPoints(p0, p1, p2, smoothness) {
+    var d1x = p0[0] - p1[0];
+    var d1y = p0[1] - p1[1];
+    var d2x = p2[0] - p1[0];
+    var d2y = p2[1] - p1[1];
+    var d1a = Math.pow(d1x * d1x + d1y * d1y, CatmullRomExp / 2);
+    var d2a = Math.pow(d2x * d2x + d2y * d2y, CatmullRomExp / 2);
+    var numx = (d2a * d2a * d1x - d1a * d1a * d2x) * smoothness;
+    var numy = (d2a * d2a * d1y - d1a * d1a * d2y) * smoothness;
+    var denom1 = d2a * (d1a + d2a) * 3;
+    var denom2 = d1a * (d1a + d2a) * 3;
+
+    return [[
+        p1[0] + (denom1 && numx / denom1),
+        p1[1] + (denom1 && numy / denom1)
+    ], [
+        p1[0] - (denom2 && numx / denom2),
+        p1[1] - (denom2 && numy / denom2)
+    ]];
+};
+
+},{}],885:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+'use strict';
+
+var isArrayOrTypedArray = _dereq_('../../lib').isArrayOrTypedArray;
+
+/*
+ * Construct a 2D array of cheater values given a, b, and a slope.
+ * If
+ */
+module.exports = function(a, b, cheaterslope) {
+    var i, j, ascal, bscal, aval, bval;
+    var data = [];
+
+    var na = isArrayOrTypedArray(a) ? a.length : a;
+    var nb = isArrayOrTypedArray(b) ? b.length : b;
+    var adata = isArrayOrTypedArray(a) ? a : null;
+    var bdata = isArrayOrTypedArray(b) ? b : null;
+
+    // If we're using data, scale it so that for data that's just barely
+    // not evenly spaced, the switch to value-based indexing is continuous.
+    // This means evenly spaced data should look the same whether value
+    // or index cheatertype.
+    if(adata) {
+        ascal = (adata.length - 1) / (adata[adata.length - 1] - adata[0]) / (na - 1);
+    }
+
+    if(bdata) {
+        bscal = (bdata.length - 1) / (bdata[bdata.length - 1] - bdata[0]) / (nb - 1);
+    }
+
+    var xval;
+    var xmin = Infinity;
+    var xmax = -Infinity;
+    for(j = 0; j < nb; j++) {
+        data[j] = [];
+        bval = bdata ? (bdata[j] - bdata[0]) * bscal : j / (nb - 1);
+        for(i = 0; i < na; i++) {
+            aval = adata ? (adata[i] - adata[0]) * ascal : i / (na - 1);
+            xval = aval - bval * cheaterslope;
+            xmin = Math.min(xval, xmin);
+            xmax = Math.max(xval, xmax);
+            data[j][i] = xval;
+        }
+    }
+
+    // Normalize cheater values to the 0-1 range. This comes into play when you have
+    // multiple cheater plots. After careful consideration, it seems better if cheater
+    // values are normalized to a consistent range. Otherwise one cheater affects the
+    // layout of other cheaters on the same axis.
+    var slope = 1.0 / (xmax - xmin);
+    var offset = -xmin * slope;
+    for(j = 0; j < nb; j++) {
+        for(i = 0; i < na; i++) {
+            data[j][i] = slope * data[j][i] + offset;
+        }
+    }
+
+    return data;
+};
+
+},{"../../lib":694}],886:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+'use strict';
+
+var makeControlPoints = _dereq_('./catmull_rom');
+var ensureArray = _dereq_('../../lib').ensureArray;
+
+/*
+ * Turns a coarse grid into a fine grid with control points.
+ *
+ * Here's an ASCII representation:
+ *
+ *       o ----- o ----- o ----- o
+ *       |       |       |       |
+ *       |       |       |       |
+ *       |       |       |       |
+ *       o ----- o ----- o ----- o
+ *       |       |       |       |
+ *       |       |       |       |
+ *    ^  |       |       |       |
+ *    |  o ----- o ----- o ----- o
+ *  b |  |       |       |       |
+ *    |  |       |       |       |
+ *    |  |       |       |       |
+ *       o ----- o ----- o ----- o
+ *         ------>
+ *           a
+ *
+ * First of all, note that we want to do this in *cartesian* space. This means
+ * we might run into problems when there are extreme differences in x/y scaling,
+ * but the alternative is that the topology of the contours might actually be
+ * view-dependent, which seems worse. As a fallback, the only parameter that
+ * actually affects the result is the *aspect ratio*, so that we can at least
+ * improve the situation a bit without going all the way to screen coordinates.
+ *
+ * This function flattens the points + tangents  into a slightly denser grid of
+ * *control points*. The resulting grid looks like this:
+ *
+ *       9 +--o-o--+ -o-o--+--o-o--+
+ *       8 o  o o  o  o o  o  o o  o
+ *         |       |       |       |
+ *       7 o  o o  o  o o  o  o o  o
+ *       6 +--o-o--+ -o-o--+--o-o--+
+ *       5 o  o o  o  o o  o  o o  o
+ *         |       |       |       |
+ *    ^  4 o  o o  o  o o  o  o o  o
+ *    |  3 +--o-o--+ -o-o--+--o-o--+
+ *  b |  2 o  o o  o  o o  o  o o  o
+ *    |    |       |       |       |
+ *    |  1 o  o o  o  o o  o  o o  o
+ *       0 +--o-o--+ -o-o--+--o-o--+
+ *         0  1 2  3  4 5  6  7 8  9
+ *         ------>
+ *           a
+ *
+ * where `o`s represent newly-computed control points. the resulting dimension is
+ *
+ *     (m - 1) * 3 + 1
+ *   = 3 * m - 2
+ *
+ * We could simply store the tangents separately, but that's a nightmare to organize
+ * in two dimensions since we'll be slicing grid lines in both directions and since
+ * that basically requires very nearly just as much storage as just storing the dense
+ * grid.
+ *
+ * Wow!
+ */
+
+
+/*
+ * Catmull-rom is biased at the boundaries toward the interior and we actually
+ * can't use catmull-rom to compute the control point closest to (but inside)
+ * the boundary.
+ *
+ * A note on plotly's spline interpolation. It uses the catmull rom control point
+ * closest to the boundary *as* a quadratic control point. This seems incorrect,
+ * so I've elected not to follow that. Given control points 0 and 1, regular plotly
+ * splines give *equivalent* cubic control points:
+ *
+ * Input:
+ *
+ *   boundary
+ *     |                    |
+ *     p0           p2      p3    --> interior
+ *     0.0          0.667   1.0
+ *     |                    |
+ *
+ * Cubic-equivalent of what plotly splines draw::
+ *
+ *   boundary
+ *     |                    |
+ *     p0   p1      p2      p3    --> interior
+ *     0.0  0.4444  0.8888  1.0
+ *     |                    |
+ *
+ * What this function fills in:
+ *
+ *   boundary
+ *     |                    |
+ *     p0    p1     p2      p3    --> interior
+ *     0.0   0.333  0.667   1.0
+ *     |                    |
+ *
+ * Parameters:
+ *   p0: boundary point
+ *   p2: catmull rom point based on computation at p3
+ *   p3: first grid point
+ *
+ * Of course it works whichever way it's oriented; you just need to interpret the
+ * input/output accordingly.
+ */
+function inferCubicControlPoint(p0, p2, p3) {
+    // Extend p1 away from p0 by 50%. This is the equivalent quadratic point that
+    // would give the same slope as catmull rom at p0.
+    var p2e0 = -0.5 * p3[0] + 1.5 * p2[0];
+    var p2e1 = -0.5 * p3[1] + 1.5 * p2[1];
+
+    return [
+        (2 * p2e0 + p0[0]) / 3,
+        (2 * p2e1 + p0[1]) / 3,
+    ];
+}
+
+module.exports = function computeControlPoints(xe, ye, x, y, asmoothing, bsmoothing) {
+    var i, j, ie, je, xej, yej, xj, yj, cp, p1;
+    // At this point, we know these dimensions are correct and representative of
+    // the whole 2D arrays:
+    var na = x[0].length;
+    var nb = x.length;
+
+    // (n)umber of (e)xpanded points:
+    var nea = asmoothing ? 3 * na - 2 : na;
+    var neb = bsmoothing ? 3 * nb - 2 : nb;
+
+    xe = ensureArray(xe, neb);
+    ye = ensureArray(ye, neb);
+
+    for(ie = 0; ie < neb; ie++) {
+        xe[ie] = ensureArray(xe[ie], nea);
+        ye[ie] = ensureArray(ye[ie], nea);
+    }
+
+    // This loop fills in the X'd points:
+    //
+    //    .       .       .       .
+    //    .       .       .       .
+    //    |       |       |       |
+    //    |       |       |       |
+    //    X ----- X ----- X ----- X
+    //    |       |       |       |
+    //    |       |       |       |
+    //    |       |       |       |
+    //    X ----- X ----- X ----- X
+    //
+    //
+    // ie = (i) (e)xpanded:
+    for(j = 0, je = 0; j < nb; j++, je += bsmoothing ? 3 : 1) {
+        xej = xe[je];
+        yej = ye[je];
+        xj = x[j];
+        yj = y[j];
+
+        // je = (j) (e)xpanded:
+        for(i = 0, ie = 0; i < na; i++, ie += asmoothing ? 3 : 1) {
+            xej[ie] = xj[i];
+            yej[ie] = yj[i];
+        }
+    }
+
+    if(asmoothing) {
+        // If there's a-smoothing, this loop fills in the X'd points with catmull-rom
+        // control points computed along the a-axis:
+        //     .       .       .       .
+        //     .       .       .       .
+        //     |       |       |       |
+        //     |       |       |       |
+        //     o -Y-X- o -X-X- o -X-Y- o
+        //     |       |       |       |
+        //     |       |       |       |
+        //     |       |       |       |
+        //     o -Y-X- o -X-X- o -X-Y- o
+        //
+        // i:  0       1       2       3
+        // ie: 0  1 3  3  4 5  6  7 8  9
+        //
+        //           ------>
+        //             a
+        //
+        for(j = 0, je = 0; j < nb; j++, je += bsmoothing ? 3 : 1

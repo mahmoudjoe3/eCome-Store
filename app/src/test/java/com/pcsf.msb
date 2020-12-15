@@ -1,0 +1,654 @@
+ {
+        if(p[i] < p[j]) {
+          sgn = -sgn
+        } else if(p[i] === p[j]) {
+          return 0
+        }
+      }
+    }
+    return sgn
+  } else {
+    //Otherwise use linear time algorithm
+    var visited = pool.mallocUint8(n)
+    for(var i=0; i<n; ++i) {
+      visited[i] = 0
+    }
+    var sgn = 1
+    for(var i=0; i<n; ++i) {
+      if(!visited[i]) {
+        var count = 1
+        visited[i] = 1
+        for(var j=p[i]; j!==i; j=p[j]) {
+          if(visited[j]) {
+            pool.freeUint8(visited)
+            return 0
+          }
+          count += 1
+          visited[j] = 1
+        }
+        if(!(count & 1)) {
+          sgn = -sgn
+        }
+      }
+    }
+    pool.freeUint8(visited)
+    return sgn
+  }
+}
+},{"typedarray-pool":523}],450:[function(_dereq_,module,exports){
+"use strict"
+
+var pool = _dereq_("typedarray-pool")
+var inverse = _dereq_("invert-permutation")
+
+function rank(permutation) {
+  var n = permutation.length
+  switch(n) {
+    case 0:
+    case 1:
+      return 0
+    case 2:
+      return permutation[1]
+    default:
+      break
+  }
+  var p = pool.mallocUint32(n)
+  var pinv = pool.mallocUint32(n)
+  var r = 0, s, t, i
+  inverse(permutation, pinv)
+  for(i=0; i<n; ++i) {
+    p[i] = permutation[i]
+  }
+  for(i=n-1; i>0; --i) {
+    t = pinv[i]
+    s = p[i]
+    p[i] = p[t]
+    p[t] = s
+    pinv[i] = pinv[s]
+    pinv[s] = t
+    r = (r + s) * i
+  }
+  pool.freeUint32(pinv)
+  pool.freeUint32(p)
+  return r
+}
+
+function unrank(n, r, p) {
+  switch(n) {
+    case 0:
+      if(p) { return p }
+      return []
+    case 1:
+      if(p) {
+        p[0] = 0
+        return p
+      } else {
+        return [0]
+      }
+    case 2:
+      if(p) {
+        if(r) {
+          p[0] = 0
+          p[1] = 1
+        } else {
+          p[0] = 1
+          p[1] = 0
+        }
+        return p
+      } else {
+        return r ? [0,1] : [1,0]
+      }
+    default:
+      break
+  }
+  p = p || new Array(n)
+  var s, t, i, nf=1
+  p[0] = 0
+  for(i=1; i<n; ++i) {
+    p[i] = i
+    nf = (nf*i)|0
+  }
+  for(i=n-1; i>0; --i) {
+    s = (r / nf)|0
+    r = (r - s * nf)|0
+    nf = (nf / i)|0
+    t = p[i]|0
+    p[i] = p[s]|0
+    p[s] = t|0
+  }
+  return p
+}
+
+exports.rank = rank
+exports.unrank = unrank
+
+},{"invert-permutation":401,"typedarray-pool":523}],451:[function(_dereq_,module,exports){
+'use strict'
+
+
+module.exports = function pick (src, props, keepRest) {
+	var result = {}, prop, i
+
+	if (typeof props === 'string') props = toList(props)
+	if (Array.isArray(props)) {
+		var res = {}
+		for (i = 0; i < props.length; i++) {
+			res[props[i]] = true
+		}
+		props = res
+	}
+
+	// convert strings to lists
+	for (prop in props) {
+		props[prop] = toList(props[prop])
+	}
+
+	// keep-rest strategy requires unmatched props to be preserved
+	var occupied = {}
+
+	for (prop in props) {
+		var aliases = props[prop]
+
+		if (Array.isArray(aliases)) {
+			for (i = 0; i < aliases.length; i++) {
+				var alias = aliases[i]
+
+				if (keepRest) {
+					occupied[alias] = true
+				}
+
+				if (alias in src) {
+					result[prop] = src[alias]
+
+					if (keepRest) {
+						for (var j = i; j < aliases.length; j++) {
+							occupied[aliases[j]] = true
+						}
+					}
+
+					break
+				}
+			}
+		}
+		else if (prop in src) {
+			if (props[prop]) {
+				result[prop] = src[prop]
+			}
+
+			if (keepRest) {
+				occupied[prop] = true
+			}
+		}
+	}
+
+	if (keepRest) {
+		for (prop in src) {
+			if (occupied[prop]) continue
+			result[prop] = src[prop]
+		}
+	}
+
+	return result
+}
+
+var CACHE = {}
+
+function toList(arg) {
+	if (CACHE[arg]) return CACHE[arg]
+	if (typeof arg === 'string') {
+		arg = CACHE[arg] = arg.split(/\s*,\s*|\s+/)
+	}
+	return arg
+}
+
+},{}],452:[function(_dereq_,module,exports){
+"use strict"
+
+module.exports = planarDual
+
+var compareAngle = _dereq_("compare-angle")
+
+function planarDual(cells, positions) {
+
+  var numVertices = positions.length|0
+  var numEdges = cells.length
+  var adj = [new Array(numVertices), new Array(numVertices)]
+  for(var i=0; i<numVertices; ++i) {
+    adj[0][i] = []
+    adj[1][i] = []
+  }
+  for(var i=0; i<numEdges; ++i) {
+    var c = cells[i]
+    adj[0][c[0]].push(c)
+    adj[1][c[1]].push(c)
+  }
+
+  var cycles = []
+
+  //Add isolated vertices as trivial case
+  for(var i=0; i<numVertices; ++i) {
+    if(adj[0][i].length + adj[1][i].length === 0) {
+      cycles.push( [i] )
+    }
+  }
+
+  //Remove a half edge
+  function cut(c, i) {
+    var a = adj[i][c[i]]
+    a.splice(a.indexOf(c), 1)
+  }
+
+  //Find next vertex and cut edge
+  function next(a, b, noCut) {
+    var nextCell, nextVertex, nextDir
+    for(var i=0; i<2; ++i) {
+      if(adj[i][b].length > 0) {
+        nextCell = adj[i][b][0]
+        nextDir = i
+        break
+      }
+    }
+    nextVertex = nextCell[nextDir^1]
+
+    for(var dir=0; dir<2; ++dir) {
+      var nbhd = adj[dir][b]
+      for(var k=0; k<nbhd.length; ++k) {
+        var e = nbhd[k]
+        var p = e[dir^1]
+        var cmp = compareAngle(
+            positions[a], 
+            positions[b], 
+            positions[nextVertex],
+            positions[p])
+        if(cmp > 0) {
+          nextCell = e
+          nextVertex = p
+          nextDir = dir
+        }
+      }
+    }
+    if(noCut) {
+      return nextVertex
+    }
+    if(nextCell) {
+      cut(nextCell, nextDir)
+    }
+    return nextVertex
+  }
+
+  function extractCycle(v, dir) {
+    var e0 = adj[dir][v][0]
+    var cycle = [v]
+    cut(e0, dir)
+    var u = e0[dir^1]
+    var d0 = dir
+    while(true) {
+      while(u !== v) {
+        cycle.push(u)
+        u = next(cycle[cycle.length-2], u, false)
+      }
+      if(adj[0][v].length + adj[1][v].length === 0) {
+        break
+      }
+      var a = cycle[cycle.length-1]
+      var b = v
+      var c = cycle[1]
+      var d = next(a, b, true)
+      if(compareAngle(positions[a], positions[b], positions[c], positions[d]) < 0) {
+        break
+      }
+      cycle.push(v)
+      u = next(a, b)
+    }
+    return cycle
+  }
+
+  function shouldGlue(pcycle, ncycle) {
+    return (ncycle[1] === ncycle[ncycle.length-1])
+  }
+
+  for(var i=0; i<numVertices; ++i) {
+    for(var j=0; j<2; ++j) {
+      var pcycle = []
+      while(adj[j][i].length > 0) {
+        var ni = adj[0][i].length
+        var ncycle = extractCycle(i,j)
+        if(shouldGlue(pcycle, ncycle)) {
+          //Glue together trivial cycles
+          pcycle.push.apply(pcycle, ncycle)
+        } else {
+          if(pcycle.length > 0) {
+            cycles.push(pcycle)
+          }
+          pcycle = ncycle
+        }
+      }
+      if(pcycle.length > 0) {
+        cycles.push(pcycle)
+      }
+    }
+  }
+
+  //Combine paths and loops together
+  return cycles
+}
+},{"compare-angle":116}],453:[function(_dereq_,module,exports){
+'use strict'
+
+module.exports = trimLeaves
+
+var e2a = _dereq_('edges-to-adjacency-list')
+
+function trimLeaves(edges, positions) {
+  var adj = e2a(edges, positions.length)
+  var live = new Array(positions.length)
+  var nbhd = new Array(positions.length)
+
+  var dead = []
+  for(var i=0; i<positions.length; ++i) {
+    var count = adj[i].length
+    nbhd[i] = count
+    live[i] = true
+    if(count <= 1) {
+      dead.push(i)
+    }
+  }
+
+  while(dead.length > 0) {
+    var v = dead.pop()
+    live[v] = false
+    var n = adj[v]
+    for(var i=0; i<n.length; ++i) {
+      var u = n[i]
+      if(--nbhd[u] === 0) {
+        dead.push(u)
+      }
+    }
+  }
+
+  var newIndex = new Array(positions.length)
+  var npositions = []
+  for(var i=0; i<positions.length; ++i) {
+    if(live[i]) {
+      var v = npositions.length
+      newIndex[i] = v
+      npositions.push(positions[i])
+    } else {
+      newIndex[i] = -1
+    }
+  }
+
+  var nedges = []
+  for(var i=0; i<edges.length; ++i) {
+    var e = edges[i]
+    if(live[e[0]] && live[e[1]]) {
+      nedges.push([ newIndex[e[0]], newIndex[e[1]] ])
+    }
+  }
+  
+  return [ nedges, npositions ]
+}
+},{"edges-to-adjacency-list":158}],454:[function(_dereq_,module,exports){
+'use strict'
+
+module.exports = planarGraphToPolyline
+
+var e2a = _dereq_('edges-to-adjacency-list')
+var planarDual = _dereq_('planar-dual')
+var preprocessPolygon = _dereq_('point-in-big-polygon')
+var twoProduct = _dereq_('two-product')
+var robustSum = _dereq_('robust-sum')
+var uniq = _dereq_('uniq')
+var trimLeaves = _dereq_('./lib/trim-leaves')
+
+function makeArray(length, fill) {
+  var result = new Array(length)
+  for(var i=0; i<length; ++i) {
+    result[i] = fill
+  }
+  return result
+}
+
+function makeArrayOfArrays(length) {
+  var result = new Array(length)
+  for(var i=0; i<length; ++i) {
+    result[i] = []
+  }
+  return result
+}
+
+
+function planarGraphToPolyline(edges, positions) {
+
+  //Trim leaves
+  var result = trimLeaves(edges, positions)
+  edges = result[0]
+  positions = result[1]
+
+  var numVertices = positions.length
+  var numEdges = edges.length
+
+  //Calculate adjacency list, check manifold
+  var adj = e2a(edges, positions.length)
+  for(var i=0; i<numVertices; ++i) {
+    if(adj[i].length % 2 === 1) {
+      throw new Error('planar-graph-to-polyline: graph must be manifold')
+    }
+  }
+
+  //Get faces
+  var faces = planarDual(edges, positions)
+
+  //Check orientation of a polygon using exact arithmetic
+  function ccw(c) {
+    var n = c.length
+    var area = [0]
+    for(var j=0; j<n; ++j) {
+      var a = positions[c[j]]
+      var b = positions[c[(j+1)%n]]
+      var t00 = twoProduct(-a[0], a[1])
+      var t01 = twoProduct(-a[0], b[1])
+      var t10 = twoProduct( b[0], a[1])
+      var t11 = twoProduct( b[0], b[1])
+      area = robustSum(area, robustSum(robustSum(t00, t01), robustSum(t10, t11)))
+    }
+    return area[area.length-1] > 0
+  }
+
+  //Extract all clockwise faces
+  faces = faces.filter(ccw)
+
+  //Detect which loops are contained in one another to handle parent-of relation
+  var numFaces = faces.length
+  var parent = new Array(numFaces)
+  var containment = new Array(numFaces)
+  for(var i=0; i<numFaces; ++i) {
+    parent[i] = i
+    var row = new Array(numFaces)
+    var loopVertices = faces[i].map(function(v) {
+      return positions[v]
+    })
+    var pmc = preprocessPolygon([loopVertices])
+    var count = 0
+    outer:
+    for(var j=0; j<numFaces; ++j) {
+      row[j] = 0
+      if(i === j) {
+        continue
+      }
+      var c = faces[j]
+      var n = c.length
+      for(var k=0; k<n; ++k) {
+        var d = pmc(positions[c[k]])
+        if(d !== 0) {
+          if(d < 0) {
+            row[j] = 1
+            count += 1
+          }
+          continue outer
+        }
+      }
+      row[j] = 1
+      count += 1
+    }
+    containment[i] = [count, i, row]
+  }
+  containment.sort(function(a,b) {
+    return b[0] - a[0]
+  })
+  for(var i=0; i<numFaces; ++i) {
+    var row = containment[i]
+    var idx = row[1]
+    var children = row[2]
+    for(var j=0; j<numFaces; ++j) {
+      if(children[j]) {
+        parent[j] = idx
+      }
+    }
+  }
+
+  //Initialize face adjacency list
+  var fadj = makeArrayOfArrays(numFaces)
+  for(var i=0; i<numFaces; ++i) {
+    fadj[i].push(parent[i])
+    fadj[parent[i]].push(i)
+  }
+
+  //Build adjacency matrix for edges
+  var edgeAdjacency = {}
+  var internalVertices = makeArray(numVertices, false)
+  for(var i=0; i<numFaces; ++i) {
+    var c = faces[i]
+    var n = c.length
+    for(var j=0; j<n; ++j) {
+      var a = c[j]
+      var b = c[(j+1)%n]
+      var key = Math.min(a,b) + ":" + Math.max(a,b)
+      if(key in edgeAdjacency) {
+        var neighbor = edgeAdjacency[key]
+        fadj[neighbor].push(i)
+        fadj[i].push(neighbor)
+        internalVertices[a] = internalVertices[b] = true
+      } else {
+        edgeAdjacency[key] = i
+      }
+    }
+  }
+
+  function sharedBoundary(c) {
+    var n = c.length
+    for(var i=0; i<n; ++i) {
+      if(!internalVertices[c[i]]) {
+        return false
+      }
+    }
+    return true
+  }
+
+  var toVisit = []
+  var parity = makeArray(numFaces, -1)
+  for(var i=0; i<numFaces; ++i) {
+    if(parent[i] === i && !sharedBoundary(faces[i])) {
+      toVisit.push(i)
+      parity[i] = 0
+    } else {
+      parity[i] = -1
+    }
+  }
+
+  //Using face adjacency, classify faces as in/out
+  var result = []
+  while(toVisit.length > 0) {
+    var top = toVisit.pop()
+    var nbhd = fadj[top]
+    uniq(nbhd, function(a,b) {
+      return a-b
+    })
+    var nnbhr = nbhd.length
+    var p = parity[top]
+    var polyline
+    if(p === 0) {
+      var c = faces[top]
+      polyline = [c]
+    }
+    for(var i=0; i<nnbhr; ++i) {
+      var f = nbhd[i]
+      if(parity[f] >= 0) {
+        continue
+      }
+      parity[f] = p^1
+      toVisit.push(f)
+      if(p === 0) {
+        var c = faces[f]
+        if(!sharedBoundary(c)) {
+          c.reverse()
+          polyline.push(c)
+        }
+      }
+    }
+    if(p === 0) {
+      result.push(polyline)
+    }
+  }
+
+  return result
+}
+},{"./lib/trim-leaves":453,"edges-to-adjacency-list":158,"planar-dual":452,"point-in-big-polygon":458,"robust-sum":493,"two-product":521,"uniq":525}],455:[function(_dereq_,module,exports){
+'use strict'
+
+module.exports = _dereq_('./quad')
+},{"./quad":457}],456:[function(_dereq_,module,exports){
+arguments[4][100][0].apply(exports,arguments)
+},{"dup":100}],457:[function(_dereq_,module,exports){
+/**
+ * @module  point-cluster/quad
+ *
+ * Bucket based quad tree clustering
+ */
+
+'use strict'
+
+var search = _dereq_('binary-search-bounds')
+var clamp = _dereq_('clamp')
+var rect = _dereq_('parse-rect')
+var getBounds = _dereq_('array-bounds')
+var pick = _dereq_('pick-by-alias')
+var defined = _dereq_('defined')
+var flatten = _dereq_('flatten-vertex-data')
+var isObj = _dereq_('is-obj')
+var dtype = _dereq_('dtype')
+var log2 = _dereq_('math-log2')
+
+
+module.exports = function cluster (srcPoints, options) {
+	if (!options) { options = {} }
+
+	srcPoints = flatten(srcPoints, 'float64')
+
+	options = pick(options, {
+		bounds: 'range bounds dataBox databox',
+		maxDepth: 'depth maxDepth maxdepth level maxLevel maxlevel levels',
+		dtype: 'type dtype format out dst output destination'
+		// sort: 'sortBy sortby sort',
+		// pick: 'pick levelPoint',
+		// nodeSize: 'node nodeSize minNodeSize minSize size'
+	})
+
+	// let nodeSize = defined(options.nodeSize, 1)
+	var maxDepth = defined(options.maxDepth, 255)
+	var bounds = defined(options.bounds, getBounds(srcPoints, 2))
+	if (bounds[0] === bounds[2]) { bounds[2]++ }
+	if (bounds[1] === bounds[3]) { bounds[3]++ }
+
+	var points = normalize(srcPoints, bounds)
+
+	// init variables
+	var n = srcPoints.length >>> 1
+	var ids
+	if (!options.dtype) { options.dtype = 'array' }
+
+	if (typeof options.dtype === 'string') {
+		ids = new (dtype(options.dtype))(n)
+	}
+	else if (options.dtype) {
+		ids = options.

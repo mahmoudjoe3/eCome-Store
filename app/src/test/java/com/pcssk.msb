@@ -1,0 +1,364 @@
+ const OP* o)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DEBOP	\
+	assert(o)
+
+PERL_CALLCONV void	Perl_debprofdump(pTHX);
+PERL_CALLCONV I32	Perl_debstack(pTHX);
+PERL_CALLCONV I32	Perl_debstackptrs(pTHX);
+PERL_CALLCONV SV *	Perl_defelem_target(pTHX_ SV *sv, MAGIC *mg)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DEFELEM_TARGET	\
+	assert(sv)
+
+PERL_CALLCONV void	Perl_delete_eval_scope(pTHX);
+PERL_CALLCONV char*	Perl_delimcpy(char* to, const char* toend, const char* from, const char* fromend, int delim, I32* retlen)
+			__attribute__nonnull__(1)
+			__attribute__nonnull__(2)
+			__attribute__nonnull__(3)
+			__attribute__nonnull__(4)
+			__attribute__nonnull__(6);
+#define PERL_ARGS_ASSERT_DELIMCPY	\
+	assert(to); assert(toend); assert(from); assert(fromend); assert(retlen)
+
+PERL_CALLCONV void	Perl_despatch_signals(pTHX);
+PERL_CALLCONV_NO_RET OP*	Perl_die(pTHX_ const char* pat, ...)
+			__attribute__noreturn__
+			__attribute__format__null_ok__(__printf__,pTHX_1,pTHX_2);
+
+PERL_CALLCONV_NO_RET OP*	Perl_die_sv(pTHX_ SV *baseex)
+			__attribute__noreturn__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DIE_SV	\
+	assert(baseex)
+
+PERL_CALLCONV_NO_RET void	Perl_die_unwind(pTHX_ SV* msv)
+			__attribute__noreturn__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DIE_UNWIND	\
+	assert(msv)
+
+/* PERL_CALLCONV bool	Perl_do_aexec(pTHX_ SV* really, SV** mark, SV** sp)
+			__attribute__nonnull__(pTHX_2)
+			__attribute__nonnull__(pTHX_3); */
+#define PERL_ARGS_ASSERT_DO_AEXEC	\
+	assert(mark); assert(sp)
+
+PERL_CALLCONV bool	Perl_do_aexec5(pTHX_ SV* really, SV** mark, SV** sp, int fd, int do_report)
+			__attribute__nonnull__(pTHX_2)
+			__attribute__nonnull__(pTHX_3);
+#define PERL_ARGS_ASSERT_DO_AEXEC5	\
+	assert(mark); assert(sp)
+
+PERL_CALLCONV int	Perl_do_binmode(pTHX_ PerlIO *fp, int iotype, int mode)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DO_BINMODE	\
+	assert(fp)
+
+PERL_CALLCONV bool	Perl_do_close(pTHX_ GV* gv, bool not_implicit);
+PERL_CALLCONV void	Perl_do_dump_pad(pTHX_ I32 level, PerlIO *file, PADLIST *padlist, int full)
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT_DO_DUMP_PAD	\
+	assert(file)
+
+PERL_CALLCONV bool	Perl_do_eof(pTHX_ GV* gv)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DO_EOF	\
+	assert(gv)
+
+PERL_CALLCONV void	Perl_do_execfree(pTHX);
+PERL_CALLCONV void	Perl_do_gv_dump(pTHX_ I32 level, PerlIO *file, const char *name, GV *sv)
+			__attribute__nonnull__(pTHX_2)
+			__attribute__nonnull__(pTHX_3);
+#define PERL_ARGS_ASSERT_DO_GV_DUMP	\
+	assert(file); assert(name)
+
+PERL_CALLCONV void	Perl_do_gvgv_dump(pTHX_ I32 level, PerlIO *file, const char *name, GV *sv)
+			__attribute__nonnull__(pTHX_2)
+			__attribute__nonnull__(pTHX_3);
+#define PERL_ARGS_ASSERT_DO_GVGV_DUMP	\
+	assert(file); assert(name)
+
+PERL_CALLCONV void	Perl_do_hv_dump(pTHX_ I32 level, PerlIO *file, const char *name, HV *sv)
+			__attribute__nonnull__(pTHX_2)
+			__attribute__nonnull__(pTHX_3);
+#define PERL_ARGS_ASSERT_DO_HV_DUMP	\
+	assert(file); assert(name)
+
+PERL_CALLCONV void	Perl_do_join(pTHX_ SV *sv, SV *delim, SV **mark, SV **sp)
+			__attribute__nonnull__(pTHX_1)
+			__attribute__nonnull__(pTHX_2)
+			__attribute__nonnull__(pTHX_3)
+			__attribute__nonnull__(pTHX_4);
+#define PERL_ARGS_ASSERT_DO_JOIN	\
+	assert(sv); assert(delim); assert(mark); assert(sp)
+
+PERL_CALLCONV void	Perl_do_magic_dump(pTHX_ I32 level, PerlIO *file, const MAGIC *mg, I32 nest, I32 maxnest, bool dumpops, STRLEN pvlim)
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT_DO_MAGIC_DUMP	\
+	assert(file)
+
+PERL_CALLCONV I32	Perl_do_ncmp(pTHX_ SV *const left, SV *const right)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1)
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT_DO_NCMP	\
+	assert(left); assert(right)
+
+PERL_CALLCONV void	Perl_do_op_dump(pTHX_ I32 level, PerlIO *file, const OP *o)
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT_DO_OP_DUMP	\
+	assert(file)
+
+/* PERL_CALLCONV bool	Perl_do_open(pTHX_ GV* gv, const char* name, I32 len, int as_raw, int rawmode, int rawperm, PerlIO* supplied_fp)
+			__attribute__nonnull__(pTHX_1)
+			__attribute__nonnull__(pTHX_2); */
+#define PERL_ARGS_ASSERT_DO_OPEN	\
+	assert(gv); assert(name)
+
+PERL_CALLCONV bool	Perl_do_open6(pTHX_ GV *gv, const char *oname, STRLEN len, PerlIO *supplied_fp, SV **svp, U32 num)
+			__attribute__nonnull__(pTHX_1)
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT_DO_OPEN6	\
+	assert(gv); assert(oname)
+
+PERL_CALLCONV bool	Perl_do_open9(pTHX_ GV *gv, const char *name, I32 len, int as_raw, int rawmode, int rawperm, PerlIO *supplied_fp, SV *svs, I32 num)
+			__attribute__nonnull__(pTHX_1)
+			__attribute__nonnull__(pTHX_2)
+			__attribute__nonnull__(pTHX_8);
+#define PERL_ARGS_ASSERT_DO_OPEN9	\
+	assert(gv); assert(name); assert(svs)
+
+PERL_CALLCONV bool	Perl_do_open_raw(pTHX_ GV *gv, const char *oname, STRLEN len, int rawmode, int rawperm)
+			__attribute__nonnull__(pTHX_1)
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT_DO_OPEN_RAW	\
+	assert(gv); assert(oname)
+
+PERL_CALLCONV bool	Perl_do_openn(pTHX_ GV *gv, const char *oname, I32 len, int as_raw, int rawmode, int rawperm, PerlIO *supplied_fp, SV **svp, I32 num)
+			__attribute__nonnull__(pTHX_1)
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT_DO_OPENN	\
+	assert(gv); assert(oname)
+
+PERL_CALLCONV void	Perl_do_pmop_dump(pTHX_ I32 level, PerlIO *file, const PMOP *pm)
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT_DO_PMOP_DUMP	\
+	assert(file)
+
+PERL_CALLCONV bool	Perl_do_print(pTHX_ SV* sv, PerlIO* fp)
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT_DO_PRINT	\
+	assert(fp)
+
+PERL_CALLCONV OP*	Perl_do_readline(pTHX)
+			__attribute__warn_unused_result__;
+
+PERL_CALLCONV bool	Perl_do_seek(pTHX_ GV* gv, Off_t pos, int whence);
+PERL_CALLCONV void	Perl_do_sprintf(pTHX_ SV* sv, I32 len, SV** sarg)
+			__attribute__nonnull__(pTHX_1)
+			__attribute__nonnull__(pTHX_3);
+#define PERL_ARGS_ASSERT_DO_SPRINTF	\
+	assert(sv); assert(sarg)
+
+PERL_CALLCONV void	Perl_do_sv_dump(pTHX_ I32 level, PerlIO *file, SV *sv, I32 nest, I32 maxnest, bool dumpops, STRLEN pvlim)
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT_DO_SV_DUMP	\
+	assert(file)
+
+PERL_CALLCONV Off_t	Perl_do_sysseek(pTHX_ GV* gv, Off_t pos, int whence)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DO_SYSSEEK	\
+	assert(gv)
+
+PERL_CALLCONV Off_t	Perl_do_tell(pTHX_ GV* gv)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DO_TELL	\
+	assert(gv)
+
+PERL_CALLCONV I32	Perl_do_trans(pTHX_ SV* sv)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DO_TRANS	\
+	assert(sv)
+
+PERL_CALLCONV UV	Perl_do_vecget(pTHX_ SV* sv, SSize_t offset, int size)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DO_VECGET	\
+	assert(sv)
+
+PERL_CALLCONV void	Perl_do_vecset(pTHX_ SV* sv)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DO_VECSET	\
+	assert(sv)
+
+PERL_CALLCONV void	Perl_do_vop(pTHX_ I32 optype, SV* sv, SV* left, SV* right)
+			__attribute__nonnull__(pTHX_2)
+			__attribute__nonnull__(pTHX_3)
+			__attribute__nonnull__(pTHX_4);
+#define PERL_ARGS_ASSERT_DO_VOP	\
+	assert(sv); assert(left); assert(right)
+
+PERL_CALLCONV OP*	Perl_dofile(pTHX_ OP* term, I32 force_builtin)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DOFILE	\
+	assert(term)
+
+PERL_CALLCONV bool	Perl_doing_taint(int argc, char** argv, char** env)
+			__attribute__warn_unused_result__;
+
+PERL_CALLCONV OP *	Perl_doref(pTHX_ OP *o, I32 type, bool set_op_ref)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DOREF	\
+	assert(o)
+
+PERL_CALLCONV void	Perl_dounwind(pTHX_ I32 cxix);
+PERL_CALLCONV I32	Perl_dowantarray(pTHX)
+			__attribute__warn_unused_result__;
+
+PERL_CALLCONV void	Perl_drand48_init_r(perl_drand48_t *random_state, U32 seed)
+			__attribute__nonnull__(1);
+#define PERL_ARGS_ASSERT_DRAND48_INIT_R	\
+	assert(random_state)
+
+PERL_CALLCONV double	Perl_drand48_r(perl_drand48_t *random_state)
+			__attribute__nonnull__(1);
+#define PERL_ARGS_ASSERT_DRAND48_R	\
+	assert(random_state)
+
+PERL_CALLCONV void	Perl_dump_all(pTHX);
+PERL_CALLCONV void	Perl_dump_all_perl(pTHX_ bool justperl);
+PERL_CALLCONV void	Perl_dump_eval(pTHX);
+PERL_CALLCONV void	Perl_dump_form(pTHX_ const GV* gv)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DUMP_FORM	\
+	assert(gv)
+
+PERL_CALLCONV void	Perl_dump_indent(pTHX_ I32 level, PerlIO *file, const char* pat, ...)
+			__attribute__format__(__printf__,pTHX_3,pTHX_4)
+			__attribute__nonnull__(pTHX_2)
+			__attribute__nonnull__(pTHX_3);
+#define PERL_ARGS_ASSERT_DUMP_INDENT	\
+	assert(file); assert(pat)
+
+PERL_CALLCONV void	Perl_dump_packsubs(pTHX_ const HV* stash)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DUMP_PACKSUBS	\
+	assert(stash)
+
+PERL_CALLCONV void	Perl_dump_packsubs_perl(pTHX_ const HV* stash, bool justperl)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DUMP_PACKSUBS_PERL	\
+	assert(stash)
+
+PERL_CALLCONV void	Perl_dump_sub(pTHX_ const GV* gv)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DUMP_SUB	\
+	assert(gv)
+
+PERL_CALLCONV void	Perl_dump_sub_perl(pTHX_ const GV* gv, bool justperl)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_DUMP_SUB_PERL	\
+	assert(gv)
+
+PERL_CALLCONV void	Perl_dump_vindent(pTHX_ I32 level, PerlIO *file, const char* pat, va_list *args)
+			__attribute__nonnull__(pTHX_2)
+			__attribute__nonnull__(pTHX_3);
+#define PERL_ARGS_ASSERT_DUMP_VINDENT	\
+	assert(file); assert(pat)
+
+PERL_CALLCONV void	Perl_emulate_cop_io(pTHX_ const COP *const c, SV *const sv)
+			__attribute__nonnull__(pTHX_1)
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT_EMULATE_COP_IO	\
+	assert(c); assert(sv)
+
+PERL_CALLCONV SV*	Perl_eval_pv(pTHX_ const char* p, I32 croak_on_error)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_EVAL_PV	\
+	assert(p)
+
+PERL_CALLCONV I32	Perl_eval_sv(pTHX_ SV* sv, I32 flags)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_EVAL_SV	\
+	assert(sv)
+
+PERL_CALLCONV void	Perl_fbm_compile(pTHX_ SV* sv, U32 flags)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_FBM_COMPILE	\
+	assert(sv)
+
+PERL_CALLCONV char*	Perl_fbm_instr(pTHX_ unsigned char* big, unsigned char* bigend, SV* littlestr, U32 flags)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1)
+			__attribute__nonnull__(pTHX_2)
+			__attribute__nonnull__(pTHX_3);
+#define PERL_ARGS_ASSERT_FBM_INSTR	\
+	assert(big); assert(bigend); assert(littlestr)
+
+PERL_CALLCONV bool	Perl_feature_is_enabled(pTHX_ const char *const name, STRLEN namelen)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_FEATURE_IS_ENABLED	\
+	assert(name)
+
+PERL_CALLCONV SV*	Perl_filter_add(pTHX_ filter_t funcp, SV* datasv);
+PERL_CALLCONV void	Perl_filter_del(pTHX_ filter_t funcp)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_FILTER_DEL	\
+	assert(funcp)
+
+PERL_CALLCONV I32	Perl_filter_read(pTHX_ int idx, SV *buf_sv, int maxlen)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT_FILTER_READ	\
+	assert(buf_sv)
+
+PERL_CALLCONV void	Perl_finalize_optree(pTHX_ OP* o)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_FINALIZE_OPTREE	\
+	assert(o)
+
+PERL_CALLCONV CV *	Perl_find_lexical_cv(pTHX_ PADOFFSET off);
+PERL_CALLCONV CV*	Perl_find_runcv(pTHX_ U32 *db_seqp)
+			__attribute__warn_unused_result__;
+
+PERL_CALLCONV CV*	Perl_find_runcv_where(pTHX_ U8 cond, IV arg, U32 *db_seqp)
+			__attribute__warn_unused_result__;
+
+PERL_CALLCONV SV*	Perl_find_rundefsv(pTHX);
+PERL_CALLCONV SV*	Perl_find_rundefsv2(pTHX_ CV *cv, U32 seq)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_FIND_RUNDEFSV2	\
+	assert(cv)
+
+PERL_CALLCONV PADOFFSET	Perl_find_rundefsvoffset(pTHX)
+			__attribute__deprecated__;
+
+PERL_CALLCONV char*	Perl_find_script(pTHX_ const char *scriptname, bool dosearch, const char *const *const search_ext, I32 flags)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_FIND_SCRIPT	\
+	assert(scriptname)
+
+PERL_CALLCONV I32	Perl_foldEQ(const char* a, const char* b, I32 len)
+			__attribute__pure__
+			__attribute__nonnull__(1)
+			__attribute__nonnull__(2);
+#define PERL_ARGS_ASSERT_FOLDEQ	\
+	assert(a); assert(b)
+
+PERL_CALLCONV I32	Perl_foldEQ_latin1(const char* a, const char* b, I32 len)
+			__attribute__pure__
+			__attribute__nonnull__(1)
+			__attribute__nonnull__(2);
+#define PERL_ARGS_ASSERT_FOLDEQ_LATIN1	\
+	assert(a); assert(b)
+
+PERL_CALLCONV I32	Perl_foldEQ_locale(const char* a, const char* b, I32 len)
+			__attribute__pure__
+			__attribute__nonnull__(1)
+			__attribute__nonnull__(2);
+#define PERL_ARGS_ASSERT_FOLDEQ_LOCALE	\
+	assert(a); assert(b)
+
+/* PERL_CALLCONV I32	foldEQ_utf8(pTHX_ const char *s1

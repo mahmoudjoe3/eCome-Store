@@ -1,0 +1,382 @@
+        ppadiplus = ppadplus(i);
+        ppadiminus = ppadminus(i);
+        vmin = di - vpadminus(i);
+        vmax = di + vpadplus(i);
+        // special case for log axes: if vpad makes this object span
+        // more than an order of mag, clip it to one order. This is so
+        // we don't have non-positive errors or absurdly large lower
+        // range due to rounding errors
+        if(isLog && vmin < vmax / 10) vmin = vmax / 10;
+
+        dmin = ax.c2l(vmin);
+        dmax = ax.c2l(vmax);
+
+        if(tozero) {
+            dmin = Math.min(0, dmin);
+            dmax = Math.max(0, dmax);
+        }
+        if(goodNumber(dmin)) {
+            collapseMinArray(minArray, dmin, ppadiminus, collapseOpts);
+        }
+        if(goodNumber(dmax)) {
+            collapseMaxArray(maxArray, dmax, ppadiplus, collapseOpts);
+        }
+    }
+
+    // For efficiency covering monotonic or near-monotonic data,
+    // check a few points at both ends first and then sweep
+    // through the middle
+    var iMax = Math.min(6, len);
+    for(i = 0; i < iMax; i++) addItem(i);
+    for(i = len - 1; i >= iMax; i--) addItem(i);
+
+    return {
+        min: minArray,
+        max: maxArray,
+        opts: opts
+    };
+}
+
+function collapseMinArray(array, newVal, newPad, opts) {
+    collapseArray(array, newVal, newPad, opts, lessOrEqual);
+}
+
+function collapseMaxArray(array, newVal, newPad, opts) {
+    collapseArray(array, newVal, newPad, opts, greaterOrEqual);
+}
+
+/**
+ * collapseArray
+ *
+ * Takes items from 'array' and compares them to 'newVal', 'newPad'.
+ *
+ * @param {array} array:
+ *  current set of min or max extremes
+ * @param {number} newVal:
+ *  new value to compare against
+ * @param {number} newPad:
+ *  pad value associated with 'newVal'
+ * @param {object} opts:
+ *  - tozero {boolean}
+ *  - extrapad {number}
+ * @param {function} atLeastAsExtreme:
+ *  comparison function, use
+ *  - lessOrEqual for min 'array' and
+ *  - greaterOrEqual for max 'array'
+ *
+ * In practice, 'array' is either
+ *  - 'extremes[ax._id].min' or
+ *  - 'extremes[ax._id].max
+ *  found in traces and layout items that affect autorange.
+ *
+ * Since we don't yet know the relationship between pixels and values
+ * (that's what we're trying to figure out!) AND we don't yet know how
+ * many pixels `extrapad` represents (it's going to be 5% of the length,
+ * but we don't want to have to redo calc just because length changed)
+ * two point must satisfy three criteria simultaneously for one to supersede the other:
+ *  - at least as extreme a `val`
+ *  - at least as big a `pad`
+ *  - an unpadded point cannot supersede a padded point, but any other combination can
+ *
+ * Then:
+ * - If the item supersedes the new point, set includeThis false
+ * - If the new pt supersedes the item, delete it from 'array'
+ */
+function collapseArray(array, newVal, newPad, opts, atLeastAsExtreme) {
+    var tozero = opts.tozero;
+    var extrapad = opts.extrapad;
+    var includeThis = true;
+
+    for(var j = 0; j < array.length && includeThis; j++) {
+        var v = array[j];
+        if(atLeastAsExtreme(v.val, newVal) && v.pad >= newPad && (v.extrapad || !extrapad)) {
+            includeThis = false;
+            break;
+        } else if(atLeastAsExtreme(newVal, v.val) && v.pad <= newPad && (extrapad || !v.extrapad)) {
+            array.splice(j, 1);
+            j--;
+        }
+    }
+    if(includeThis) {
+        var clipAtZero = (tozero && newVal === 0);
+        array.push({
+            val: newVal,
+            pad: clipAtZero ? 0 : newPad,
+            extrapad: clipAtZero ? false : extrapad
+        });
+    }
+}
+
+// In order to stop overflow errors, don't consider points
+// too close to the limits of js floating point
+function goodNumber(v) {
+    return isNumeric(v) && Math.abs(v) < FP_SAFE;
+}
+
+function lessOrEqual(v0, v1) { return v0 <= v1; }
+function greaterOrEqual(v0, v1) { return v0 >= v1; }
+
+},{"../../constants/numerical":671,"../../lib":694,"../../registry":825,"fast-isnumeric":215}],742:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+
+'use strict';
+
+var d3 = _dereq_('d3');
+var isNumeric = _dereq_('fast-isnumeric');
+var Plots = _dereq_('../../plots/plots');
+
+var Registry = _dereq_('../../registry');
+var Lib = _dereq_('../../lib');
+var svgTextUtils = _dereq_('../../lib/svg_text_utils');
+var Titles = _dereq_('../../components/titles');
+var Color = _dereq_('../../components/color');
+var Drawing = _dereq_('../../components/drawing');
+
+var axAttrs = _dereq_('./layout_attributes');
+var cleanTicks = _dereq_('./clean_ticks');
+
+var constants = _dereq_('../../constants/numerical');
+var ONEAVGYEAR = constants.ONEAVGYEAR;
+var ONEAVGMONTH = constants.ONEAVGMONTH;
+var ONEDAY = constants.ONEDAY;
+var ONEHOUR = constants.ONEHOUR;
+var ONEMIN = constants.ONEMIN;
+var ONESEC = constants.ONESEC;
+var MINUS_SIGN = constants.MINUS_SIGN;
+var BADNUM = constants.BADNUM;
+
+var MID_SHIFT = _dereq_('../../constants/alignment').MID_SHIFT;
+var LINE_SPACING = _dereq_('../../constants/alignment').LINE_SPACING;
+
+var axes = module.exports = {};
+
+axes.setConvert = _dereq_('./set_convert');
+var autoType = _dereq_('./axis_autotype');
+
+var axisIds = _dereq_('./axis_ids');
+axes.id2name = axisIds.id2name;
+axes.name2id = axisIds.name2id;
+axes.cleanId = axisIds.cleanId;
+axes.list = axisIds.list;
+axes.listIds = axisIds.listIds;
+axes.getFromId = axisIds.getFromId;
+axes.getFromTrace = axisIds.getFromTrace;
+
+var autorange = _dereq_('./autorange');
+axes.getAutoRange = autorange.getAutoRange;
+axes.findExtremes = autorange.findExtremes;
+
+/*
+ * find the list of possible axes to reference with an xref or yref attribute
+ * and coerce it to that list
+ *
+ * attr: the attribute we're generating a reference for. Should end in 'x' or 'y'
+ *     but can be prefixed, like 'ax' for annotation's arrow x
+ * dflt: the default to coerce to, or blank to use the first axis (falling back on
+ *     extraOption if there is no axis)
+ * extraOption: aside from existing axes with this letter, what non-axis value is allowed?
+ *     Only required if it's different from `dflt`
+ */
+axes.coerceRef = function(containerIn, containerOut, gd, attr, dflt, extraOption) {
+    var axLetter = attr.charAt(attr.length - 1);
+    var axlist = gd._fullLayout._subplots[axLetter + 'axis'];
+    var refAttr = attr + 'ref';
+    var attrDef = {};
+
+    if(!dflt) dflt = axlist[0] || extraOption;
+    if(!extraOption) extraOption = dflt;
+
+    // data-ref annotations are not supported in gl2d yet
+
+    attrDef[refAttr] = {
+        valType: 'enumerated',
+        values: axlist.concat(extraOption ? [extraOption] : []),
+        dflt: dflt
+    };
+
+    // xref, yref
+    return Lib.coerce(containerIn, containerOut, attrDef, refAttr);
+};
+
+/*
+ * coerce position attributes (range-type) that can be either on axes or absolute
+ * (paper or pixel) referenced. The biggest complication here is that we don't know
+ * before looking at the axis whether the value must be a number or not (it may be
+ * a date string), so we can't use the regular valType='number' machinery
+ *
+ * axRef (string): the axis this position is referenced to, or:
+ *     paper: fraction of the plot area
+ *     pixel: pixels relative to some starting position
+ * attr (string): the attribute in containerOut we are coercing
+ * dflt (number): the default position, as a fraction or pixels. If the attribute
+ *     is to be axis-referenced, this will be converted to an axis data value
+ *
+ * Also cleans the values, since the attribute definition itself has to say
+ * valType: 'any' to handle date axes. This allows us to accept:
+ * - for category axes: category names, and convert them here into serial numbers.
+ *   Note that this will NOT work for axis range endpoints, because we don't know
+ *   the category list yet (it's set by ax.makeCalcdata during calc)
+ *   but it works for component (note, shape, images) positions.
+ * - for date axes: JS Dates or milliseconds, and convert to date strings
+ * - for other types: coerce them to numbers
+ */
+axes.coercePosition = function(containerOut, gd, coerce, axRef, attr, dflt) {
+    var cleanPos, pos;
+
+    if(axRef === 'paper' || axRef === 'pixel') {
+        cleanPos = Lib.ensureNumber;
+        pos = coerce(attr, dflt);
+    } else {
+        var ax = axes.getFromId(gd, axRef);
+        dflt = ax.fraction2r(dflt);
+        pos = coerce(attr, dflt);
+        cleanPos = ax.cleanPos;
+    }
+
+    containerOut[attr] = cleanPos(pos);
+};
+
+axes.cleanPosition = function(pos, gd, axRef) {
+    var cleanPos = (axRef === 'paper' || axRef === 'pixel') ?
+        Lib.ensureNumber :
+        axes.getFromId(gd, axRef).cleanPos;
+
+    return cleanPos(pos);
+};
+
+axes.redrawComponents = function(gd, axIds) {
+    axIds = axIds ? axIds : axes.listIds(gd);
+
+    var fullLayout = gd._fullLayout;
+
+    function _redrawOneComp(moduleName, methodName, stashName, shortCircuit) {
+        var method = Registry.getComponentMethod(moduleName, methodName);
+        var stash = {};
+
+        for(var i = 0; i < axIds.length; i++) {
+            var ax = fullLayout[axes.id2name(axIds[i])];
+            var indices = ax[stashName];
+
+            for(var j = 0; j < indices.length; j++) {
+                var ind = indices[j];
+
+                if(!stash[ind]) {
+                    method(gd, ind);
+                    stash[ind] = 1;
+                    // once is enough for images (which doesn't use the `i` arg anyway)
+                    if(shortCircuit) return;
+                }
+            }
+        }
+    }
+
+    // annotations and shapes 'draw' method is slow,
+    // use the finer-grained 'drawOne' method instead
+    _redrawOneComp('annotations', 'drawOne', '_annIndices');
+    _redrawOneComp('shapes', 'drawOne', '_shapeIndices');
+    _redrawOneComp('images', 'draw', '_imgIndices', true);
+};
+
+var getDataConversions = axes.getDataConversions = function(gd, trace, target, targetArray) {
+    var ax;
+
+    // If target points to an axis, use the type we already have for that
+    // axis to find the data type. Otherwise use the values to autotype.
+    var d2cTarget = (target === 'x' || target === 'y' || target === 'z') ?
+        target :
+        targetArray;
+
+    // In the case of an array target, make a mock data array
+    // and call supplyDefaults to the data type and
+    // setup the data-to-calc method.
+    if(Array.isArray(d2cTarget)) {
+        ax = {
+            type: autoType(targetArray),
+            _categories: []
+        };
+        axes.setConvert(ax);
+
+        // build up ax._categories (usually done during ax.makeCalcdata()
+        if(ax.type === 'category') {
+            for(var i = 0; i < targetArray.length; i++) {
+                ax.d2c(targetArray[i]);
+            }
+        }
+        // TODO what to do for transforms?
+    } else {
+        ax = axes.getFromTrace(gd, trace, d2cTarget);
+    }
+
+    // if 'target' has corresponding axis
+    // -> use setConvert method
+    if(ax) return {d2c: ax.d2c, c2d: ax.c2d};
+
+    // special case for 'ids'
+    // -> cast to String
+    if(d2cTarget === 'ids') return {d2c: toString, c2d: toString};
+
+    // otherwise (e.g. numeric-array of 'marker.color' or 'marker.size')
+    // -> cast to Number
+
+    return {d2c: toNum, c2d: toNum};
+};
+
+function toNum(v) { return +v; }
+function toString(v) { return String(v); }
+
+axes.getDataToCoordFunc = function(gd, trace, target, targetArray) {
+    return getDataConversions(gd, trace, target, targetArray).d2c;
+};
+
+// get counteraxis letter for this axis (name or id)
+// this can also be used as the id for default counter axis
+axes.counterLetter = function(id) {
+    var axLetter = id.charAt(0);
+    if(axLetter === 'x') return 'y';
+    if(axLetter === 'y') return 'x';
+};
+
+// incorporate a new minimum difference and first tick into
+// forced
+// note that _forceTick0 is linearized, so needs to be turned into
+// a range value for setting tick0
+axes.minDtick = function(ax, newDiff, newFirst, allow) {
+    // doesn't make sense to do forced min dTick on log or category axes,
+    // and the plot itself may decide to cancel (ie non-grouped bars)
+    if(['log', 'category', 'multicategory'].indexOf(ax.type) !== -1 || !allow) {
+        ax._minDtick = 0;
+    }
+    // undefined means there's nothing there yet
+    else if(ax._minDtick === undefined) {
+        ax._minDtick = newDiff;
+        ax._forceTick0 = newFirst;
+    }
+    else if(ax._minDtick) {
+        // existing minDtick is an integer multiple of newDiff
+        // (within rounding err)
+        // and forceTick0 can be shifted to newFirst
+        if((ax._minDtick / newDiff + 1e-6) % 1 < 2e-6 &&
+                (((newFirst - ax._forceTick0) / newDiff % 1) +
+                    1.000001) % 1 < 2e-6) {
+            ax._minDtick = newDiff;
+            ax._forceTick0 = newFirst;
+        }
+        // if the converse is true (newDiff is a multiple of minDtick and
+        // newFirst can be shifted to forceTick0) then do nothing - same
+        // forcing stands. Otherwise, cancel forced minimum
+        else if((newDiff / ax._minDtick + 1e-6) % 1 > 2e-6 ||
+                (((newFirst - ax._forceTick0) / ax._minDtick % 1) +
+                    1.000001) % 1 > 2e-6) {
+            ax._minDtick = 0;
+        }
+    }
+};
+
+// save a copy of the initial a

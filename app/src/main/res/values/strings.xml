@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">eCom Store</string>
+    <string name="find_discover_choose_and_buy_anything_online">Find, Discover, Choose and Buy anything online.</string>
+    <string name="join_now">Join Now</string>
+    <string name="already_have_account_login">Already have account? Login</string>
+    <string name="login">Login</string>
+    <string name="i_m_an_admin">I’m an Admin</string>
+    <string name="i_m_not_an_admin">I’m not an Admin</string>
+    <string name="forget_password">Forget Password?</string>
+    <string name="remember_me">Remember me</string>
+    <string name="password">Password</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="name">Name</string>
+    <string name="create_account">Create Account</string>
+    <string name="please_wait_while_credentials_checked">Please wait , while credentials Checked..</string>
+    <string name="Login_Admin">Login Admin</string>
+
+</resources>

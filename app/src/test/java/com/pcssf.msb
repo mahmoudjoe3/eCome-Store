@@ -1,0 +1,419 @@
+X_ SV* sv, VOL I32 flags)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CALL_SV	\
+	assert(sv)
+
+PERL_CALLCONV const PERL_CONTEXT *	Perl_caller_cx(pTHX_ I32 level, const PERL_CONTEXT **dbcxp);
+PERL_CALLCONV Malloc_t	Perl_calloc(MEM_SIZE elements, MEM_SIZE size)
+			__attribute__malloc__
+			__attribute__warn_unused_result__;
+
+PERL_CALLCONV bool	Perl_cando(pTHX_ Mode_t mode, bool effective, const Stat_t* statbufp)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_3);
+#define PERL_ARGS_ASSERT_CANDO	\
+	assert(statbufp)
+
+PERL_CALLCONV I32	Perl_cast_i32(NV f)
+			__attribute__warn_unused_result__;
+
+PERL_CALLCONV IV	Perl_cast_iv(NV f)
+			__attribute__warn_unused_result__;
+
+PERL_CALLCONV U32	Perl_cast_ulong(NV f)
+			__attribute__warn_unused_result__;
+
+PERL_CALLCONV UV	Perl_cast_uv(NV f)
+			__attribute__warn_unused_result__;
+
+PERL_CALLCONV bool	Perl_check_utf8_print(pTHX_ const U8 *s, const STRLEN len)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CHECK_UTF8_PRINT	\
+	assert(s)
+
+PERL_CALLCONV OP *	Perl_ck_anoncode(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_ANONCODE	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_backtick(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_BACKTICK	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_bitop(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_BITOP	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_cmp(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_CMP	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_concat(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_CONCAT	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_defined(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_DEFINED	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_delete(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_DELETE	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_each(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_EACH	\
+	assert(o)
+
+PERL_CALLCONV OP*	Perl_ck_entersub_args_core(pTHX_ OP *entersubop, GV *namegv, SV *protosv)
+			__attribute__nonnull__(pTHX_1)
+			__attribute__nonnull__(pTHX_2)
+			__attribute__nonnull__(pTHX_3);
+#define PERL_ARGS_ASSERT_CK_ENTERSUB_ARGS_CORE	\
+	assert(entersubop); assert(namegv); assert(protosv)
+
+PERL_CALLCONV OP*	Perl_ck_entersub_args_list(pTHX_ OP *entersubop)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_ENTERSUB_ARGS_LIST	\
+	assert(entersubop)
+
+PERL_CALLCONV OP*	Perl_ck_entersub_args_proto(pTHX_ OP *entersubop, GV *namegv, SV *protosv)
+			__attribute__nonnull__(pTHX_1)
+			__attribute__nonnull__(pTHX_2)
+			__attribute__nonnull__(pTHX_3);
+#define PERL_ARGS_ASSERT_CK_ENTERSUB_ARGS_PROTO	\
+	assert(entersubop); assert(namegv); assert(protosv)
+
+PERL_CALLCONV OP*	Perl_ck_entersub_args_proto_or_list(pTHX_ OP *entersubop, GV *namegv, SV *protosv)
+			__attribute__nonnull__(pTHX_1)
+			__attribute__nonnull__(pTHX_2)
+			__attribute__nonnull__(pTHX_3);
+#define PERL_ARGS_ASSERT_CK_ENTERSUB_ARGS_PROTO_OR_LIST	\
+	assert(entersubop); assert(namegv); assert(protosv)
+
+PERL_CALLCONV OP *	Perl_ck_eof(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_EOF	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_eval(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_EVAL	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_exec(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_EXEC	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_exists(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_EXISTS	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_ftst(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_FTST	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_fun(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_FUN	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_glob(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_GLOB	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_grep(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_GREP	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_index(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_INDEX	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_join(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_JOIN	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_length(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_LENGTH	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_lfun(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_LFUN	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_listiob(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_LISTIOB	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_match(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_MATCH	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_method(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_METHOD	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_null(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_NULL	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_open(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_OPEN	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_prototype(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_PROTOTYPE	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_readline(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_READLINE	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_refassign(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_REFASSIGN	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_repeat(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_REPEAT	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_require(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_REQUIRE	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_return(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_RETURN	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_rfun(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_RFUN	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_rvconst(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_RVCONST	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_sassign(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_SASSIGN	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_select(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_SELECT	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_shift(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_SHIFT	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_smartmatch(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_SMARTMATCH	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_sort(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_SORT	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_spair(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_SPAIR	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_split(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_SPLIT	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_stringify(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_STRINGIFY	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_subr(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_SUBR	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_substr(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_SUBSTR	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_svconst(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_SVCONST	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_tell(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_TELL	\
+	assert(o)
+
+PERL_CALLCONV OP *	Perl_ck_trunc(pTHX_ OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CK_TRUNC	\
+	assert(o)
+
+PERL_CALLCONV void	Perl_ck_warner(pTHX_ U32 err, const char* pat, ...)
+			__attribute__format__(__printf__,pTHX_2,pTHX_3)
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT_CK_WARNER	\
+	assert(pat)
+
+PERL_CALLCONV void	Perl_ck_warner_d(pTHX_ U32 err, const char* pat, ...)
+			__attribute__format__(__printf__,pTHX_2,pTHX_3)
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT_CK_WARNER_D	\
+	assert(pat)
+
+PERL_CALLCONV bool	Perl_ckwarn(pTHX_ U32 w);
+PERL_CALLCONV bool	Perl_ckwarn_d(pTHX_ U32 w);
+PERL_CALLCONV const COP*	Perl_closest_cop(pTHX_ const COP *cop, const OP *o, const OP *curop, bool opnext)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CLOSEST_COP	\
+	assert(cop)
+
+PERL_CALLCONV const char *	Perl_cop_fetch_label(pTHX_ COP *const cop, STRLEN *len, U32 *flags)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_COP_FETCH_LABEL	\
+	assert(cop)
+
+PERL_CALLCONV void	Perl_cop_store_label(pTHX_ COP *const cop, const char *label, STRLEN len, U32 flags)
+			__attribute__nonnull__(pTHX_1)
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT_COP_STORE_LABEL	\
+	assert(cop); assert(label)
+
+PERL_CALLCONV SV *	Perl_core_prototype(pTHX_ SV *sv, const char *name, const int code, int * const opnum)
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT_CORE_PROTOTYPE	\
+	assert(name)
+
+PERL_CALLCONV OP *	Perl_coresub_op(pTHX_ SV *const coreargssv, const int code, const int opnum)
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CORESUB_OP	\
+	assert(coreargssv)
+
+PERL_CALLCONV PERL_CONTEXT*	Perl_create_eval_scope(pTHX_ U32 flags);
+PERL_CALLCONV_NO_RET void	Perl_croak(pTHX_ const char* pat, ...)
+			__attribute__noreturn__
+			__attribute__format__null_ok__(__printf__,pTHX_1,pTHX_2);
+
+PERL_STATIC_NO_RET void	S_croak_memory_wrap(void)
+			__attribute__noreturn__;
+
+PERL_CALLCONV_NO_RET void	Perl_croak_no_mem(void)
+			__attribute__noreturn__;
+
+PERL_CALLCONV_NO_RET void	Perl_croak_no_modify(void)
+			__attribute__noreturn__;
+
+PERL_CALLCONV_NO_RET void	Perl_croak_popstack(void)
+			__attribute__noreturn__;
+
+PERL_CALLCONV_NO_RET void	Perl_croak_sv(pTHX_ SV *baseex)
+			__attribute__noreturn__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CROAK_SV	\
+	assert(baseex)
+
+PERL_CALLCONV_NO_RET void	Perl_croak_xs_usage(const CV *const cv, const char *const params)
+			__attribute__noreturn__
+			__attribute__nonnull__(1)
+			__attribute__nonnull__(2);
+#define PERL_ARGS_ASSERT_CROAK_XS_USAGE	\
+	assert(cv); assert(params)
+
+PERL_CALLCONV regexp_engine const *	Perl_current_re_engine(pTHX);
+PERL_CALLCONV const char *	Perl_custom_op_desc(pTHX_ const OP *o)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CUSTOM_OP_DESC	\
+	assert(o)
+
+PERL_CALLCONV XOPRETANY	Perl_custom_op_get_field(pTHX_ const OP *o, const xop_flags_enum field)
+			__attribute__warn_unused_result__
+			__attribute__nonnull__(pTHX_1);
+#define PERL_ARGS_ASSERT_CUSTOM_OP_GET_FIELD	\
+	assert(o)
+
+PERL_CALLCONV const 

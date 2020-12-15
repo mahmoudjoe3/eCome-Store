@@ -1,0 +1,366 @@
+ > xEdge1) ? xEdge1 : 0;
+        yEdge = (pt[1] < yEdge0) ? yEdge0 : (pt[1] > yEdge1) ? yEdge1 : 0;
+        if(xEdge || yEdge) {
+            // to get fills right - if first point is far, push it toward the
+            // screen in whichever direction(s) are far
+            if(!pti) {
+                pts[pti++] = [xEdge || pt[0], yEdge || pt[1]];
+            }
+            else if(lastFarPt) {
+                // both this point and the last are outside the nearby region
+                // check if we're crossing the nearby region
+                var intersections = getEdgeIntersections(lastFarPt, pt);
+                if(intersections.length > 1) {
+                    updateEdgesForReentry(intersections[0]);
+                    pts[pti++] = intersections[1];
+                }
+            }
+            // we're leaving the nearby region - add the point where we left it
+            else {
+                edgePt = getEdgeIntersections(pts[pti - 1], pt)[0];
+                pts[pti++] = edgePt;
+            }
+
+            var lastPt = pts[pti - 1];
+            if(xEdge && yEdge && (lastPt[0] !== xEdge || lastPt[1] !== yEdge)) {
+                // we've gone out beyond a new corner: add the corner too
+                // so that the next point will take the right winding
+                if(lastFarPt) {
+                    if(lastXEdge !== xEdge && lastYEdge !== yEdge) {
+                        if(lastXEdge && lastYEdge) {
+                            // we've gone around to an opposite corner - we
+                            // need to add the correct extra corner
+                            // in order to get the right winding
+                            updateEdge(getClosestCorner(lastFarPt, pt));
+                        }
+                        else {
+                            // we're coming from a far edge - the extra corner
+                            // we need is determined uniquely by the sectors
+                            updateEdge([lastXEdge || xEdge, lastYEdge || yEdge]);
+                        }
+                    }
+                    else if(lastXEdge && lastYEdge) {
+                        updateEdge([lastXEdge, lastYEdge]);
+                    }
+                }
+                updateEdge([xEdge, yEdge]);
+            }
+            else if((lastXEdge - xEdge) && (lastYEdge - yEdge)) {
+                // we're coming from an edge or far corner to an edge - again the
+                // extra corner we need is uniquely determined by the sectors
+                updateEdge([xEdge || lastXEdge, yEdge || lastYEdge]);
+            }
+            lastFarPt = pt;
+            lastXEdge = xEdge;
+            lastYEdge = yEdge;
+        }
+        else {
+            if(lastFarPt) {
+                // this point is in range but the previous wasn't: add its entry pt first
+                updateEdgesForReentry(getEdgeIntersections(lastFarPt, pt)[0]);
+            }
+
+            pts[pti++] = pt;
+        }
+    }
+
+    // loop over ALL points in this trace
+    for(i = 0; i < d.length; i++) {
+        clusterStartPt = getPt(i);
+        if(!clusterStartPt) continue;
+
+        pti = 0;
+        lastFarPt = null;
+        addPt(clusterStartPt);
+
+        // loop over one segment of the trace
+        for(i++; i < d.length; i++) {
+            clusterHighPt = getPt(i);
+            if(!clusterHighPt) {
+                if(connectGaps) continue;
+                else break;
+            }
+
+            // can't decimate if nonlinear line shape
+            // TODO: we *could* decimate [hv]{2,3} shapes if we restricted clusters to horz or vert again
+            // but spline would be verrry awkward to decimate
+            if(!linear || !opts.simplify) {
+                addPt(clusterHighPt);
+                continue;
+            }
+
+            var nextPt = getPt(i + 1);
+
+            clusterRefDist = ptDist(clusterHighPt, clusterStartPt);
+
+            if(clusterRefDist < getTolerance(clusterHighPt, nextPt) * minTolerance) continue;
+
+            clusterUnitVector = [
+                (clusterHighPt[0] - clusterStartPt[0]) / clusterRefDist,
+                (clusterHighPt[1] - clusterStartPt[1]) / clusterRefDist
+            ];
+
+            clusterLowPt = clusterStartPt;
+            clusterHighVal = clusterRefDist;
+            clusterLowVal = clusterMinDeviation = clusterMaxDeviation = 0;
+            clusterHighFirst = false;
+            clusterEndPt = clusterHighPt;
+
+            // loop over one cluster of points that collapse onto one line
+            for(i++; i < d.length; i++) {
+                thisPt = nextPt;
+                nextPt = getPt(i + 1);
+                if(!thisPt) {
+                    if(connectGaps) continue;
+                    else break;
+                }
+                thisVector = [
+                    thisPt[0] - clusterStartPt[0],
+                    thisPt[1] - clusterStartPt[1]
+                ];
+                // cross product (or dot with normal to the cluster vector)
+                thisDeviation = thisVector[0] * clusterUnitVector[1] - thisVector[1] * clusterUnitVector[0];
+                clusterMinDeviation = Math.min(clusterMinDeviation, thisDeviation);
+                clusterMaxDeviation = Math.max(clusterMaxDeviation, thisDeviation);
+
+                if(clusterMaxDeviation - clusterMinDeviation > getTolerance(thisPt, nextPt)) break;
+
+                clusterEndPt = thisPt;
+                thisVal = thisVector[0] * clusterUnitVector[0] + thisVector[1] * clusterUnitVector[1];
+
+                if(thisVal > clusterHighVal) {
+                    clusterHighVal = thisVal;
+                    clusterHighPt = thisPt;
+                    clusterHighFirst = false;
+                } else if(thisVal < clusterLowVal) {
+                    clusterLowVal = thisVal;
+                    clusterLowPt = thisPt;
+                    clusterHighFirst = true;
+                }
+            }
+
+            // insert this cluster into pts
+            // we've already inserted the start pt, now check if we have high and low pts
+            if(clusterHighFirst) {
+                addPt(clusterHighPt);
+                if(clusterEndPt !== clusterLowPt) addPt(clusterLowPt);
+            } else {
+                if(clusterLowPt !== clusterStartPt) addPt(clusterLowPt);
+                if(clusterEndPt !== clusterHighPt) addPt(clusterHighPt);
+            }
+            // and finally insert the end pt
+            addPt(clusterEndPt);
+
+            // have we reached the end of this segment?
+            if(i >= d.length || !thisPt) break;
+
+            // otherwise we have an out-of-cluster point to insert as next clusterStartPt
+            addPt(thisPt);
+            clusterStartPt = thisPt;
+        }
+
+        // to get fills right - repeat what we did at the start
+        if(lastFarPt) updateEdge([lastXEdge || lastFarPt[0], lastYEdge || lastFarPt[1]]);
+
+        segments.push(pts.slice(0, pti));
+    }
+
+    return segments;
+};
+
+},{"../../constants/numerical":671,"../../lib":694,"./constants":1051}],1062:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+
+'use strict';
+
+
+// common to 'scatter' and 'scatterternary'
+module.exports = function handleLineShapeDefaults(traceIn, traceOut, coerce) {
+    var shape = coerce('line.shape');
+    if(shape === 'spline') coerce('line.smoothing');
+};
+
+},{}],1063:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+'use strict';
+
+var LINKEDFILLS = {tonextx: 1, tonexty: 1, tonext: 1};
+
+module.exports = function linkTraces(gd, plotinfo, cdscatter) {
+    var trace, i, group, prevtrace, groupIndex;
+
+    // first sort traces to keep stacks & filled-together groups together
+    var groupIndices = {};
+    var needsSort = false;
+    var prevGroupIndex = -1;
+    var nextGroupIndex = 0;
+    var prevUnstackedGroupIndex = -1;
+    for(i = 0; i < cdscatter.length; i++) {
+        trace = cdscatter[i][0].trace;
+        group = trace.stackgroup || '';
+        if(group) {
+            if(group in groupIndices) {
+                groupIndex = groupIndices[group];
+            }
+            else {
+                groupIndex = groupIndices[group] = nextGroupIndex;
+                nextGroupIndex++;
+            }
+        }
+        else if(trace.fill in LINKEDFILLS && prevUnstackedGroupIndex >= 0) {
+            groupIndex = prevUnstackedGroupIndex;
+        }
+        else {
+            groupIndex = prevUnstackedGroupIndex = nextGroupIndex;
+            nextGroupIndex++;
+        }
+
+        if(groupIndex < prevGroupIndex) needsSort = true;
+        trace._groupIndex = prevGroupIndex = groupIndex;
+    }
+
+    var cdscatterSorted = cdscatter.slice();
+    if(needsSort) {
+        cdscatterSorted.sort(function(a, b) {
+            var traceA = a[0].trace;
+            var traceB = b[0].trace;
+            return (traceA._groupIndex - traceB._groupIndex) ||
+                (traceA.index - traceB.index);
+        });
+    }
+
+    // now link traces to each other
+    var prevtraces = {};
+    for(i = 0; i < cdscatterSorted.length; i++) {
+        trace = cdscatterSorted[i][0].trace;
+        group = trace.stackgroup || '';
+
+        // Note: The check which ensures all cdscatter here are for the same axis and
+        // are either cartesian or scatterternary has been removed. This code assumes
+        // the passed scattertraces have been filtered to the proper plot types and
+        // the proper subplots.
+        if(trace.visible === true) {
+            trace._nexttrace = null;
+
+            if(trace.fill in LINKEDFILLS) {
+                prevtrace = prevtraces[group];
+                trace._prevtrace = prevtrace || null;
+
+                if(prevtrace) {
+                    prevtrace._nexttrace = trace;
+                }
+            }
+
+            trace._ownfill = (trace.fill && (
+                trace.fill.substr(0, 6) === 'tozero' ||
+                trace.fill === 'toself' ||
+                (trace.fill.substr(0, 2) === 'to' && !trace._prevtrace)
+            ));
+
+            prevtraces[group] = trace;
+        } else {
+            trace._prevtrace = trace._nexttrace = trace._ownfill = null;
+        }
+    }
+
+    return cdscatterSorted;
+};
+
+},{}],1064:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+
+'use strict';
+
+var isNumeric = _dereq_('fast-isnumeric');
+
+
+// used in the drawing step for 'scatter' and 'scattegeo' and
+// in the convert step for 'scatter3d'
+module.exports = function makeBubbleSizeFn(trace) {
+    var marker = trace.marker;
+    var sizeRef = marker.sizeref || 1;
+    var sizeMin = marker.sizemin || 0;
+
+    // for bubble charts, allow scaling the provided value linearly
+    // and by area or diameter.
+    // Note this only applies to the array-value sizes
+
+    var baseFn = (marker.sizemode === 'area') ?
+        function(v) { return Math.sqrt(v / sizeRef); } :
+        function(v) { return v / sizeRef; };
+
+    // TODO add support for position/negative bubbles?
+    // TODO add 'sizeoffset' attribute?
+    return function(v) {
+        var baseSize = baseFn(v / 2);
+
+        // don't show non-numeric and negative sizes
+        return (isNumeric(baseSize) && (baseSize > 0)) ?
+            Math.max(baseSize, sizeMin) :
+            0;
+    };
+};
+
+},{"fast-isnumeric":215}],1065:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+
+'use strict';
+
+module.exports = {
+    container: 'marker',
+    min: 'cmin',
+    max: 'cmax'
+};
+
+},{}],1066:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+'use strict';
+
+var Color = _dereq_('../../components/color');
+var hasColorscale = _dereq_('../../components/colorscale/helpers').hasColorscale;
+var colorscaleDefaults = _dereq_('../../components/colorscale/defaults');
+
+var subTypes = _dereq_('./subtypes');
+
+/*
+ * opts: object of flags to control features not all marker users support
+ *   noLine: caller does not support marker lines
+ *   gradient: caller supports gradients
+ *   noSelect: caller does not support selected/unselected attribute containers
+ */
+module.exports = function markerDefaults(traceIn, traceOut, defaul

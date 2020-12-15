@@ -1,0 +1,21 @@
+n="left">unused</td></tr><tr><td align="left">4</td><td align="left">0</td><td align="left">length of remaining data in 8-byte units</td></tr></tbody></table><table border="0"><colgroup><col align="left" class="c1" /><col align="left" class="c2" /><col align="left" class="c3" /></colgroup><thead><tr><th colspan="3" align="left"><span class="bold"><strong><code class="function">SaveComplete</code></strong></span></th></tr></thead><tbody><tr><td align="left">1</td><td align="left">?</td><td align="left">XSMP</td></tr><tr><td align="left">1</td><td align="left">18</td><td align="left">opcode</td></tr><tr><td align="left">2</td><td align="left"> </td><td align="left">unused</td></tr><tr><td align="left">4</td><td align="left">0</td><td align="left">length of remaining data in 8-byte units</td></tr></tbody></table></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="Predefined_Properties"></a>Chapter 11. Predefined Properties</h1></div></div></div><p>
+All property values are stored in a LISTofARRAY8.  If the type of the
+property is CARD8, the value is stored as a LISTofARRAY8 with one
+ARRAY8 that is one byte long.  That single byte contains the CARD8.
+If the type of the property is ARRAY8, the value is stored in the
+first element of a single element LISTofARRAY8.
+  </p><p>
+The required properties must be set each time a client connects with
+the SM.  The properties must be set after the client
+sends <code class="function">RegisterClient</code> and before the client
+sends <code class="function">SaveYourselfDone</code> Otherwise, the behavior of
+the session manager is not defined.
+  </p><p>
+Clients may set, get, and delete nonstandard properties.  The lifetime
+of stored properties does not extend into subsequent sessions.
+  </p><div class="informaltable"><table border="1"><colgroup><col align="left" class="c1" /><col align="left" class="c2" /><col align="left" class="c3" /><col align="left" class="c4" /></colgroup><thead><tr><th align="left">Name</th><th align="left">Type</th><th align="left">Posix Type</th><th align="left">Required?</th></tr></thead><tbody><tr><td align="left">CloneCommand</td><td align="left">OS-specific</td><td align="left">LISTofARRAY8</td><td align="left">Yes</td></tr><tr><td align="left">CurrentDirectory</td><td align="left">OS-specific</td><td align="left">ARRAY8</td><td align="left">No</td></tr><tr><td align="left">DiscardCommand</td><td align="left">OS-specific</td><td align="left">LISTofARRAY8</td><td align="left">No*</td></tr><tr><td align="left">Environment</td><td align="left">OS-specific</td><td align="left">LISTofARRAY8</td><td align="left">No</td></tr><tr><td align="left">ProcessID</td><td align="left">OS-specific</td><td align="left">ARRAY8</td><td align="left">No</td></tr><tr><td align="left">Program</td><td align="left">OS-specific</td><td align="left">ARRAY8</td><td align="left">Yes</td></tr><tr><td align="left">RestartCommand</td><td align="left">OS-specific</td><td align="left">LISTofARRAY8</td><td align="left">Yes</td></tr><tr><td align="left">ResignCommand</td><td align="left">OS-specific</td><td align="left">LISTofARRAY8</td><td align="left">No</td></tr><tr><td align="left">RestartStyleHint</td><td align="left">CARD8</td><td align="left">CARD8</td><td align="left">No</td></tr><tr><td align="left">ShutdownCommand</td><td align="left">OS-specific</td><td align="left">LISTofARRAY8</td><td align="left">No</td></tr><tr><td align="left">UserID</td><td align="left">ARRAY8</td><td align="left">ARRAY8</td><td align="left">Yes</td></tr></tbody></table></div><p>
+* Required if any state is stored in an external repository (e.g., state file).
+  </p><div class="variablelist"><table border="0" class="variablelist"><colgroup><col align="left" valign="top" /><col /></colgroup><tbody><tr><td><p><span class="term">CloneCommand</span></p></td><td><p>
+This is like the <code class="function">RestartCommand</code> except it
+restarts a copy of the application.  The only difference is that the
+application doesn't supply its client id at register time.  On <acronym c

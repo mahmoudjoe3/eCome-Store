@@ -1,0 +1,546 @@
+
+            height = element.clientHeight;
+            if(allEqual) return !sizeChanged;
+            distance = Math.exp(view.computedRadius[0]);
+            return true;
+        },
+        lookAt: function(center, eye, up) {
+            view.lookAt(view.lastT(), center, eye, up);
+        },
+        rotate: function(pitch, yaw, roll) {
+            view.rotate(view.lastT(), pitch, yaw, roll);
+        },
+        pan: function(dx, dy, dz) {
+            view.pan(view.lastT(), dx, dy, dz);
+        },
+        translate: function(dx, dy, dz) {
+            view.translate(view.lastT(), dx, dy, dz);
+        }
+    };
+
+    Object.defineProperties(camera, {
+        matrix: {
+            get: function() {
+                return view.computedMatrix;
+            },
+            set: function(mat) {
+                view.setMatrix(view.lastT(), mat);
+                return view.computedMatrix;
+            },
+            enumerable: true
+        },
+        mode: {
+            get: function() {
+                return view.getMode();
+            },
+            set: function(mode) {
+                var curUp = view.computedUp.slice();
+                var curEye = view.computedEye.slice();
+                var curCenter = view.computedCenter.slice();
+                view.setMode(mode);
+                if(mode === 'turntable') {
+                    // Hacky time warping stuff to generate smooth animation
+                    var t0 = now();
+                    view._active.lookAt(t0, curEye, curCenter, curUp);
+                    view._active.lookAt(t0 + 500, curEye, curCenter, [0, 0, 1]);
+                    view._active.flush(t0);
+                }
+                return view.getMode();
+            },
+            enumerable: true
+        },
+        center: {
+            get: function() {
+                return view.computedCenter;
+            },
+            set: function(ncenter) {
+                view.lookAt(view.lastT(), null, ncenter);
+                return view.computedCenter;
+            },
+            enumerable: true
+        },
+        eye: {
+            get: function() {
+                return view.computedEye;
+            },
+            set: function(neye) {
+                view.lookAt(view.lastT(), neye);
+                return view.computedEye;
+            },
+            enumerable: true
+        },
+        up: {
+            get: function() {
+                return view.computedUp;
+            },
+            set: function(nup) {
+                view.lookAt(view.lastT(), null, null, nup);
+                return view.computedUp;
+            },
+            enumerable: true
+        },
+        distance: {
+            get: function() {
+                return distance;
+            },
+            set: function(d) {
+                view.setDistance(view.lastT(), d);
+                return d;
+            },
+            enumerable: true
+        },
+        distanceLimits: {
+            get: function() {
+                return view.getDistanceLimits(limits);
+            },
+            set: function(v) {
+                view.setDistanceLimits(v);
+                return v;
+            },
+            enumerable: true
+        }
+    });
+
+    element.addEventListener('contextmenu', function(ev) {
+        ev.preventDefault();
+        return false;
+    });
+
+    var lastX = 0;
+    var lastY = 0;
+    var lastMods = {shift: false, control: false, alt: false, meta: false};
+    camera.mouseListener = mouseChange(element, handleInteraction);
+
+    // enable simple touch interactions
+    element.addEventListener('touchstart', function(ev) {
+        var xy = mouseOffset(ev.changedTouches[0], element);
+        handleInteraction(0, xy[0], xy[1], lastMods);
+        handleInteraction(1, xy[0], xy[1], lastMods);
+
+        ev.preventDefault();
+    }, supportsPassive ? {passive: false} : false);
+    element.addEventListener('touchmove', function(ev) {
+        var xy = mouseOffset(ev.changedTouches[0], element);
+        handleInteraction(1, xy[0], xy[1], lastMods);
+
+        ev.preventDefault();
+    }, supportsPassive ? {passive: false} : false);
+    element.addEventListener('touchend', function(ev) {
+        handleInteraction(0, lastX, lastY, lastMods);
+
+        ev.preventDefault();
+    }, supportsPassive ? {passive: false} : false);
+
+    function handleInteraction(buttons, x, y, mods) {
+        var keyBindingMode = camera.keyBindingMode;
+
+        if(keyBindingMode === false) return;
+
+        var rotate = keyBindingMode === 'rotate';
+        var pan = keyBindingMode === 'pan';
+        var zoom = keyBindingMode === 'zoom';
+
+        var ctrl = !!mods.control;
+        var alt = !!mods.alt;
+        var shift = !!mods.shift;
+        var left = !!(buttons & 1);
+        var right = !!(buttons & 2);
+        var middle = !!(buttons & 4);
+
+        var scale = 1.0 / element.clientHeight;
+        var dx = scale * (x - lastX);
+        var dy = scale * (y - lastY);
+
+        var flipX = camera.flipX ? 1 : -1;
+        var flipY = camera.flipY ? 1 : -1;
+
+        var t = now();
+
+        var drot = Math.PI * camera.rotateSpeed;
+
+        if((rotate && left && !ctrl && !alt && !shift) || (left && !ctrl && !alt && shift)) {
+            // Rotate
+            view.rotate(t, flipX * drot * dx, -flipY * drot * dy, 0);
+        }
+
+        if((pan && left && !ctrl && !alt && !shift) || right || (left && ctrl && !alt && !shift)) {
+            // Pan
+            view.pan(t, -camera.translateSpeed * dx * distance, camera.translateSpeed * dy * distance, 0);
+        }
+
+        if((zoom && left && !ctrl && !alt && !shift) || middle || (left && !ctrl && alt && !shift)) {
+            // Zoom
+            var kzoom = -camera.zoomSpeed * dy / window.innerHeight * (t - view.lastT()) * 100;
+            view.pan(t, 0, 0, distance * (Math.exp(kzoom) - 1));
+        }
+
+        lastX = x;
+        lastY = y;
+        lastMods = mods;
+
+        return true;
+    }
+
+    camera.wheelListener = mouseWheel(element, function(dx, dy) {
+        // TODO remove now that we can disable scroll via scrollZoom?
+        if(camera.keyBindingMode === false) return;
+        if(!camera.enableWheel) return;
+
+        var flipX = camera.flipX ? 1 : -1;
+        var flipY = camera.flipY ? 1 : -1;
+        var t = now();
+        if(Math.abs(dx) > Math.abs(dy)) {
+            view.rotate(t, 0, 0, -dx * flipX * Math.PI * camera.rotateSpeed / window.innerWidth);
+        } else {
+            var kzoom = -camera.zoomSpeed * flipY * dy / window.innerHeight * (t - view.lastT()) / 20.0;
+            view.pan(t, 0, 0, distance * (Math.exp(kzoom) - 1));
+        }
+    }, true);
+
+    return camera;
+}
+
+},{"3d-view":46,"has-passive-events":397,"mouse-change":421,"mouse-event-offset":422,"mouse-wheel":424,"right-now":482}],785:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+
+'use strict';
+
+var overrideAll = _dereq_('../../plot_api/edit_types').overrideAll;
+var fxAttrs = _dereq_('../../components/fx/layout_attributes');
+
+var Scene = _dereq_('./scene');
+var getSubplotData = _dereq_('../get_data').getSubplotData;
+var Lib = _dereq_('../../lib');
+var xmlnsNamespaces = _dereq_('../../constants/xmlns_namespaces');
+
+var GL3D = 'gl3d';
+var SCENE = 'scene';
+
+
+exports.name = GL3D;
+
+exports.attr = SCENE;
+
+exports.idRoot = SCENE;
+
+exports.idRegex = exports.attrRegex = Lib.counterRegex('scene');
+
+exports.attributes = _dereq_('./layout/attributes');
+
+exports.layoutAttributes = _dereq_('./layout/layout_attributes');
+
+exports.baseLayoutAttrOverrides = overrideAll({
+    hoverlabel: fxAttrs.hoverlabel
+}, 'plot', 'nested');
+
+exports.supplyLayoutDefaults = _dereq_('./layout/defaults');
+
+exports.plot = function plotGl3d(gd) {
+    var fullLayout = gd._fullLayout;
+    var fullData = gd._fullData;
+    var sceneIds = fullLayout._subplots[GL3D];
+
+    for(var i = 0; i < sceneIds.length; i++) {
+        var sceneId = sceneIds[i];
+        var fullSceneData = getSubplotData(fullData, GL3D, sceneId);
+        var sceneLayout = fullLayout[sceneId];
+        var scene = sceneLayout._scene;
+
+        if(!scene) {
+            scene = new Scene({
+                id: sceneId,
+                graphDiv: gd,
+                container: gd.querySelector('.gl-container'),
+                staticPlot: gd._context.staticPlot,
+                plotGlPixelRatio: gd._context.plotGlPixelRatio
+            },
+                fullLayout
+            );
+
+            // set ref to Scene instance
+            sceneLayout._scene = scene;
+        }
+
+        // save 'initial' camera settings for modebar button
+        if(!scene.cameraInitial) {
+            scene.cameraInitial = Lib.extendDeep({}, sceneLayout.camera);
+        }
+
+        scene.plot(fullSceneData, fullLayout, gd.layout);
+    }
+};
+
+exports.clean = function(newFullData, newFullLayout, oldFullData, oldFullLayout) {
+    var oldSceneKeys = oldFullLayout._subplots[GL3D] || [];
+
+    for(var i = 0; i < oldSceneKeys.length; i++) {
+        var oldSceneKey = oldSceneKeys[i];
+
+        if(!newFullLayout[oldSceneKey] && !!oldFullLayout[oldSceneKey]._scene) {
+            oldFullLayout[oldSceneKey]._scene.destroy();
+
+            if(oldFullLayout._infolayer) {
+                oldFullLayout._infolayer
+                    .selectAll('.annotation-' + oldSceneKey)
+                    .remove();
+            }
+        }
+    }
+};
+
+exports.toSVG = function(gd) {
+    var fullLayout = gd._fullLayout;
+    var sceneIds = fullLayout._subplots[GL3D];
+    var size = fullLayout._size;
+
+    for(var i = 0; i < sceneIds.length; i++) {
+        var sceneLayout = fullLayout[sceneIds[i]];
+        var domain = sceneLayout.domain;
+        var scene = sceneLayout._scene;
+
+        var imageData = scene.toImage('png');
+        var image = fullLayout._glimages.append('svg:image');
+
+        image.attr({
+            xmlns: xmlnsNamespaces.svg,
+            'xlink:href': imageData,
+            x: size.l + size.w * domain.x[0],
+            y: size.t + size.h * (1 - domain.y[1]),
+            width: size.w * (domain.x[1] - domain.x[0]),
+            height: size.h * (domain.y[1] - domain.y[0]),
+            preserveAspectRatio: 'none'
+        });
+
+        scene.destroy();
+    }
+};
+
+// clean scene ids, 'scene1' -> 'scene'
+exports.cleanId = function cleanId(id) {
+    if(!id.match(/^scene[0-9]*$/)) return;
+
+    var sceneNum = id.substr(5);
+    if(sceneNum === '1') sceneNum = '';
+
+    return SCENE + sceneNum;
+};
+
+exports.updateFx = function(gd) {
+    var fullLayout = gd._fullLayout;
+    var subplotIds = fullLayout._subplots[GL3D];
+
+    for(var i = 0; i < subplotIds.length; i++) {
+        var subplotObj = fullLayout[subplotIds[i]]._scene;
+        subplotObj.updateFx(fullLayout.dragmode, fullLayout.hovermode);
+    }
+};
+
+},{"../../components/fx/layout_attributes":611,"../../constants/xmlns_namespaces":672,"../../lib":694,"../../plot_api/edit_types":725,"../get_data":779,"./layout/attributes":786,"./layout/defaults":790,"./layout/layout_attributes":791,"./scene":795}],786:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+'use strict';
+
+
+module.exports = {
+    scene: {
+        valType: 'subplotid',
+        
+        dflt: 'scene',
+        editType: 'calc+clearAxisTypes',
+        
+    }
+};
+
+},{}],787:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+'use strict';
+
+var Color = _dereq_('../../../components/color');
+var axesAttrs = _dereq_('../../cartesian/layout_attributes');
+var extendFlat = _dereq_('../../../lib/extend').extendFlat;
+var overrideAll = _dereq_('../../../plot_api/edit_types').overrideAll;
+
+module.exports = overrideAll({
+    visible: axesAttrs.visible,
+    showspikes: {
+        valType: 'boolean',
+        
+        dflt: true,
+        
+    },
+    spikesides: {
+        valType: 'boolean',
+        
+        dflt: true,
+        
+    },
+    spikethickness: {
+        valType: 'number',
+        
+        min: 0,
+        dflt: 2,
+        
+    },
+    spikecolor: {
+        valType: 'color',
+        
+        dflt: Color.defaultLine,
+        
+    },
+    showbackground: {
+        valType: 'boolean',
+        
+        dflt: false,
+        
+    },
+    backgroundcolor: {
+        valType: 'color',
+        
+        dflt: 'rgba(204, 204, 204, 0.5)',
+        
+    },
+    showaxeslabels: {
+        valType: 'boolean',
+        
+        dflt: true,
+        
+    },
+    color: axesAttrs.color,
+    categoryorder: axesAttrs.categoryorder,
+    categoryarray: axesAttrs.categoryarray,
+    title: axesAttrs.title,
+    type: extendFlat({}, axesAttrs.type, {
+        values: ['-', 'linear', 'log', 'date', 'category']
+    }),
+    autorange: axesAttrs.autorange,
+    rangemode: axesAttrs.rangemode,
+    range: extendFlat({}, axesAttrs.range, {
+        items: [
+            {valType: 'any', editType: 'plot', impliedEdits: {'^autorange': false}},
+            {valType: 'any', editType: 'plot', impliedEdits: {'^autorange': false}}
+        ],
+        anim: false
+    }),
+    // ticks
+    tickmode: axesAttrs.tickmode,
+    nticks: axesAttrs.nticks,
+    tick0: axesAttrs.tick0,
+    dtick: axesAttrs.dtick,
+    tickvals: axesAttrs.tickvals,
+    ticktext: axesAttrs.ticktext,
+    ticks: axesAttrs.ticks,
+    mirror: axesAttrs.mirror,
+    ticklen: axesAttrs.ticklen,
+    tickwidth: axesAttrs.tickwidth,
+    tickcolor: axesAttrs.tickcolor,
+    showticklabels: axesAttrs.showticklabels,
+    tickfont: axesAttrs.tickfont,
+    tickangle: axesAttrs.tickangle,
+    tickprefix: axesAttrs.tickprefix,
+    showtickprefix: axesAttrs.showtickprefix,
+    ticksuffix: axesAttrs.ticksuffix,
+    showticksuffix: axesAttrs.showticksuffix,
+    showexponent: axesAttrs.showexponent,
+    exponentformat: axesAttrs.exponentformat,
+    separatethousands: axesAttrs.separatethousands,
+    tickformat: axesAttrs.tickformat,
+    tickformatstops: axesAttrs.tickformatstops,
+    hoverformat: axesAttrs.hoverformat,
+    // lines and grids
+    showline: axesAttrs.showline,
+    linecolor: axesAttrs.linecolor,
+    linewidth: axesAttrs.linewidth,
+    showgrid: axesAttrs.showgrid,
+    gridcolor: extendFlat({}, axesAttrs.gridcolor,  // shouldn't this be on-par with 2D?
+        {dflt: 'rgb(204, 204, 204)'}),
+    gridwidth: axesAttrs.gridwidth,
+    zeroline: axesAttrs.zeroline,
+    zerolinecolor: axesAttrs.zerolinecolor,
+    zerolinewidth: axesAttrs.zerolinewidth,
+    _deprecated: {
+        title: axesAttrs._deprecated.title,
+        titlefont: axesAttrs._deprecated.titlefont
+    }
+}, 'plot', 'from-root');
+
+},{"../../../components/color":571,"../../../lib/extend":684,"../../../plot_api/edit_types":725,"../../cartesian/layout_attributes":755}],788:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+
+'use strict';
+
+var colorMix = _dereq_('tinycolor2').mix;
+
+var Lib = _dereq_('../../../lib');
+var Template = _dereq_('../../../plot_api/plot_template');
+
+var layoutAttributes = _dereq_('./axis_attributes');
+var handleTypeDefaults = _dereq_('../../cartesian/type_defaults');
+var handleAxisDefaults = _dereq_('../../cartesian/axis_defaults');
+
+var axesNames = ['xaxis', 'yaxis', 'zaxis'];
+
+// TODO: hard-coded lightness fraction based on gridline default colors
+// that differ from other subplot types.
+var gridLightness = 100 * (204 - 0x44) / (255 - 0x44);
+
+module.exports = function supplyLayoutDefaults(layoutIn, layoutOut, options) {
+    var containerIn, containerOut;
+
+    function coerce(attr, dflt) {
+        return Lib.coerce(containerIn, containerOut, layoutAttributes, attr, dflt);
+    }
+
+    for(var j = 0; j < axesNames.length; j++) {
+        var axName = axesNames[j];
+        containerIn = layoutIn[axName] || {};
+
+        containerOut = Template.newContainer(layoutOut, axName);
+        containerOut._id = axName[0] + options.scene;
+        containerOut._name = axName;
+
+        handleTypeDefaults(containerIn, containerOut, coerce, options);
+
+        handleAxisDefaults(
+            containerIn,
+            containerOut,
+            coerce,
+            {
+                font: options.font,
+                letter: axName[0],
+                data: options.data,
+                showGrid: true,
+                noTickson: true,
+                bgColor: options.bgColor,
+                calendar: options.calendar
+            },
+            options.fullLayout);
+
+        coerce('gridcolor', colorMix(containerOut.color, options.bgColor, gridLightness).toRgbString());
+        coerce('title.text', ax

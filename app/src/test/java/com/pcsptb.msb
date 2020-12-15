@@ -1,0 +1,399 @@
++) {
+                    var cdj = calcTraces[indices[i]][j];
+                    cdj[valAttr] /= norm;
+                    cdj.sNorm = cdj.s / norm;
+                }
+            }
+        }
+
+        // autorange
+        for(i = 0; i < indices.length; i++) {
+            cd = calcTraces[indices[i]];
+            var trace = cd[0].trace;
+            var ppad = calc.calcMarkerSize(trace, trace._rawLength);
+            var arrayPad = Array.isArray(ppad);
+            if((ppad && hasAnyBlanks[i]) || arrayPad) {
+                var ppadRaw = ppad;
+                ppad = new Array(serieslen);
+                for(j = 0; j < serieslen; j++) {
+                    ppad[j] = cd[j].gap ? 0 : (arrayPad ? ppadRaw[cd[j].i] : ppadRaw);
+                }
+            }
+            var x = new Array(serieslen);
+            var y = new Array(serieslen);
+            for(j = 0; j < serieslen; j++) {
+                x[j] = cd[j].x;
+                y[j] = cd[j].y;
+            }
+            calc.calcAxisExpansion(gd, trace, xa, ya, x, y, ppad);
+
+            // while we're here (in a loop over all traces in the stack)
+            // record the orientation, so hover can find it easily
+            cd[0].t.orientation = groupOpts.orientation;
+        }
+    }
+};
+
+function insertBlank(calcTrace, index, position, traceIndex, hasAnyBlanks, interpolate, posAttr) {
+    hasAnyBlanks[traceIndex] = true;
+    var newEntry = {
+        i: null,
+        gap: true,
+        s: 0
+    };
+    newEntry[posAttr] = position;
+    calcTrace.splice(index, 0, newEntry);
+    // Even if we're not interpolating, if one trace has multiple
+    // values at the same position and this trace only has one value there,
+    // we just duplicate that one value rather than insert a zero.
+    // We also make it look like a real point - because it's ambiguous which
+    // one really is the real one!
+    if(index && position === calcTrace[index - 1][posAttr]) {
+        var prevEntry = calcTrace[index - 1];
+        newEntry.s = prevEntry.s;
+        // TODO is it going to cause any problems to have multiple
+        // calcdata points with the same index?
+        newEntry.i = prevEntry.i;
+        newEntry.gap = prevEntry.gap;
+    }
+    else if(interpolate) {
+        newEntry.s = getInterp(calcTrace, index, position, posAttr);
+    }
+    if(!index) {
+        // t and trace need to stay on the first cd entry
+        calcTrace[0].t = calcTrace[1].t;
+        calcTrace[0].trace = calcTrace[1].trace;
+        delete calcTrace[1].t;
+        delete calcTrace[1].trace;
+    }
+}
+
+function getInterp(calcTrace, index, position, posAttr) {
+    var pt0 = calcTrace[index - 1];
+    var pt1 = calcTrace[index + 1];
+    if(!pt1) return pt0.s;
+    if(!pt0) return pt1.s;
+    return pt0.s + (pt1.s - pt0.s) * (position - pt0[posAttr]) / (pt1[posAttr] - pt0[posAttr]);
+}
+
+},{"./calc":1048}],1053:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+
+'use strict';
+
+
+// remove opacity for any trace that has a fill or is filled to
+module.exports = function crossTraceDefaults(fullData) {
+    for(var i = 0; i < fullData.length; i++) {
+        var tracei = fullData[i];
+        if(tracei.type !== 'scatter') continue;
+
+        var filli = tracei.fill;
+        if(filli === 'none' || filli === 'toself') continue;
+
+        tracei.opacity = undefined;
+
+        if(filli === 'tonexty' || filli === 'tonextx') {
+            for(var j = i - 1; j >= 0; j--) {
+                var tracej = fullData[j];
+
+                if((tracej.type === 'scatter') &&
+                        (tracej.xaxis === tracei.xaxis) &&
+                        (tracej.yaxis === tracei.yaxis)) {
+                    tracej.opacity = undefined;
+                    break;
+                }
+            }
+        }
+    }
+};
+
+},{}],1054:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+'use strict';
+
+var Lib = _dereq_('../../lib');
+var Registry = _dereq_('../../registry');
+
+var attributes = _dereq_('./attributes');
+var constants = _dereq_('./constants');
+var subTypes = _dereq_('./subtypes');
+var handleXYDefaults = _dereq_('./xy_defaults');
+var handleStackDefaults = _dereq_('./stack_defaults');
+var handleMarkerDefaults = _dereq_('./marker_defaults');
+var handleLineDefaults = _dereq_('./line_defaults');
+var handleLineShapeDefaults = _dereq_('./line_shape_defaults');
+var handleTextDefaults = _dereq_('./text_defaults');
+var handleFillColorDefaults = _dereq_('./fillcolor_defaults');
+
+module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout) {
+    function coerce(attr, dflt) {
+        return Lib.coerce(traceIn, traceOut, attributes, attr, dflt);
+    }
+
+    var len = handleXYDefaults(traceIn, traceOut, layout, coerce);
+    if(!len) traceOut.visible = false;
+
+    if(!traceOut.visible) return;
+
+    var stackGroupOpts = handleStackDefaults(traceIn, traceOut, layout, coerce);
+
+    var defaultMode = !stackGroupOpts && (len < constants.PTS_LINESONLY) ?
+        'lines+markers' : 'lines';
+    coerce('text');
+    coerce('hovertext');
+    coerce('mode', defaultMode);
+
+    if(subTypes.hasLines(traceOut)) {
+        handleLineDefaults(traceIn, traceOut, defaultColor, layout, coerce);
+        handleLineShapeDefaults(traceIn, traceOut, coerce);
+        coerce('connectgaps');
+        coerce('line.simplify');
+    }
+
+    if(subTypes.hasMarkers(traceOut)) {
+        handleMarkerDefaults(traceIn, traceOut, defaultColor, layout, coerce, {gradient: true});
+    }
+
+    if(subTypes.hasText(traceOut)) {
+        handleTextDefaults(traceIn, traceOut, layout, coerce);
+    }
+
+    var dfltHoverOn = [];
+
+    if(subTypes.hasMarkers(traceOut) || subTypes.hasText(traceOut)) {
+        coerce('cliponaxis');
+        coerce('marker.maxdisplayed');
+        dfltHoverOn.push('points');
+    }
+
+    // It's possible for this default to be changed by a later trace.
+    // We handle that case in some hacky code inside handleStackDefaults.
+    coerce('fill', stackGroupOpts ? stackGroupOpts.fillDflt : 'none');
+    if(traceOut.fill !== 'none') {
+        handleFillColorDefaults(traceIn, traceOut, defaultColor, coerce);
+        if(!subTypes.hasLines(traceOut)) handleLineShapeDefaults(traceIn, traceOut, coerce);
+    }
+
+    var lineColor = (traceOut.line || {}).color;
+    var markerColor = (traceOut.marker || {}).color;
+
+    if(traceOut.fill === 'tonext' || traceOut.fill === 'toself') {
+        dfltHoverOn.push('fills');
+    }
+    coerce('hoveron', dfltHoverOn.join('+') || 'points');
+    if(traceOut.hoveron !== 'fills') coerce('hovertemplate');
+    var errorBarsSupplyDefaults = Registry.getComponentMethod('errorbars', 'supplyDefaults');
+    errorBarsSupplyDefaults(traceIn, traceOut, lineColor || markerColor || defaultColor, {axis: 'y'});
+    errorBarsSupplyDefaults(traceIn, traceOut, lineColor || markerColor || defaultColor, {axis: 'x', inherit: 'y'});
+
+    Lib.coerceSelectionMarkerOpacity(traceOut, coerce);
+};
+
+},{"../../lib":694,"../../registry":825,"./attributes":1047,"./constants":1051,"./fillcolor_defaults":1056,"./line_defaults":1060,"./line_shape_defaults":1062,"./marker_defaults":1066,"./stack_defaults":1069,"./subtypes":1071,"./text_defaults":1072,"./xy_defaults":1073}],1055:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+'use strict';
+
+var Lib = _dereq_('../../lib');
+
+/** Fill hover 'pointData' container with 'correct' hover text value
+ *
+ * - If trace hoverinfo contains a 'text' flag and hovertext is not set,
+ *   the text elements will be seen in the hover labels.
+ *
+ * - If trace hoverinfo contains a 'text' flag and hovertext is set,
+ *   hovertext takes precedence over text
+ *   i.e. the hoverinfo elements will be seen in the hover labels
+ *
+ *  @param {object} calcPt
+ *  @param {object} trace
+ *  @param {object || array} contOut (mutated here)
+ */
+module.exports = function fillHoverText(calcPt, trace, contOut) {
+    var fill = Array.isArray(contOut) ?
+        function(v) { contOut.push(v); } :
+        function(v) { contOut.text = v; };
+
+    var htx = Lib.extractOption(calcPt, trace, 'htx', 'hovertext');
+    if(isValid(htx)) return fill(htx);
+
+    var tx = Lib.extractOption(calcPt, trace, 'tx', 'text');
+    if(isValid(tx)) return fill(tx);
+};
+
+// accept all truthy values and 0 (which gets cast to '0' in the hover labels)
+function isValid(v) {
+    return v || v === 0;
+}
+
+},{"../../lib":694}],1056:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+
+'use strict';
+
+var Color = _dereq_('../../components/color');
+var isArrayOrTypedArray = _dereq_('../../lib').isArrayOrTypedArray;
+
+module.exports = function fillColorDefaults(traceIn, traceOut, defaultColor, coerce) {
+    var inheritColorFromMarker = false;
+
+    if(traceOut.marker) {
+        // don't try to inherit a color array
+        var markerColor = traceOut.marker.color;
+        var markerLineColor = (traceOut.marker.line || {}).color;
+
+        if(markerColor && !isArrayOrTypedArray(markerColor)) {
+            inheritColorFromMarker = markerColor;
+        }
+        else if(markerLineColor && !isArrayOrTypedArray(markerLineColor)) {
+            inheritColorFromMarker = markerLineColor;
+        }
+    }
+
+    coerce('fillcolor', Color.addOpacity(
+        (traceOut.line || {}).color ||
+        inheritColorFromMarker ||
+        defaultColor, 0.5
+    ));
+};
+
+},{"../../components/color":571,"../../lib":694}],1057:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+
+'use strict';
+
+var Color = _dereq_('../../components/color');
+var subtypes = _dereq_('./subtypes');
+
+
+module.exports = function getTraceColor(trace, di) {
+    var lc, tc;
+
+    // TODO: text modes
+
+    if(trace.mode === 'lines') {
+        lc = trace.line.color;
+        return (lc && Color.opacity(lc)) ?
+            lc : trace.fillcolor;
+    }
+    else if(trace.mode === 'none') {
+        return trace.fill ? trace.fillcolor : '';
+    }
+    else {
+        var mc = di.mcc || (trace.marker || {}).color;
+        var mlc = di.mlcc || ((trace.marker || {}).line || {}).color;
+
+        tc = (mc && Color.opacity(mc)) ? mc :
+            (mlc && Color.opacity(mlc) &&
+                (di.mlw || ((trace.marker || {}).line || {}).width)) ? mlc : '';
+
+        if(tc) {
+            // make sure the points aren't TOO transparent
+            if(Color.opacity(tc) < 0.3) {
+                return Color.addOpacity(tc, 0.3);
+            }
+            else return tc;
+        }
+        else {
+            lc = (trace.line || {}).color;
+            return (lc && Color.opacity(lc) &&
+                subtypes.hasLines(trace) && trace.line.width) ?
+                    lc : trace.fillcolor;
+        }
+    }
+};
+
+},{"../../components/color":571,"./subtypes":1071}],1058:[function(_dereq_,module,exports){
+/**
+* Copyright 2012-2019, Plotly, Inc.
+* All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
+'use strict';
+
+var Lib = _dereq_('../../lib');
+var Fx = _dereq_('../../components/fx');
+var Registry = _dereq_('../../registry');
+var getTraceColor = _dereq_('./get_trace_color');
+var Color = _dereq_('../../components/color');
+var fillHoverText = _dereq_('./fill_hover_text');
+
+module.exports = function hoverPoints(pointData, xval, yval, hovermode) {
+    var cd = pointData.cd;
+    var trace = cd[0].trace;
+    var xa = pointData.xa;
+    var ya = pointData.ya;
+    var xpx = xa.c2p(xval);
+    var ypx = ya.c2p(yval);
+    var pt = [xpx, ypx];
+    var hoveron = trace.hoveron || '';
+    var minRad = (trace.mode.indexOf('markers') !== -1) ? 3 : 0.5;
+
+    // look for points to hover on first, then take fills only if we
+    // didn't find a point
+    if(hoveron.indexOf('points') !== -1) {
+        var dx = function(di) {
+            // dx and dy are used in compare modes - here we want to always
+            // prioritize the closest data point, at least as long as markers are
+            // the same size or nonexistent, but still try to prioritize small markers too.
+            var rad = Math.max(3, di.mrc || 0);
+            var kink = 1 - 1 / rad;
+            var dxRaw = Math.abs(xa.c2p(di.x) - xpx);
+            var d = (dxRaw < rad) ? (kink * dxRaw / rad) : (dxRaw - rad + kink);
+            return d;
+        };
+        var dy = function(di) {
+            var rad = Math.max(3, di.mrc || 0);
+            var kink = 1 - 1 / rad;
+            var dyRaw = Math.abs(ya.c2p(di.y) - ypx);
+            return (dyRaw < rad) ? (kink * dyRaw / rad) : (dyRaw - rad + kink);
+        };
+        var dxy = function(di) {
+            // scatter points: d.mrc is the calculated marker radius
+            // adjust the distance so if you're inside the marker it
+            // always will show up regardless of point size, but
+            // prioritize smaller points
+            var rad = Math.max(minRad, di.mrc || 0);
+            var dx = xa.c2p(di.x) - xpx;
+            var dy = ya.c2p(di.y) - ypx;
+            return Math.max(Math.sqrt(dx * dx + dy * dy) - rad, 1 - minRad / rad);
+        };
+        var distfn = Fx.getDistanceFunction(hovermode, dx, dy, 

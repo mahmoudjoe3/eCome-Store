@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -59,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        mFirebaseAuthViewModel = ViewModelProviders.of(this).get(FirebaseAuthViewModel.class);
+        mFirebaseAuthViewModel = new ViewModelProvider(this).get(FirebaseAuthViewModel.class);
 
     }
 

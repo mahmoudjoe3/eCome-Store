@@ -109,6 +109,15 @@
                         android:textColor="@color/colorPrimaryDark"
                         android:textStyle="bold" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:visibility="gone"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"/>
+
                 <Button
                     android:id="@+id/AddProduct"
                     android:layout_width="match_parent"

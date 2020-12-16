@@ -1,23 +1,67 @@
 package com.mahmoudjoe3.eComStore.model;
 
-import android.net.Uri;
+import java.util.ArrayList;
 
 public class Product {
-    private Uri[] mImageUri;
+    private ArrayList<String> mImageUri;
     private String mTitle;
     private String mCategory;
     private String mDescription;
     private float mPrice;
     private User mAdmin;
 
-    public Product(User mAdmin, Uri[] mImageUri, String mTitle, String mCategory, String mDescription, float mPrice) {
-        this.mImageUri = mImageUri;
+    private String mId;
+    private String mTime;
+    private String mDate;
+
+    public Product() {
+    }
+
+    public Product(Product p) {
+        this.mImageUri = p.mImageUri;
+        this.mTitle = p.mTitle;
+        this.mCategory = p.mCategory;
+        this.mDescription = p.mDescription;
+        this.mPrice = p.mPrice;
+        this.mAdmin = p.mAdmin;
+        this.mId = p.mId;
+        this.mTime = p.mTime;
+        this.mDate = p.mDate;
+    }
+    public Product(User mAdmin, String mTitle, String mCategory, String mDescription, float mPrice) {
         this.mTitle = mTitle;
         this.mCategory = mCategory;
         this.mDescription = mDescription;
         this.mPrice = mPrice;
         this.mAdmin=mAdmin;
+        this.mImageUri=new ArrayList<>();
     }
+
+    public void setmId(String mId) {
+        this.mId = mId;
+    }
+
+    public void setTime(String time) {
+        this.mTime = time;
+    }
+
+    public void setDate(String date) {
+        this.mDate = date;
+    }
+
+    public String getmId() {
+        return mId;
+    }
+
+    public String getmTime() {
+        return mTime;
+    }
+
+    public String getmDate() {
+        return mDate;
+    }
+
+
 
     public User getmAdmin() {
         return mAdmin;
@@ -27,11 +71,11 @@ public class Product {
         this.mAdmin = mAdmin;
     }
 
-    public Uri[] getmImageUri() {
+    public ArrayList<String> getmImageUri() {
         return mImageUri;
     }
 
-    public void setmImageUri(Uri[] mImageUri) {
+    public void setmImageUri(ArrayList<String> mImageUri) {
         this.mImageUri = mImageUri;
     }
 

@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -40,7 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
-        mFirebaseAuthViewModel = ViewModelProviders.of(this).get(FirebaseAuthViewModel.class);
+        mFirebaseAuthViewModel = new ViewModelProvider(this).get(FirebaseAuthViewModel.class);
 
     }
 

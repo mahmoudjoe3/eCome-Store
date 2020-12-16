@@ -13,12 +13,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.adminUI.AdminHomeActivity"></activity>
-        <activity android:name=".ui.adminUI.AdminAddProductActivity" />
-        <activity android:name=".ui.userUI.UserHomeActivity" />
-        <activity android:name=".ui.main.RegisterActivity" />
-        <activity android:name=".ui.main.LoginActivity" />
-        <activity android:name=".ui.main.MainActivity">
+        <activity android:name=".ui.adminUI.AdminHomeActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".ui.adminUI.AdminAddProductActivity"
+            android:parentActivityName=".ui.adminUI.AdminHomeActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".ui.userUI.UserHomeActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".ui.main.RegisterActivity"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".ui.main.LoginActivity"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".ui.main.MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

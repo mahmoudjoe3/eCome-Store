@@ -11,17 +11,21 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.Product;
 import com.mahmoudjoe3.eComStore.model.User;
+import com.mahmoudjoe3.eComStore.repo.FirebaseRepo;
 import com.mahmoudjoe3.eComStore.viewModel.admin.AddProductViewModel;
 import com.squareup.picasso.Picasso;
 
@@ -72,6 +76,8 @@ public class AddProductFragment extends Fragment {
     Button mAddProduct;
     @BindView(R.id.hintImage)
     TextView hintImage;
+    @BindView(R.id.progressBar)
+    ProgressBar mProgressBar;
 
     private Uri[] mImageUri;
     private int mCurrentImgIndex = 0;
@@ -91,13 +97,14 @@ public class AddProductFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageUri = new Uri[4];
-        addProductViewModel= ViewModelProviders.of(this).get(AddProductViewModel.class);
+        addProductViewModel= new ViewModelProvider(this).get(AddProductViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_product, container, false);
         ButterKnife.bind(this, view);
+
         return view;
     }
 
@@ -139,37 +146,54 @@ public class AddProductFragment extends Fragment {
                 break;
 
             case R.id.remove_img1:
+                removeImage(1);
+                break;
+            case R.id.remove_img2:
+                removeImage(2);
+                break;
+            case R.id.remove_img3:
+                removeImage(3);
+                break;
+            case R.id.remove_img4:
+                removeImage(4);
+                break;
+        }
+    }
+
+    private void removeImage(int i) {
+        switch (i){
+            case 1:
                 int mCurrentRemovedImgIndex = 0;
                 mImg1.setImageResource(android.R.color.transparent);
                 mImageUri[mCurrentRemovedImgIndex] = null;
                 mRemoveImg1.setVisibility(View.GONE);
                 break;
-            case R.id.remove_img2:
+            case 2:
                 mCurrentRemovedImgIndex = 1;
                 mImg2.setImageResource(android.R.color.transparent);
                 mImageUri[mCurrentRemovedImgIndex] = null;
                 mRemoveImg2.setVisibility(View.GONE);
                 break;
-            case R.id.remove_img3:
+            case 3:
                 mCurrentRemovedImgIndex = 2;
                 mImg3.setImageResource(android.R.color.transparent);
                 mImageUri[mCurrentRemovedImgIndex] = null;
                 mRemoveImg3.setVisibility(View.GONE);
                 break;
-            case R.id.remove_img4:
+            case 4:
                 mCurrentRemovedImgIndex = 3;
                 mImg4.setImageResource(android.R.color.transparent);
                 mImageUri[mCurrentRemovedImgIndex] = null;
                 mRemoveImg4.setVisibility(View.GONE);
                 break;
         }
+
     }
 
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_GET_CONTENT);
         gallery.setType("image/*");
         startActivityForResult(gallery, Gallary_Req);
-
     }
 
     @Override
@@ -201,6 +225,7 @@ public class AddProductFragment extends Fragment {
 
     @OnClick(R.id.AddProduct)
     public void onViewClicked() {
+        mAddProduct.setEnabled(false);
         AddProduct();
     }
 
@@ -229,9 +254,36 @@ public class AddProductFragment extends Fragment {
             title=mTitle.getText().toString();
             price=mPrice.getText().toString();
             description=mDescription.getText().toString();
-            Product product=new Product(mAdmin,mImageUri,title,mCategory,description,Float.parseFloat(price));
-            addProductViewModel.insertProduct(product);
-            Toast.makeText(getActivity(),"product inserted",Toast.LENGTH_LONG).show();
+            Product product=new Product(mAdmin,title,mCategory,description,Float.parseFloat(price));
+
+            mProgressBar.setVisibility(View.VISIBLE);
+
+            addProductViewModel.insertProduct(product,mImageUri);
+
+            addProductViewModel.setmOnAddProductListener(new FirebaseRepo.OnAddProductListener() {
+                @Override
+                public void onFailure(String error) {
+                    Toast.makeText(getActivity(),"Error::"+error,Toast.LENGTH_LONG).show();
+                    mProgressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onSuccess() {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content),"Product Uploaded",Snackbar.LENGTH_LONG).show();
+                    mAddProduct.setEnabled(true);
+                    mProgressBar.setVisibility(View.GONE);
+                    clearData();
+                }
+            });
         }
+    }
+    void clearData(){
+        removeImage(1);
+        removeImage(2);
+        removeImage(3);
+        removeImage(4);
+        mTitle.setText("");
+        mPrice.setText("");
+        mDescription.setText("");
     }
 }

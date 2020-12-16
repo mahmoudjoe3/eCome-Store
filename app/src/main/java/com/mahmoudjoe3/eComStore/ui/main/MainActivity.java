@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.mahmoudjoe3.eComStore.Logic.MyLogic;
@@ -43,12 +44,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mFirebaseAuthViewModel = new ViewModelProvider(this).get(FirebaseAuthViewModel.class);
+        LogInProcess();
+        //delay for one sec
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mFirebaseAuthViewModel = ViewModelProviders.of(this).get(FirebaseAuthViewModel.class);
 
-        LogInProcess();
 
     }
 
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 FireStore(phone, password);
                 return;
             }
+
             //offline
             if (phone != null && password != null && name != null) {
                 User user = new User(name, phone, password);
@@ -144,9 +148,9 @@ public class MainActivity extends AppCompatActivity {
                 .setCancelable(false);
     }
 
-
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.finish();
+        super.onPause();
     }
 }

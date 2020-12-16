@@ -12,6 +12,8 @@ public class Prevalent {
     public final static String LOGIN_PREF="login_pref";
     public final static String refColName_User="users";
     public final static String refColName_Admin="admins";
+    public final static String refColName_product="products";
+    public final static String refStorage_productImage="product image";
     public final static String ADMIN="admin";
     public final static String USER_DATA ="userData";
 

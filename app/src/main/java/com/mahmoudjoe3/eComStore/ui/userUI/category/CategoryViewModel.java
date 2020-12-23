@@ -1,30 +1,29 @@
-package com.mahmoudjoe3.eComStore.viewModel.admin;
+package com.mahmoudjoe3.eComStore.ui.userUI.category;
 
-import android.app.Application;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.mahmoudjoe3.eComStore.model.Product;
 import com.mahmoudjoe3.eComStore.repo.FirebaseRepo;
 
 import java.util.List;
 
-public class AdminHomePageViewModel extends AndroidViewModel {
+public class CategoryViewModel extends ViewModel {
+
     private FirebaseRepo repo;
     private MutableLiveData<List<Product>> productsLiveData;
 
-    public AdminHomePageViewModel(@NonNull Application application) {
-        super(application);
+    public CategoryViewModel() {
         repo=FirebaseRepo.getInstance();
         productsLiveData= new MutableLiveData<>();
-
     }
 
-    void fitchProduct(String productOwner){
-        repo.fitchProducts(productOwner,null);
+    private void fitchProduct(String productOwner,String cat){
+        if(cat.equalsIgnoreCase("home"))
+            repo.fitchProducts(null,null);
+        else
+            repo.fitchProducts(null,cat);
         repo.setOnFitchProductListener(new FirebaseRepo.OnFitchProductListener() {
             @Override
             public void onFailure(String error) {
@@ -38,15 +37,8 @@ public class AdminHomePageViewModel extends AndroidViewModel {
         });
     }
 
-    public LiveData<List<Product>> getProductsLiveData(String OwnerId) {
-        fitchProduct(OwnerId);
+    public LiveData<List<Product>> getProductsLiveData(String OwnerId,String cat) {
+        fitchProduct(OwnerId,cat);
         return productsLiveData;
     }
-
-    public void deleteProduct(Product product){
-        repo.deleteProduct(product);
-    }
-
-
-
 }

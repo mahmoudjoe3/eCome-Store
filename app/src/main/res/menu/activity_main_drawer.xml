@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_fashion"
+            android:icon="@drawable/fashion"
+            android:title="Fashion" />
+        <item
+            android:id="@+id/nav_watches"
+            android:icon="@drawable/watch"
+
+            android:title="Watches" />
+        <item
+            android:id="@+id/nav_mobile"
+            android:icon="@drawable/phone"
+            android:title="Mobiles &amp; Tablets" />
+        <item
+            android:id="@+id/nav_tvs"
+            android:icon="@drawable/television"
+            android:title="TVs" />
+        <item
+            android:id="@+id/nav_pc"
+            android:icon="@drawable/laptop"
+            android:title="PC &amp; Accessories" />
+        <item
+            android:id="@+id/nav_healthy"
+            android:icon="@drawable/shampoo"
+            android:title="Health &amp; Beauty" />
+
+        <item
+            android:id="@+id/nav_furniture"
+            android:icon="@drawable/furniture"
+            android:title="Furniture" />
+        <item
+            android:id="@+id/nav_sport"
+            android:icon="@drawable/dumbbell"
+            android:title="Sports" />
+        <item
+            android:id="@+id/nav_orders"
+            android:icon="@drawable/ic_orders"
+            android:title="Track Orders" />
+        <item
+            android:id="@+id/nav_wishList"
+            android:icon="@drawable/ic_wishlist"
+            android:title="My Wishlist" />
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_setting"
+            android:title="Setting" />
+        <item
+            android:id="@+id/nav_logout2"
+            android:icon="@drawable/ic_logout2"
+            android:title="Logout" />
+    </group>
+</menu>

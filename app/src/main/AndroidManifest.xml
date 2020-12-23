@@ -13,20 +13,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.adminUI.AdminHomeActivity"
-            android:launchMode="singleTop"/>
-        <activity android:name=".ui.adminUI.AdminAddProductActivity"
-            android:parentActivityName=".ui.adminUI.AdminHomeActivity"
-            android:launchMode="singleTop"/>
-        <activity android:name=".ui.userUI.UserHomeActivity"
-            android:launchMode="singleTop"/>
-        <activity android:name=".ui.main.RegisterActivity"
-            android:parentActivityName=".ui.main.MainActivity"
-            android:launchMode="singleTop"/>
-        <activity android:name=".ui.main.LoginActivity"
-            android:parentActivityName=".ui.main.MainActivity"
-            android:launchMode="singleTop"/>
-        <activity android:name=".ui.main.MainActivity"
+        <activity
+            android:name=".ui.userUI.UserHomeActivity"
+            android:label="@string/title_activity_user_home"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".ui.ViewProductActivity" />
+        <activity
+            android:name=".ui.adminUI.AdminHomeActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.adminUI.AdminAddProductActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.adminUI.AdminHomeActivity" />
+        <activity
+            android:name=".ui.main.RegisterActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.main.MainActivity" />
+        <activity
+            android:name=".ui.main.LoginActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.main.MainActivity" />
+        <activity
+            android:name=".ui.main.MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

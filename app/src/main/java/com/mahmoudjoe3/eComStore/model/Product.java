@@ -1,18 +1,22 @@
 package com.mahmoudjoe3.eComStore.model;
 
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Product {
+public class Product implements Serializable {
+    private String mId;
     private ArrayList<String> mImageUri;
     private String mTitle;
     private String mCategory;
-    private String mDescription;
     private float mPrice;
-    private User mAdmin;
 
-    private String mId;
+
     private String mTime;
     private String mDate;
+    private int mQuantity;
+    private User mAdmin;
+    private String mDescription;
 
     public Product() {
     }
@@ -27,13 +31,15 @@ public class Product {
         this.mId = p.mId;
         this.mTime = p.mTime;
         this.mDate = p.mDate;
+        this.mQuantity=p.mQuantity;
     }
-    public Product(User mAdmin, String mTitle, String mCategory, String mDescription, float mPrice) {
+    public Product(User mAdmin, String mTitle, String mCategory, String mDescription, float mPrice, int quantity) {
         this.mTitle = mTitle;
         this.mCategory = mCategory;
         this.mDescription = mDescription;
         this.mPrice = mPrice;
         this.mAdmin=mAdmin;
+        this.mQuantity = quantity;
         this.mImageUri=new ArrayList<>();
     }
 
@@ -109,5 +115,13 @@ public class Product {
 
     public void setmPrice(float mPrice) {
         this.mPrice = mPrice;
+    }
+
+    public int getQuantity() {
+        return mQuantity;
+    }
+
+    public void setQuantity(int quantity) {
+        mQuantity = quantity;
     }
 }

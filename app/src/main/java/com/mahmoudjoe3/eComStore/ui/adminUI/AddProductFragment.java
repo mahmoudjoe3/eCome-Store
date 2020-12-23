@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -70,6 +68,8 @@ public class AddProductFragment extends Fragment {
     TextInputEditText mTitle;
     @BindView(R.id.Price)
     TextInputEditText mPrice;
+    @BindView(R.id.Quantity)
+    TextInputEditText mQuantity;
     @BindView(R.id.Description)
     TextInputEditText mDescription;
     @BindView(R.id.AddProduct)
@@ -102,7 +102,7 @@ public class AddProductFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_add_product, container, false);
+        View view = inflater.inflate(R.layout.admin_fragment_add_product, container, false);
         ButterKnife.bind(this, view);
 
         return view;
@@ -245,16 +245,21 @@ public class AddProductFragment extends Fragment {
             mPrice.setError("Price is Required");
             valid=false;
         }
+        if (mQuantity.getText().toString().isEmpty()){
+            mQuantity.setError("Price is Required");
+            valid=false;
+        }
         if (mDescription.getText().toString().isEmpty()){
             mDescription.setError("description is Required");
             valid=false;
         }
         if(valid) {
-            String title,price,description;
+            String title,price,description,Quantity;
             title=mTitle.getText().toString();
             price=mPrice.getText().toString();
             description=mDescription.getText().toString();
-            Product product=new Product(mAdmin,title,mCategory,description,Float.parseFloat(price));
+            Quantity=mQuantity.getText().toString();
+            Product product=new Product(mAdmin,title,mCategory,description,Float.parseFloat(price), Integer.parseInt(Quantity));
 
             mProgressBar.setVisibility(View.VISIBLE);
 
@@ -285,5 +290,6 @@ public class AddProductFragment extends Fragment {
         mTitle.setText("");
         mPrice.setText("");
         mDescription.setText("");
+        mQuantity.setText("");
     }
 }

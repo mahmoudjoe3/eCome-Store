@@ -26,7 +26,7 @@ public class AdminAddProductActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_add_product);
+        setContentView(R.layout.admin_activity_add_product);
         ButterKnife.bind(this);
         mAdmin= (User) getIntent().getSerializableExtra(Prevalent.USER_DATA);
         pagerAdapter = new PagerAdapter(getSupportFragmentManager());

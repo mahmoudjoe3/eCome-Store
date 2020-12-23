@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.mahmoudjoe3.eComStore.ui.userUI.category.CategoryFragment"
+        android:label="Home"
+        tools:layout="@layout/user_fragment_catagory" />
+
+    <fragment
+        android:id="@+id/nav_fashion"
+        android:name="com.mahmoudjoe3.eComStore.ui.userUI.category.CategoryFragment"
+        android:label="Fashion"
+        tools:layout="@layout/user_fragment_catagory" />
+
+    <fragment
+        android:id="@+id/nav_watches"
+        android:name="com.mahmoudjoe3.eComStore.ui.userUI.category.CategoryFragment"
+        android:label="Watches"
+        tools:layout="@layout/user_fragment_catagory" />
+    <fragment
+        android:id="@+id/nav_mobile"
+        android:name="com.mahmoudjoe3.eComStore.ui.userUI.category.CategoryFragment"
+        android:label="Mobiles &amp; Tablets"
+        tools:layout="@layout/user_fragment_catagory" />
+
+    <fragment
+        android:id="@+id/nav_tvs"
+        android:name="com.mahmoudjoe3.eComStore.ui.userUI.category.CategoryFragment"
+        android:label="TVs"
+        tools:layout="@layout/user_fragment_catagory" />
+
+    <fragment
+        android:id="@+id/nav_pc"
+        android:name="com.mahmoudjoe3.eComStore.ui.userUI.category.CategoryFragment"
+        android:label="PC &amp; Accessories"
+        tools:layout="@layout/user_fragment_catagory" />
+    <fragment
+        android:id="@+id/nav_healthy"
+        android:name="com.mahmoudjoe3.eComStore.ui.userUI.category.CategoryFragment"
+        android:label="Health &amp; Beauty"
+        tools:layout="@layout/user_fragment_catagory" />
+
+    <fragment
+        android:id="@+id/nav_furniture"
+        android:name="com.mahmoudjoe3.eComStore.ui.userUI.category.CategoryFragment"
+        android:label="Furniture"
+        tools:layout="@layout/user_fragment_catagory" />
+
+    <fragment
+        android:id="@+id/nav_sport"
+        android:name="com.mahmoudjoe3.eComStore.ui.userUI.category.CategoryFragment"
+        android:label="Sports"
+        tools:layout="@layout/user_fragment_catagory" />
+    <fragment
+        android:id="@+id/nav_orders"
+        android:name="com.mahmoudjoe3.eComStore.ui.userUI.trackOrder.TrackOrderFragment"
+        android:label="Orders"
+        tools:layout="@layout/user_fragment_track_order" />
+
+    <fragment
+        android:id="@+id/nav_wishList"
+        android:name="com.mahmoudjoe3.eComStore.ui.userUI.wishlist.WishlistFragment"
+        android:label="Wishlist"
+        tools:layout="@layout/user_fragment_wishlist" />
+
+    <fragment
+        android:id="@+id/nav_setting"
+        android:name="com.mahmoudjoe3.eComStore.ui.userUI.setting.SettingFragment"
+        android:label="Setting"
+        tools:layout="@layout/user_fragment_setting" />
+
+</navigation>

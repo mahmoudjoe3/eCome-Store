@@ -1,20 +1,16 @@
 package com.mahmoudjoe3.eComStore.ui.adminUI;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.mahmoudjoe3.eComStore.R;
-import com.mahmoudjoe3.eComStore.model.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,7 +53,7 @@ public class SelectCatagoryFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_select_catagory, container, false);
+        View view = inflater.inflate(R.layout.admin_fragment_select_catagory, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -102,7 +98,7 @@ public class SelectCatagoryFragment extends Fragment {
             case R.id.healthy:
                 restoreButtonsBG();
                 healthy.setBackgroundResource(R.color.indicator);
-                mCat = "healthy";
+                mCat = "health & beauty";
                 break;
             case R.id.watches:
                 restoreButtonsBG();
@@ -112,17 +108,17 @@ public class SelectCatagoryFragment extends Fragment {
             case R.id.pc:
                 restoreButtonsBG();
                 pc.setBackgroundResource(R.color.indicator);
-                mCat = "pc";
+                mCat = "pc & accessories";
                 break;
             case R.id.tv:
                 restoreButtonsBG();
                 tv.setBackgroundResource(R.color.indicator);
-                mCat = "tv";
+                mCat = "tvs";
                 break;
             case R.id.phones:
                 restoreButtonsBG();
                 phones.setBackgroundResource(R.color.indicator);
-                mCat = "phones";
+                mCat = "mobiles & tablets";
                 break;
             case R.id.sports:
                 restoreButtonsBG();

@@ -7,6 +7,8 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorRegBG">#edf0f2</color>
     <color name="colorLoginBG">#e7f4ea</color>
+    <color name="colorInStoke">#4CAF50</color>
+    <color name="colorOutStoke">#6E6D6D</color>
 
 
     <color name="indicator_1">#E91E63</color>

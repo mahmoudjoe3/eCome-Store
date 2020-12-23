@@ -1,15 +1,7 @@
 package com.mahmoudjoe3.eComStore.repo;
 
-import android.annotation.SuppressLint;
-import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.widget.Toast;
-
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,12 +12,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mahmoudjoe3.eComStore.model.User;
 import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
-import com.mahmoudjoe3.eComStore.ui.main.LoginActivity;
-import com.mahmoudjoe3.eComStore.ui.main.MainActivity;
-import com.mahmoudjoe3.eComStore.ui.main.RegisterActivity;
-import com.mahmoudjoe3.eComStore.ui.adminUI.AdminHomeActivity;
-import com.mahmoudjoe3.eComStore.ui.userUI.UserHomeActivity;
-
 
 
 public class FirebaseAuthRepo {

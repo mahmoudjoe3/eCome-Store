@@ -46,13 +46,24 @@ public class FirebaseRepo {
 
     /////////////////////////////////////    product fitch    //////////////////////////////////////
 
-    public void fitchProducts(){
+    public void fitchProducts(String ProductOwner,String cat){
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Product> products=new ArrayList<>();
-                for(DataSnapshot snap:snapshot.getChildren()){
-                    products.add(snap.getValue(Product.class));
+
+                for(DataSnapshot snap:snapshot.getChildren()) {
+                    Product product=snap.getValue(Product.class);
+                    if(ProductOwner==null&&cat==null) { //fitch all to user
+                        products.add(product);
+                    }
+                    else if(ProductOwner==null&&product.getmCategory().equalsIgnoreCase(cat)) { //fitch cat to user
+                        products.add(product);
+                    }
+
+                    else if (product.getmAdmin().getPhone().equalsIgnoreCase(ProductOwner)) {//fitch to admin
+                        products.add(product);
+                    }
                 }
                 if(mOnFitchProductListener!=null)
                     mOnFitchProductListener.onSuccess(products);
@@ -158,5 +169,30 @@ public class FirebaseRepo {
     public interface OnAddProductListener{
         void onFailure(String error);
         void onSuccess();
+    }
+    /////////////////////////////////////    delete product     //////////////////////////////////////
+
+    public void deleteProduct(Product  product){
+        delete(product,0);
+    }
+    void delete(Product product,int i){
+        if(i>=product.getmImageUri().size()){
+            mReference.child(product.getmId()).removeValue();
+            return;
+        }
+        StorageReference deletedRef = FirebaseStorage.getInstance().getReferenceFromUrl(product.getmImageUri().get(i));
+        deletedRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "onSuccess: ");
+                delete(product,i+1);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: "+e.getMessage());
+            }
+        });
+
     }
 }

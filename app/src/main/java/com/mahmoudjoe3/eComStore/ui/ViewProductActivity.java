@@ -97,6 +97,10 @@ public class ViewProductActivity extends AppCompatActivity {
     }
 
     private void updateFav_and_Cart() {
+        if(product.getQuantity()==0){
+            pAddCart.setEnabled(false);
+            pCartAdded.setEnabled(false);
+        }
         updateFav();
         updateCart();
     }
@@ -117,6 +121,7 @@ public class ViewProductActivity extends AppCompatActivity {
             pCartAdded.setImageResource(R.drawable.ic_remove_cart);
             pAddCart.setText("Remove from Cart");
             pAddCart.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+
         }else {
             pCartAdded.setTag("of");
             pCartAdded.setImageResource(R.drawable.ic_add_cart);

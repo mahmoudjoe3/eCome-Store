@@ -61,30 +61,29 @@
                     android:text="SOLD OUT"
                     android:textColor="@color/red" />
 
-                <ImageButton android:id="@+id/add_to_fav"
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/add_to_fav"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:tag="of"
                     android:src="@drawable/ic_fav_off"
-                    android:background="@drawable/solid_button_layout_ripple"
-                    android:padding="@dimen/_2sdp"
+                    app:fabSize="mini"
+                    android:tag="of"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:layout_marginBottom="@dimen/_8sdp"
                     android:layout_marginTop="@dimen/_3sdp"
-                    android:layout_marginEnd="@dimen/_12sdp"/>
-
-                <ImageButton android:id="@+id/add_to_cart"
+                    android:layout_marginEnd="@dimen/_8sdp"/>
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/add_to_cart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:tag="of"
                     android:src="@drawable/ic_add_cart"
-                    android:background="@drawable/solid_button_layout_ripple"
-                    android:padding="@dimen/_2sdp"
+                    app:fabSize="mini"
+                    android:tag="of"
                     android:layout_toLeftOf="@id/add_to_fav"
                     android:layout_alignParentBottom="true"
                     android:layout_marginBottom="@dimen/_8sdp"
-                    android:layout_marginEnd="@dimen/_10sdp"/>
+                    android:layout_marginEnd="@dimen/_4sdp" />
 
             </RelativeLayout>
 

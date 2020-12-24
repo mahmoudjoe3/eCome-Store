@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
 import com.mahmoudjoe3.eComStore.model.Product;
@@ -94,6 +95,8 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductV
                 }
             });
         } else {//user
+            if(currentProduct.getQuantity()==0)
+                holder.mAdd_cart.setEnabled(false);
             //////////fill fav and cart icon///////////
             if(mUser!=null&&mUser.getFavList()!=null&&mUser.getFavList().contains(currentProduct.getmId())){
                 holder.mAdd_fav.setTag("on");
@@ -144,7 +147,7 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductV
     public class ProductViewHolder extends RecyclerView.ViewHolder {
         ImageView mProductImage;
         TextView mProductTitle, mProductStoke, mProductPrice, mProductDate;
-        ImageButton mAdd_cart, mAdd_fav;
+        FloatingActionButton mAdd_cart, mAdd_fav;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);

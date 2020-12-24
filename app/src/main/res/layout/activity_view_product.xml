@@ -9,16 +9,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/p_my_toolbar"
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:elevation="4dp"
-            app:title="Title"
-            app:titleTextColor="@color/colorBG"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/p_my_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:title="Title"
+                app:titleTextColor="@color/colorBG" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
         <com.smarteist.autoimageslider.SliderView android:id="@+id/slider"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_300sdp"
@@ -63,11 +69,9 @@
                     android:paddingEnd="@dimen/_5sdp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:background="@drawable/transparent_button_layout_ripple"
+                    android:gravity="start"
                     android:layout_marginStart="@dimen/_20sdp"
                     android:text="5 in Stoke"
-                    android:textSize="@dimen/_16ssp"
                     android:textColor="@color/colorPrimaryDark"/>
 
         </LinearLayout>

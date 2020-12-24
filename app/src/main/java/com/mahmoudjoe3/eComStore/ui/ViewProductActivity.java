@@ -65,13 +65,11 @@ public class ViewProductActivity extends AppCompatActivity {
 
         if(product.getQuantity()>0) {
             pQuantity.setText(product.getQuantity()+" in stoke");
-            pQuantity.setBackgroundResource(R.drawable.transparent_layout_with_border);
-            pQuantity.setTextColor(getResources().getColor( R.color.colorPrimaryDark));
+            pQuantity.setTextColor(getResources().getColor( R.color.red));
         }
         else {
-            pQuantity.setText("out of stoke");
-            pQuantity.setBackgroundResource(R.drawable.solid_button_layout_ripple);
-            pQuantity.setTextColor(getResources().getColor( R.color.colorBG));
+            pQuantity.setText("SOLD OUT");
+            pQuantity.setTextColor(getResources().getColor( R.color.colorOutStoke));
         }
     }
 

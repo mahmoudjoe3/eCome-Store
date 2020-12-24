@@ -15,10 +15,12 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".ui.userUI.UserHomeActivity"
+            android:launchMode="singleTop"
             android:label="@string/title_activity_user_home"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".ui.ViewProductActivity" />
+            android:name=".ui.ViewProductActivity"
+            android:parentActivityName=".ui.userUI.UserHomeActivity"/>
         <activity
             android:name=".ui.adminUI.AdminHomeActivity"
             android:launchMode="singleTop" />

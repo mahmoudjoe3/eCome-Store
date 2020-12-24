@@ -59,7 +59,7 @@ public class CategoryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        categoryViewModel.getProductsLiveData(null, Cat).observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
+        /*categoryViewModel.getProductsLiveData(null, Cat).observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
             @Override
             public void onChanged(List<Product> products) {
                 categoryViewModel.getUserLiveData(userId).observe(getViewLifecycleOwner(), new Observer<AuthorizedUser>() {
@@ -71,7 +71,7 @@ public class CategoryFragment extends Fragment {
                     }
                 });
             }
-        });
+        });*/
         productAdapter.setOnImageButtonClickListener(new productAdapter.onImageButtonClickListener() {
             @Override
             public void onCartClick(Product product, ImageButton v) {
@@ -108,8 +108,13 @@ public class CategoryFragment extends Fragment {
         productAdapter.setListener(new productAdapter.onClickListener() {
             @Override
             public void onClick(Product product) {
+                boolean inFav= mUser.getFavList().contains(product.getmId());
+                boolean inCart= mUser.getCartList().contains(product.getmId());
                 Intent i=new Intent(getActivity(), ViewProductActivity.class);
+                i.putExtra(ViewProductActivity.inFav_Key,inFav);
+                i.putExtra(ViewProductActivity.inCart_Key,inCart);
                 i.putExtra(ViewProductActivity.product_Key,product);
+                i.putExtra(ViewProductActivity.user_Key,mUser);
                 startActivity(i);
             }
 
@@ -120,4 +125,22 @@ public class CategoryFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: ");
+        categoryViewModel.getProductsLiveData(null, Cat).observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
+            @Override
+            public void onChanged(List<Product> products) {
+                categoryViewModel.getUserLiveData(userId).observe(getViewLifecycleOwner(), new Observer<AuthorizedUser>() {
+                    @Override
+                    public void onChanged(AuthorizedUser user) {
+                        mUser=user;
+                        productAdapter.setProductList(products,user);
+
+                    }
+                });
+            }
+        });
+    }
 }

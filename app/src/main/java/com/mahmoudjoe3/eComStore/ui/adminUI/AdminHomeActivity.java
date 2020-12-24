@@ -64,9 +64,7 @@ public class AdminHomeActivity extends AppCompatActivity {
         mAdapter.setListener(new productAdapter.onClickListener() {
             @Override
             public void onClick(Product product) {
-                Intent i=new Intent(AdminHomeActivity.this, ViewProductActivity.class);
-                i.putExtra(ViewProductActivity.product_Key,product);
-                startActivity(i);
+                //TODO intent to add product frag
             }
 
             @Override

@@ -99,9 +99,17 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductV
                 holder.mAdd_fav.setTag("on");
                 holder.mAdd_fav.setImageResource(R.drawable.ic_fav_on);
             }
+            else {
+                holder.mAdd_fav.setTag("of");
+                holder.mAdd_fav.setImageResource(R.drawable.ic_fav_off);
+            }
             if(mUser!=null&&mUser.getCartList()!=null&&mUser.getCartList().contains(currentProduct.getmId())){
                 holder.mAdd_cart.setTag("on");
                 holder.mAdd_cart.setImageResource(R.drawable.ic_remove_cart);
+            }
+            else {
+                holder.mAdd_cart.setTag("of");
+                holder.mAdd_cart.setImageResource(R.drawable.ic_add_cart);
             }
 
             holder.mAdd_cart.setOnClickListener(new View.OnClickListener() {

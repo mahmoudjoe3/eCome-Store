@@ -24,10 +24,12 @@
                 app:titleTextColor="@color/colorBG" />
 
         </com.google.android.material.appbar.AppBarLayout>
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_300sdp">
         <com.smarteist.autoimageslider.SliderView android:id="@+id/slider"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_300sdp"
+            android:layout_height="match_parent"
             app:sliderScrollTimeInSec="2"
             app:sliderStartAutoCycle="true"
             app:sliderAutoCycleDirection="back_and_forth"
@@ -39,6 +41,30 @@
             app:sliderIndicatorOrientation="horizontal"
             app:sliderIndicatorGravity="center_horizontal|bottom"
             />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/p_fav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_fav_off"
+        app:fabSize="mini"
+        android:tag="of"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:layout_marginBottom="@dimen/_16sdp"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/p_cartAdded"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add_cart"
+        app:fabSize="mini"
+        android:tag="of"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@id/p_fav"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:layout_marginBottom="@dimen/_6sdp"/>
+</RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -102,7 +128,30 @@
 
         </LinearLayout>
 
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_margin="@dimen/_16ssp">
+                <Button
+                    android:id="@+id/p_addCart"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/solid_button_layout_ripple"
+                    android:padding="@dimen/_2sdp"
+                    android:tag="of"
+                    android:text="ADD to Cart"
+                    android:paddingEnd="@dimen/_2sdp"
+                    android:textColor="@color/colorBG" />
 
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

@@ -16,6 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
 import com.mahmoudjoe3.eComStore.model.Product;
 import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
 
@@ -44,9 +45,65 @@ public class FirebaseRepo {
         return instance;
     }
 
+
+    /////////////////////////////////////   get user data     //////////////////////////////////////
+
+    public void getUserById(String userId){
+        mReference= FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
+        mReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                AuthorizedUser user=snapshot.child(userId).getValue(AuthorizedUser.class);
+                if(mOnFindUserListener!=null)mOnFindUserListener.onSuccess(user);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public onFindUserListener mOnFindUserListener;
+    public void setOnFindUserListener(onFindUserListener mOnFindUserListener) {
+        this.mOnFindUserListener = mOnFindUserListener;
+    }
+    public interface onFindUserListener{
+        void onSuccess(AuthorizedUser user);
+    }
+
+
+    /////////////////////////////////////   manage fav and cart list      //////////////////////////////////////
+
+
+    public void addCart(String cart, AuthorizedUser user) {
+        mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
+        user.getCartList().add(cart);
+        mReference.child(user.getPhone()).setValue(user);
+    }
+    public void removeCart(String cart, AuthorizedUser user) {
+        mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
+        user.getCartList().remove(cart);
+        mReference.child(user.getPhone()).setValue(user);
+    }
+
+    public void addFav(String fav, AuthorizedUser user) {
+        mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
+        user.getFavList().add(fav);
+        mReference.child(user.getPhone()).setValue(user);
+    }
+
+    public void removeFav(String fav, AuthorizedUser user) {
+        mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
+        user.getFavList().remove(fav);
+        mReference.child(user.getPhone()).setValue(user);
+    }
+
+
     /////////////////////////////////////    product fitch    //////////////////////////////////////
 
     public void fitchProducts(String ProductOwner,String cat){
+        mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_product);
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -83,6 +140,7 @@ public class FirebaseRepo {
     public void setOnFitchProductListener(OnFitchProductListener mOnFitchProductListener) {
         this.mOnFitchProductListener = mOnFitchProductListener;
     }
+
     public interface OnFitchProductListener{
         void onFailure(String error);
         void onSuccess(List<Product> productList);
@@ -90,10 +148,9 @@ public class FirebaseRepo {
 
 
 
-
-
     /////////////////////////////////////    product insertion    //////////////////////////////////////
     public void insertProduct(Product product, Uri[] mImageUri) {
+        mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_product);
         String date,time,productKey;
         Calendar calendar=Calendar.getInstance();
         SimpleDateFormat DateFormat= new SimpleDateFormat("MMM dd, yyyy");
@@ -173,6 +230,7 @@ public class FirebaseRepo {
     /////////////////////////////////////    delete product     //////////////////////////////////////
 
     public void deleteProduct(Product  product){
+        mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_product);
         delete(product,0);
     }
     void delete(Product product,int i){

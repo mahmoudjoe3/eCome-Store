@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/my_toolbar"
-        tools:listitem="@layout/item_product_layout"/>
+        tools:listitem="@layout/admin_item_product_layout"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addNewProduct"

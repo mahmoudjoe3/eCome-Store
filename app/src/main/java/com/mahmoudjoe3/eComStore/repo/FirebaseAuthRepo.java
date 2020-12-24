@@ -10,8 +10,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
 import com.mahmoudjoe3.eComStore.model.User;
 import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
+
+import java.util.ArrayList;
 
 
 public class FirebaseAuthRepo {
@@ -21,9 +24,9 @@ public class FirebaseAuthRepo {
         mOnLoginListener = onLoginListener;
     }
     public interface OnLoginListener {
-        void onLogeInSuccess(User user);
+        void onLogeInSuccess(Object user);
         void onLogeInDenied(String errorMsg);
-        void onRemember(User user);
+        void onRemember(Object user);
     }
 
     private OnRegisterListener mOnRegisterListener;
@@ -74,7 +77,7 @@ public class FirebaseAuthRepo {
 
     }
     private void insertNewUser(String name, String phone, String password) {
-        User user=new User(name,phone,password);
+        AuthorizedUser user=new AuthorizedUser(name,phone,password);
         mReference.child(phone).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -103,25 +106,47 @@ public class FirebaseAuthRepo {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.child(refCollectionName).child(phone).exists()) { //access done
-                    User user;
-                    user = snapshot.child(refCollectionName).child(phone).getValue(User.class);
-                    if (user.getPhone().equals(phone)) {
-                        if (user.getPassword().equals(password)) {
-                            //pref
-                            if (rememberMe) {
-                                if (mOnLoginListener != null) {
-                                    mOnLoginListener.onRemember(user);
+                    if(admin) {
+                        User user = snapshot.child(refCollectionName).child(phone).getValue(User.class);
+                        if (user.getPhone().equals(phone)) {
+                            if (user.getPassword().equals(password)) {
+                                //pref
+                                if (rememberMe) {
+                                    if (mOnLoginListener != null) {
+                                        mOnLoginListener.onRemember(user);
+                                    }
                                 }
-                            }
-                            if (mOnLoginListener != null) {
-                                mOnLoginListener.onLogeInSuccess(user);
-                            }
-                        } else {
-                            if (mOnLoginListener != null) {
-                                mOnLoginListener.onLogeInDenied("password incorrect");
+                                if (mOnLoginListener != null) {
+                                    mOnLoginListener.onLogeInSuccess(user);
+                                }
+                            } else {
+                                if (mOnLoginListener != null) {
+                                    mOnLoginListener.onLogeInDenied("password incorrect");
+                                }
                             }
                         }
                     }
+                    else {
+                        AuthorizedUser user = snapshot.child(refCollectionName).child(phone).getValue(AuthorizedUser.class);
+                        if (user.getPhone().equals(phone)) {
+                            if (user.getPassword().equals(password)) {
+                                //pref
+                                if (rememberMe) {
+                                    if (mOnLoginListener != null) {
+                                        mOnLoginListener.onRemember(user);
+                                    }
+                                }
+                                if (mOnLoginListener != null) {
+                                    mOnLoginListener.onLogeInSuccess(user);
+                                }
+                            } else {
+                                if (mOnLoginListener != null) {
+                                    mOnLoginListener.onLogeInDenied("password incorrect");
+                                }
+                            }
+                        }
+                    }
+
                 } else {  //access denied
                     if (mOnLoginListener != null) {
                         mOnLoginListener.onLogeInDenied("Login Failed, You should have account");

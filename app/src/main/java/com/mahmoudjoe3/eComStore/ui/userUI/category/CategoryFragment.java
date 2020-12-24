@@ -2,10 +2,13 @@ package com.mahmoudjoe3.eComStore.ui.userUI.category;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,30 +19,36 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.navigation.NavigationView;
 import com.mahmoudjoe3.eComStore.R;
+import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
 import com.mahmoudjoe3.eComStore.model.Product;
+import com.mahmoudjoe3.eComStore.repo.FirebaseRepo;
 import com.mahmoudjoe3.eComStore.ui.ViewProductActivity;
-import com.mahmoudjoe3.eComStore.ui.adminUI.AdminHomeActivity;
-import com.mahmoudjoe3.eComStore.ui.adminUI.productAdapter;
+import com.mahmoudjoe3.eComStore.ui.productAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-
 public class CategoryFragment extends Fragment {
-
+    private static final String TAG = "CategoryFragment.me";
     RecyclerView pList;
     private CategoryViewModel categoryViewModel;
     String Cat;
     private productAdapter productAdapter;
+    AuthorizedUser mUser;
+    String userId;
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.user_fragment_catagory, container, false);
+        Log.d(TAG, "onCreateView: ");
+        NavigationView navView = (NavigationView) getActivity().findViewById(R.id.nav_view);
+        userId = ((TextView) navView.getHeaderView(0).findViewById(R.id.profile_phone)).getText().toString();
 
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
-        Cat= String.valueOf(((Toolbar) getActivity().findViewById(R.id.toolbar)).getTitle());
+        pList = root.findViewById(R.id.pList);
+        Cat = String.valueOf(((Toolbar) getActivity().findViewById(R.id.toolbar)).getTitle());
 
-        productAdapter=new productAdapter(getActivity());
-        pList=root.findViewById(R.id.pList);
+        productAdapter = new productAdapter(getActivity(), R.layout.user_item_product_layout);
         pList.setAdapter(productAdapter);
         pList.setHasFixedSize(true);
         pList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -50,11 +59,49 @@ public class CategoryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Toast.makeText(getActivity(), ""+Cat, Toast.LENGTH_SHORT).show();
         categoryViewModel.getProductsLiveData(null, Cat).observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
             @Override
             public void onChanged(List<Product> products) {
-                productAdapter.setProductList(products);
+                categoryViewModel.getUserLiveData(userId).observe(getViewLifecycleOwner(), new Observer<AuthorizedUser>() {
+                    @Override
+                    public void onChanged(AuthorizedUser user) {
+                        mUser=user;
+                        productAdapter.setProductList(products,user);
+
+                    }
+                });
+            }
+        });
+        productAdapter.setOnImageButtonClickListener(new productAdapter.onImageButtonClickListener() {
+            @Override
+            public void onCartClick(Product product, ImageButton v) {
+                if(v.getTag().equals("of")){
+                    v.setTag("on");
+                    v.setImageResource(R.drawable.ic_remove_cart);
+                    //mUser.getCartList().add(product.getmId());
+                    categoryViewModel.addCart(product.getmId(),mUser);
+
+                }
+                else {
+                    v.setTag("of");
+                    v.setImageResource(R.drawable.ic_add_cart);
+                    //mUser.getCartList().remove(product.getmId());
+                    categoryViewModel.removeCart(product.getmId(),mUser);
+                }
+            }
+
+            @Override
+            public void onFavClick(Product product, ImageButton v) {
+                if(v.getTag().equals("of")){
+                    v.setTag("on");
+                    v.setImageResource(R.drawable.ic_fav_on);
+                    categoryViewModel.addFav(product.getmId(),mUser);
+                }
+                else {
+                    v.setTag("of");
+                    v.setImageResource(R.drawable.ic_fav_off);
+                    categoryViewModel.RemoveFav(product.getmId(),mUser);
+                }
             }
         });
 
@@ -72,4 +119,5 @@ public class CategoryFragment extends Fragment {
             }
         });
     }
+
 }

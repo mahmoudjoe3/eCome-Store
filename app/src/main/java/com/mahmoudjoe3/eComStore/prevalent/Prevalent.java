@@ -5,7 +5,6 @@ import com.mahmoudjoe3.eComStore.model.User;
 import java.security.PublicKey;
 
 public class Prevalent {
-    private static User currentOnlineUser;
     public final static String UserPhoneKey="phoneKey";
     public final static String UserPasswordKey="passwordKey";
     public final static String UserNameKey="nameKey";
@@ -16,6 +15,7 @@ public class Prevalent {
     public final static String refStorage_productImage="product image";
     public final static String ADMIN="admin";
     public final static String USER_DATA ="userData";
+    public final static String refColName_CartList="cartList";
 
-
+    public final static String refColName_FavList="favList";
 }

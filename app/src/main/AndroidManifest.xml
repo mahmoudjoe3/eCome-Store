@@ -16,7 +16,7 @@
         <activity
             android:name=".ui.userUI.UserHomeActivity"
             android:label="@string/title_activity_user_home"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.ViewProductActivity" />
         <activity

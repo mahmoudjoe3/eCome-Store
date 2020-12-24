@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.mahmoudjoe3.eComStore.Logic.MyLogic;
 import com.mahmoudjoe3.eComStore.R;
+import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
 import com.mahmoudjoe3.eComStore.model.User;
 import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
 import com.mahmoudjoe3.eComStore.repo.FirebaseAuthRepo;
@@ -70,14 +71,15 @@ public class MainActivity extends AppCompatActivity {
 
             //offline
             if (phone != null && password != null && name != null) {
-                User user = new User(name, phone, password);
+
                 Intent intent;
                 if(isAdmin)
                      intent = new Intent(MainActivity.this, AdminHomeActivity.class);
                 else
                     intent = new Intent(MainActivity.this, UserHomeActivity.class);
-
-                intent.putExtra(Prevalent.USER_DATA, user);
+                if(isAdmin)
+                    intent.putExtra(Prevalent.USER_DATA, new User(name, phone, password));
+                else intent.putExtra(Prevalent.USER_DATA, new AuthorizedUser(name, phone, password));
                 startActivity(intent);
             }
         }
@@ -93,12 +95,14 @@ public class MainActivity extends AppCompatActivity {
                 ////////////////////////////////////////////////
                 mFirebaseAuthViewModel.setOnLoginListener(new FirebaseAuthRepo.OnLoginListener() {
                     @Override
-                    public void onLogeInSuccess(User user) {
+                    public void onLogeInSuccess(Object user) {
                         mAlertDialog.dismiss();
                         Intent intent=((isAdmin)?
                                 new Intent(MainActivity.this, AdminHomeActivity.class):
                                 new Intent(MainActivity.this, UserHomeActivity.class));
-                        intent.putExtra(Prevalent.USER_DATA,user);
+                        if(isAdmin)
+                            intent.putExtra(Prevalent.USER_DATA,(User)user);
+                        else intent.putExtra(Prevalent.USER_DATA,(AuthorizedUser)user);
                         startActivity(intent);
 
                     }
@@ -110,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onRemember(User user) {
+                    public void onRemember(Object user) {
 
                     }
                 });

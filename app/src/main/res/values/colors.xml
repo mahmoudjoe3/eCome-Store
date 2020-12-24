@@ -14,5 +14,6 @@
     <color name="indicator_1">#E91E63</color>
     <color name="indicator_2">#9C27B0</color>
     <color name="indicator">#55B3C2</color>
+    <color name="red">#FF1100</color>
 
 </resources>

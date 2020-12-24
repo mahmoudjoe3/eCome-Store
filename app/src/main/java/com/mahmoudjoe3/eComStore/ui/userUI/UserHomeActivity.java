@@ -21,6 +21,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 import com.mahmoudjoe3.eComStore.R;
+import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
 import com.mahmoudjoe3.eComStore.model.User;
 import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
 import com.mahmoudjoe3.eComStore.ui.main.MainActivity;
@@ -39,7 +40,7 @@ public class UserHomeActivity extends AppCompatActivity {
     DrawerLayout mDrawerLayout;
     private AppBarConfiguration mAppBarConfiguration;
 
-    User mUser;
+    AuthorizedUser mUser;
     SharedPreferences preferences;
 
     @Override
@@ -49,10 +50,9 @@ public class UserHomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         preferences=getSharedPreferences(Prevalent.LOGIN_PREF, Context.MODE_PRIVATE);
-        mUser= (User) getIntent().getSerializableExtra(Prevalent.USER_DATA);
+        mUser= (AuthorizedUser) getIntent().getSerializableExtra(Prevalent.USER_DATA);
 
         setSupportActionBar(mToolbar);
-        Toast.makeText(this, ""+mToolbar.getTitle(), Toast.LENGTH_SHORT).show();
         mNavView.setItemIconTintList(null);
         ((TextView)mNavView.getHeaderView(0).findViewById(R.id.profile_username)).setText(mUser.getName());
         ((TextView)mNavView.getHeaderView(0).findViewById(R.id.profile_phone)).setText(mUser.getPhone());

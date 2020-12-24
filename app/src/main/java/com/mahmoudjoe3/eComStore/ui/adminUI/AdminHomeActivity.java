@@ -25,6 +25,7 @@ import com.mahmoudjoe3.eComStore.model.User;
 import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
 import com.mahmoudjoe3.eComStore.ui.ViewProductActivity;
 import com.mahmoudjoe3.eComStore.ui.main.MainActivity;
+import com.mahmoudjoe3.eComStore.ui.productAdapter;
 import com.mahmoudjoe3.eComStore.viewModel.admin.AdminHomePageViewModel;
 
 import java.util.List;
@@ -100,7 +101,7 @@ public class AdminHomeActivity extends AppCompatActivity {
     }
 
     private void initRecycle() {
-        mAdapter=new productAdapter(this);
+        mAdapter=new productAdapter(this,R.layout.admin_item_product_layout);
         mRecycleView.setAdapter(mAdapter);
         mRecycleView.setHasFixedSize(true);
         mRecycleView.setLayoutManager(new LinearLayoutManager(this));

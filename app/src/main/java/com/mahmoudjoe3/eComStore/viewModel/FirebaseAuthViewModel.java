@@ -20,7 +20,7 @@ public class FirebaseAuthViewModel extends ViewModel {
         repo.login(isAdmin,phone,password,rememberMe);
         repo.setOnLoginListener(new FirebaseAuthRepo.OnLoginListener() {
             @Override
-            public void onLogeInSuccess(User user) {
+            public void onLogeInSuccess(Object user) {
                 if(mOnLoginListener!=null)mOnLoginListener.onLogeInSuccess(user);
             }
 
@@ -30,7 +30,7 @@ public class FirebaseAuthViewModel extends ViewModel {
             }
 
             @Override
-            public void onRemember(User user) {
+            public void onRemember(Object user) {
                 if(mOnLoginListener!=null)mOnLoginListener.onRemember(user);
             }
         });

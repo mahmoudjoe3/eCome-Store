@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.textfield.TextInputEditText;
 import com.mahmoudjoe3.eComStore.Logic.MyLogic;
 import com.mahmoudjoe3.eComStore.R;
+import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
 import com.mahmoudjoe3.eComStore.model.User;
 import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
 import com.mahmoudjoe3.eComStore.repo.FirebaseAuthRepo;
@@ -89,12 +90,14 @@ public class LoginActivity extends AppCompatActivity {
 
                 mFirebaseAuthViewModel.setOnLoginListener(new FirebaseAuthRepo.OnLoginListener() {
                     @Override
-                    public void onLogeInSuccess(User user) {
+                    public void onLogeInSuccess(Object user) {
                         mAlertDialog.dismiss();
                         Intent intent=((isAdmin)?
                                 new Intent(LoginActivity.this, AdminHomeActivity.class):
                                 new Intent(LoginActivity.this, UserHomeActivity.class));
-                        intent.putExtra(Prevalent.USER_DATA,user);
+                        if(isAdmin)
+                            intent.putExtra(Prevalent.USER_DATA,(User)user);
+                        else intent.putExtra(Prevalent.USER_DATA,(AuthorizedUser)user);
                         startActivity(intent);
 
                     }
@@ -107,16 +110,27 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onRemember(User user) {
+                    public void onRemember(Object user) {
                         SharedPreferences preferences = getSharedPreferences(Prevalent.LOGIN_PREF, Context.MODE_PRIVATE);
                         preferences.edit().clear().apply();
                         SharedPreferences.Editor editor= preferences.edit();
-                        editor.putString(Prevalent.UserPhoneKey,user.getPhone());
-                        editor.putString(Prevalent.UserPasswordKey,user.getPassword());
-                        editor.putString(Prevalent.UserNameKey,user.getName());
-                        if(isAdmin) //admin
-                            editor.putBoolean(Prevalent.ADMIN,true);
-                        else editor.putBoolean(Prevalent.ADMIN,false);
+                        String phone = null,pass = null,name = null;
+                        if(isAdmin) { //admin
+                            phone=((User)user).getPhone();
+                            pass=((User)user).getPassword();
+                            name=((User)user).getName();
+                            editor.putBoolean(Prevalent.ADMIN, true);
+                        }
+                        else {
+                            phone=((AuthorizedUser)user).getPhone();
+                            pass=((AuthorizedUser)user).getPassword();
+                            name=((AuthorizedUser)user).getName();
+                            editor.putBoolean(Prevalent.ADMIN, false);
+                        }
+
+                        editor.putString(Prevalent.UserPhoneKey,phone);
+                        editor.putString(Prevalent.UserPasswordKey,pass);
+                        editor.putString(Prevalent.UserNameKey,name);
                         editor.apply();
                     }
                 });

@@ -1,4 +1,6 @@
-package com.mahmoudjoe3.eComStore.ui.userUI.wishlist;
+package com.mahmoudjoe3.eComStore.ui.userUI.cart;
+
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,16 +12,16 @@ import com.mahmoudjoe3.eComStore.repo.FirebaseRepo;
 
 import java.util.List;
 
-public class WishlistViewModel extends ViewModel {
+public class UserCartViewModel extends ViewModel {
 
-    private MutableLiveData<List<Product>> productsLiveData;
-    private MutableLiveData<AuthorizedUser> userLiveData;
+    private static final String TAG = "UserCartViewModel.me";
     private FirebaseRepo repo;
-
-    public WishlistViewModel() {
+    private MutableLiveData<AuthorizedUser> userLiveData;
+    private MutableLiveData<List<Product>> productsLiveData;
+    public UserCartViewModel() {
         repo = FirebaseRepo.getInstance();
         userLiveData = new MutableLiveData<>();
-        productsLiveData = new MutableLiveData<>();
+        productsLiveData=new MutableLiveData<>();
     }
 
     public LiveData<List<Product>> getProductsByIds(List<String> productIds) {
@@ -44,19 +46,9 @@ public class WishlistViewModel extends ViewModel {
         return userLiveData;
     }
 
-    public void addFav(String fav, AuthorizedUser user) {
-        repo.addFav(fav, user);
-    }
-    public void RemoveFav(String fav, AuthorizedUser user) {
-        repo.removeFav(fav, user);
-    }
-
-    public void addCart(String cart, AuthorizedUser user) {
-        repo.addCart(cart, user);
-    }
-
     public void removeCart(String cart, AuthorizedUser user) {
         repo.removeCart(cart, user);
     }
+
 
 }

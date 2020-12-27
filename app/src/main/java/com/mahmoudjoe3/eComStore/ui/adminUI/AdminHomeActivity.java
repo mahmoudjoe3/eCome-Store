@@ -23,9 +23,8 @@ import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.Product;
 import com.mahmoudjoe3.eComStore.model.User;
 import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
-import com.mahmoudjoe3.eComStore.ui.ViewProductActivity;
 import com.mahmoudjoe3.eComStore.ui.main.MainActivity;
-import com.mahmoudjoe3.eComStore.ui.productAdapter;
+import com.mahmoudjoe3.eComStore.ui.userUI.productAdapter;
 import com.mahmoudjoe3.eComStore.viewModel.admin.AdminHomePageViewModel;
 
 import java.util.List;

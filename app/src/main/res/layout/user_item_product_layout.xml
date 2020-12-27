@@ -40,26 +40,25 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:id="@+id/stoke"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_5sdp"
+                    android:text="SOLD OUT" />
+
+                <TextView
                     android:id="@+id/item_productPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginTop="@dimen/_5sdp"
                     android:text="40 EGP"
+                    android:layout_below="@id/stoke"
                     android:textColor="@color/indicator_1"
                     android:textSize="@dimen/_10ssp"
                     android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/stoke"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/item_productPrice"
-                    android:layout_marginStart="@dimen/_5sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:layout_marginEnd="@dimen/_5sdp"
-                    android:text="SOLD OUT"
-                    android:textColor="@color/red" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/add_to_fav"

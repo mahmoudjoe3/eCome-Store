@@ -69,9 +69,9 @@
         tools:layout="@layout/user_fragment_wishlist" />
 
     <fragment
-        android:id="@+id/nav_setting"
-        android:name="com.mahmoudjoe3.eComStore.ui.userUI.setting.SettingFragment"
+        android:id="@+id/nav_logout2"
+        android:name="com.mahmoudjoe3.eComStore.ui.userUI.logout.LogoutFragment"
         android:label="Setting"
-        tools:layout="@layout/user_fragment_setting" />
+        tools:layout="@layout/user_fragment_logout" />
 
 </navigation>

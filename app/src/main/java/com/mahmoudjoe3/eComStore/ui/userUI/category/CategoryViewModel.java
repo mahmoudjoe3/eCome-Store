@@ -23,6 +23,7 @@ public class CategoryViewModel extends ViewModel {
         repo = FirebaseRepo.getInstance();
         productsLiveData = new MutableLiveData<>();
         userLiveData = new MutableLiveData<>();
+
     }
 
     public LiveData<List<Product>> getProductsLiveData(String OwnerId, String cat) {

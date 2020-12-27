@@ -54,7 +54,8 @@ public class FirebaseRepo {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 AuthorizedUser user=snapshot.child(userId).getValue(AuthorizedUser.class);
-                if(mOnFindUserListener!=null)mOnFindUserListener.onSuccess(user);
+                if(mOnFindUserListener!=null)
+                    mOnFindUserListener.onSuccess(user);
             }
 
             @Override
@@ -70,6 +71,34 @@ public class FirebaseRepo {
     }
     public interface onFindUserListener{
         void onSuccess(AuthorizedUser user);
+    }
+
+    /////////////////////////////////////   get product data     //////////////////////////////////////
+
+    public void getProductListByIds(List<String> productIds){
+        mReference= FirebaseDatabase.getInstance().getReference(Prevalent.refColName_product);
+        mReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Product> products=new ArrayList<>();
+                for (String key: productIds)
+                    products.add(snapshot.child(key).getValue(Product.class));
+                if(mOnGetProductListener!=null)mOnGetProductListener.onSuccess(products);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public OnGetProductListener mOnGetProductListener;
+    public void setOnGetProductListener(OnGetProductListener mOnGetProductListener) {
+        this.mOnGetProductListener = mOnGetProductListener;
+    }
+    public interface OnGetProductListener{
+        void onSuccess(List<Product> products);
     }
 
 
@@ -232,10 +261,31 @@ public class FirebaseRepo {
     public void deleteProduct(Product  product){
         mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_product);
         delete(product,0);
+
     }
     void delete(Product product,int i){
         if(i>=product.getmImageUri().size()){
             mReference.child(product.getmId()).removeValue();
+            DatabaseReference mRef=FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
+            mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for(DataSnapshot snap:snapshot.getChildren()) {
+                        AuthorizedUser user = snap.getValue(AuthorizedUser.class);
+                        if(user.getCartList().contains(product.getmId())){
+                            removeCart(product.getmId(),user);
+                        }
+                        if(user.getFavList().contains(product.getmId())){
+                            removeFav(product.getmId(),user);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
             return;
         }
         StorageReference deletedRef = FirebaseStorage.getInstance().getReferenceFromUrl(product.getmImageUri().get(i));

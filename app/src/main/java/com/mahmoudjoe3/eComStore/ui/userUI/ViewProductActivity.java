@@ -1,5 +1,6 @@
-package com.mahmoudjoe3.eComStore.ui;
+package com.mahmoudjoe3.eComStore.ui.userUI;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -115,18 +116,18 @@ public class ViewProductActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void updateCart() {
         if(inCart){
             pCartAdded.setTag("on");
             pCartAdded.setImageResource(R.drawable.ic_remove_cart);
             pAddCart.setText("Remove from Cart");
-            pAddCart.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-
+            pAddCart.setBackground(getDrawable(R.drawable.solid_button_layout_ripple));
         }else {
             pCartAdded.setTag("of");
             pCartAdded.setImageResource(R.drawable.ic_add_cart);
             pAddCart.setText("Add to Cart");
-            pAddCart.setBackgroundColor(getResources().getColor(R.color.colorInStoke));
+            pAddCart.setBackground(getDrawable(R.drawable.solid_button_layout_ripple_green));
         }
     }
 

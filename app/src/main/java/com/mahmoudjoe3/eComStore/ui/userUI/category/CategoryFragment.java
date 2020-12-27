@@ -4,11 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,28 +28,28 @@ import com.google.android.material.navigation.NavigationView;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
 import com.mahmoudjoe3.eComStore.model.Product;
-import com.mahmoudjoe3.eComStore.repo.FirebaseRepo;
-import com.mahmoudjoe3.eComStore.ui.ViewProductActivity;
-import com.mahmoudjoe3.eComStore.ui.productAdapter;
+import com.mahmoudjoe3.eComStore.ui.userUI.UserHomeActivity;
+import com.mahmoudjoe3.eComStore.ui.userUI.ViewProductActivity;
+import com.mahmoudjoe3.eComStore.ui.userUI.productAdapter;
+import com.mahmoudjoe3.eComStore.viewModel.ShardViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryFragment extends Fragment {
     private static final String TAG = "CategoryFragment.me";
-    RecyclerView pList;
     private CategoryViewModel categoryViewModel;
     String Cat;
+    RecyclerView pList;
     private productAdapter productAdapter;
     AuthorizedUser mUser;
     String userId;
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.user_fragment_catagory, container, false);
-        Log.d(TAG, "onCreateView: ");
         NavigationView navView = (NavigationView) getActivity().findViewById(R.id.nav_view);
         userId = ((TextView) navView.getHeaderView(0).findViewById(R.id.profile_phone)).getText().toString();
 
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+
         pList = root.findViewById(R.id.pList);
         Cat = String.valueOf(((Toolbar) getActivity().findViewById(R.id.toolbar)).getTitle());
 
@@ -59,19 +64,7 @@ public class CategoryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        /*categoryViewModel.getProductsLiveData(null, Cat).observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
-            @Override
-            public void onChanged(List<Product> products) {
-                categoryViewModel.getUserLiveData(userId).observe(getViewLifecycleOwner(), new Observer<AuthorizedUser>() {
-                    @Override
-                    public void onChanged(AuthorizedUser user) {
-                        mUser=user;
-                        productAdapter.setProductList(products,user);
 
-                    }
-                });
-            }
-        });*/
         productAdapter.setOnImageButtonClickListener(new productAdapter.onImageButtonClickListener() {
             @Override
             public void onCartClick(Product product, ImageButton v) {
@@ -128,19 +121,27 @@ public class CategoryFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart: ");
         categoryViewModel.getProductsLiveData(null, Cat).observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
             @Override
             public void onChanged(List<Product> products) {
                 categoryViewModel.getUserLiveData(userId).observe(getViewLifecycleOwner(), new Observer<AuthorizedUser>() {
                     @Override
                     public void onChanged(AuthorizedUser user) {
-                        mUser=user;
-                        productAdapter.setProductList(products,user);
-
+                        mUser = user;
+                        productAdapter.setProductList(products, user);
                     }
                 });
             }
         });
+
+        ShardViewModel shardViewModel=new ViewModelProvider(getActivity()).get(ShardViewModel.class);
+        shardViewModel.getLiveSearch().observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                productAdapter.getFilter().filter(s);
+            }
+        });
+
     }
+
 }

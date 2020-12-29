@@ -17,7 +17,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
+import com.mahmoudjoe3.eComStore.model.OrderDB;
 import com.mahmoudjoe3.eComStore.model.Product;
+import com.mahmoudjoe3.eComStore.model.SubOrderDB;
 import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
 
 import java.text.SimpleDateFormat;
@@ -69,6 +71,7 @@ public class FirebaseRepo {
     public void setOnFindUserListener(onFindUserListener mOnFindUserListener) {
         this.mOnFindUserListener = mOnFindUserListener;
     }
+
     public interface onFindUserListener{
         void onSuccess(AuthorizedUser user);
     }
@@ -302,5 +305,96 @@ public class FirebaseRepo {
             }
         });
 
+    }
+
+
+    ///////////////////////////////////////////  insert order  /////////////////////////////////////////////
+
+    public void insertOrder(OrderDB orderDB) {
+        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference(Prevalent.refColName_order);
+        String key=mRef.push().getKey();
+        orderDB.setId(key);
+        mRef.child(orderDB.getId()).setValue(orderDB).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                decreaseQty(orderDB.getOrderList());
+                deleteCart(orderDB.getPhone());
+                if(mOnOrderAddedListener!=null)mOnOrderAddedListener.onSuccess();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if(mOnOrderAddedListener!=null)mOnOrderAddedListener.onFailure();
+            }
+        });
+    }
+
+    private void deleteCart(String phone) {
+        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
+        mRef.child(phone).child("cartList").setValue(null);
+    }
+
+    private void decreaseQty(List<SubOrderDB> orderList) {
+        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference(Prevalent.refColName_product);
+        for(SubOrderDB subOrderDB:orderList) {
+            mRef.child(subOrderDB.getProduct_Key()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Product product = snapshot.getValue(Product.class);
+                    int lastQty = product.getQuantity();
+                    lastQty -= subOrderDB.getQty();
+                    product.setQuantity(lastQty);
+                    mRef.child(product.getmId()).setValue(product);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+    }
+
+    onOrderAddedListener mOnOrderAddedListener;
+
+    public void setOnOrderAddedListener(onOrderAddedListener mOnOrderAddedListener) {
+        this.mOnOrderAddedListener = mOnOrderAddedListener;
+    }
+
+    public interface onOrderAddedListener{
+        void onSuccess();
+        void onFailure();
+    }
+
+    public void fitchOrders(String userPhone) {
+        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference(Prevalent.refColName_order);
+        List<OrderDB> orderDBList=new ArrayList<>();
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for(DataSnapshot snap:snapshot.getChildren()) {
+                    OrderDB orderDB = snap.getValue(OrderDB.class);
+                    if(orderDB.getPhone().equals(userPhone)){
+                        orderDBList.add(orderDB);
+                    }
+                }
+                if(mOnOrderRetrievedListener!=null)
+                    mOnOrderRetrievedListener.onComplete(orderDBList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    onOrderRetrievedListener mOnOrderRetrievedListener;
+    public void setonOrderRetrievedListener(onOrderRetrievedListener mOnOrderRetrievedListener) {
+        this.mOnOrderRetrievedListener = mOnOrderRetrievedListener;
+    }
+    public interface onOrderRetrievedListener{
+        void onComplete(List<OrderDB> orderDBList);
     }
 }

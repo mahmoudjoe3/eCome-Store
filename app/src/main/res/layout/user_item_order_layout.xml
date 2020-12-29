@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/_3sdp"
+    app:cardBackgroundColor="@color/colorAccent"
     app:cardCornerRadius="@dimen/_2sdp">
 
     <LinearLayout
@@ -11,7 +12,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView android:id="@+id/o_image"
+        <ImageView
+            android:id="@+id/o_image"
             android:layout_width="0dp"
             android:layout_height="@dimen/_100sdp"
             android:layout_weight="1"
@@ -21,16 +23,17 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_16sdp"
             android:layout_weight="2"
-            android:orientation="vertical"
-            android:layout_marginBottom="@dimen/_16sdp">
+            android:orientation="vertical">
 
-            <TextView android:id="@+id/o_title"
+            <TextView
+                android:id="@+id/o_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_12sdp"
                 android:text="this is a title for some product and this is a title for some product"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/colorBG" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -41,22 +44,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_12sdp"
-                    android:text="Sold by:" />
+                    android:text="Sold by:"
+                    android:textColor="@color/colorBG" />
 
-                <TextView android:id="@+id/o_owner"
+                <TextView
+                    android:id="@+id/o_owner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_4sdp"
                     android:text="eCom store"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/indicator"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginTop="@dimen/_5sdp"
+                android:orientation="horizontal"
                 android:paddingTop="@dimen/_5sdp"
                 android:paddingBottom="@dimen/_5sdp">
 
@@ -64,7 +69,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_12sdp"
-                    android:text="Qty:" />
+                    android:text="Qty:"
+                    android:textColor="@color/colorBG" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/o_decreaseQty"
@@ -73,53 +79,63 @@
                     android:layout_marginStart="@dimen/_25sdp"
                     android:layout_marginEnd="@dimen/_5sdp"
                     android:padding="@dimen/_5sdp"
-                    android:src="@drawable/ic_decrease"
-                    app:fab_backgroundColor="@color/colorBG"
                     android:scaleType="fitXY"
-                    app:fabCustomSize="@dimen/_16sdp"
+                    android:src="@drawable/ic_decrease"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textStyle="bold" />
-                <TextView android:id="@+id/o_Qty"
+                    android:textStyle="bold"
+                    app:fabCustomSize="@dimen/_16sdp"
+                    app:fab_backgroundColor="@color/colorBG" />
+
+                <TextView
+                    android:id="@+id/o_Qty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1"/>
+                    android:text="1"
+                    android:textColor="@color/indicator" />
+
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/o_increaseQty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_5sdp"
-                    android:src="@drawable/ic_increase"
                     android:scaleType="centerInside"
-                    app:fabCustomSize="@dimen/_16sdp"
+                    android:src="@drawable/ic_increase"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:fabCustomSize="@dimen/_16sdp" />
             </LinearLayout>
-            <TextView android:id="@+id/o_price"
+
+            <TextView
+                android:id="@+id/o_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:text="59.0 EGP"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimaryDark"
-                android:layout_marginTop="@dimen/_5sdp"/>
+                android:textColor="@color/indicator"
+                android:textStyle="bold" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginStart="@dimen/_12sdp"
-                >
-                <TextView android:id="@+id/notFreeShip"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/notFreeShip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
                     android:text="Eligible for "
-                    android:layout_marginTop="@dimen/_5sdp"/>
+                    android:textColor="@color/colorBG" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
                     android:text="FREE Shipping"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textStyle="bold"
-                    android:layout_marginTop="@dimen/_5sdp"/>
+                    android:textColor="@color/indicator"
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </LinearLayout>

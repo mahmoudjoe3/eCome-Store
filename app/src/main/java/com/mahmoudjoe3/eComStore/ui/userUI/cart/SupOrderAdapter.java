@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
-import com.mahmoudjoe3.eComStore.model.Order.SubOrderUI;
 import com.mahmoudjoe3.eComStore.model.Product;
+import com.mahmoudjoe3.eComStore.model.SubOrderUI;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class SupOrderAdapter extends RecyclerView.Adapter<SupOrderAdapter.SubOrd
     private Context context;
     private MutableLiveData<Float> totalPriceLiveData;
 
-    public SupOrderAdapter(Context context, UserCartViewModel viewModel) {
+    public SupOrderAdapter(Context context) {
         this.list = new ArrayList<>();
         this.context = context;
         totalPriceLiveData =new MutableLiveData<>((float) 0);
@@ -83,7 +83,7 @@ public class SupOrderAdapter extends RecyclerView.Adapter<SupOrderAdapter.SubOrd
             @Override
             public void onClick(View v) {
                 int last = Integer.parseInt(holder.pQty.getText().toString());
-                if (product.getQuantity() != last) {
+                if (product.getQuantity() > last) {
                     holder.pQty.setText((last + 1) + "");
                     subOrder.setQty(last+1);
                     if(((last+1)*product.getmPrice())>=350)

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.userUI.orderSummary.OrderSummaryActivity"
+    android:background="@color/colorPrimaryDark">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/llpar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/o_my_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="Order Summary"
+            app:titleTextColor="@color/colorBG" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/not_s_card"
+        android:layout_below="@id/llpar"
+        android:background="@color/colorPrimary">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_14ssp"
+                android:layout_marginStart="@dimen/_18sdp"
+                android:layout_margin="@dimen/_18sdp"
+                android:textColor="@color/colorBG"
+                android:text="Specify Delivery Location" />
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                app:cardBackgroundColor="@color/colorPrimaryDark"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_margin="@dimen/_16sdp">
+                    <TextView android:id="@+id/s_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_15ssp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="@dimen/_30sdp"
+                        android:textColor="@color/colorBG"
+                        android:text="Mahmoud" />
+                    <TextView android:id="@+id/s_userAddress"
+                        android:layout_width="match_parent"
+                        android:textColor="@color/colorBG"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_30sdp"
+                        android:layout_marginTop="@dimen/_3sdp"
+                        android:layout_marginBottom="@dimen/_3sdp"
+                        android:text="No address" />
+                    <TextView android:id="@+id/s_userPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_14ssp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="@dimen/_30sdp"
+                        android:textColor="@color/colorBG"
+                        android:text="01146984804"/>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/s_pickLocation_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/_14ssp"
+                            android:textStyle="bold"
+                            android:layout_gravity="end"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:layout_marginStart="@dimen/_30sdp"
+                            android:text="Git My Location"
+                            android:textColor="#0368FF"/>
+                        <TextView
+                            android:id="@+id/s_show_in_map"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/_14ssp"
+                            android:visibility="gone"
+                            android:layout_gravity="end"
+                            android:paddingTop="@dimen/_6sdp"
+                            android:layout_alignParentEnd="true"
+                            android:paddingEnd="@dimen/_5sdp"
+                            android:text="Show in map"
+                            android:textColor="@color/colorOpenMap"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_14ssp"
+                android:layout_marginStart="@dimen/_18sdp"
+                android:textColor="@color/colorBG"
+                android:layout_marginTop="@dimen/_18sdp"
+                android:layout_marginBottom="@dimen/_18sdp"
+
+                android:text="Shipment (Shipped locally)" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                app:cardBackgroundColor="@color/colorPrimaryDark">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView android:id="@+id/s_delivery_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:layout_marginStart="@dimen/_20sdp"
+                        android:layout_marginBottom="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:text="Delivered by 27-Dec-2020"
+                        android:textColor="@color/colorBG"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/s_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_14ssp"
+                android:layout_marginStart="@dimen/_18sdp"
+                android:layout_marginTop="@dimen/_18sdp"
+                android:layout_marginBottom="@dimen/_18sdp"
+                android:textColor="@color/colorBG"
+                android:text="Payment Summary" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/colorPrimaryDark">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/_16sdp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Payment option"
+                            android:textColor="@color/colorBG"
+                            android:layout_marginBottom="@dimen/_10sdp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Sub Total"
+                            android:textColor="@color/colorBG"
+                            android:layout_marginBottom="@dimen/_10sdp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="+ COD Fees"
+                            android:textColor="@color/colorBG"
+                            android:layout_marginBottom="@dimen/_10sdp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="+ Shipping"
+                            android:textColor="@color/colorBG"
+                            android:layout_marginBottom="@dimen/_10sdp"/>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:orientation="vertical"
+                        android:gravity="end">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cash On Delivary (COD)"
+                            android:textColor="@color/indicator"
+                            android:layout_marginBottom="@dimen/_10sdp"/>
+
+                        <TextView android:id="@+id/s_total1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1,170.0 EGP"
+                            android:textColor="@color/indicator"
+                            android:layout_marginBottom="@dimen/_10sdp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="5 EGP"
+                            android:textColor="@color/indicator"
+                            android:layout_marginBottom="@dimen/_10sdp"/>
+                        <TextView android:id="@+id/s_freeShipping"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="FREE Shipping"
+                            android:textColor="@color/indicator"
+                            android:layout_marginBottom="@dimen/_10sdp"/>
+
+                    </LinearLayout>
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.cardview.widget.CardView android:id="@+id/not_s_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:cardBackgroundColor="@color/colorPrimaryDark">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/_16sdp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorBG"
+                android:text="Grand Total"/>
+            <TextView android:id="@+id/s_total2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/indicator"
+                android:text="1,175.0 EGP"
+                android:textSize="@dimen/_16sdp"
+                android:layout_marginBottom="@dimen/_16sdp"/>
+            <Button
+                android:id="@+id/s_placeOrder_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/solid_button_layout_ripple_green"
+                android:text="Place Order"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

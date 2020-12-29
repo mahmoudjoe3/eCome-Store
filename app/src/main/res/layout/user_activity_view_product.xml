@@ -8,7 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/colorPrimaryDark">
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:sliderScrollTimeInSec="2"
+            android:background="@color/colorPrimaryDark"
             app:sliderStartAutoCycle="true"
             app:sliderAutoCycleDirection="back_and_forth"
             app:sliderIndicatorPadding="@dimen/_3sdp"
@@ -70,12 +72,15 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_margin="@dimen/_14sdp">
+
+
+
             <TextView android:id="@+id/p_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Title"
                 android:textSize="@dimen/_16ssp"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorBG"
                 android:layout_marginBottom="@dimen/_10sdp"/>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -90,53 +95,58 @@
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="bold"
                     android:textColor="@color/indicator_1"/>
-                <TextView android:id="@+id/p_Quantity"
-                    android:paddingStart="@dimen/_5sdp"
-                    android:paddingEnd="@dimen/_5sdp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:layout_marginStart="@dimen/_20sdp"
-                    android:text="5 in Stoke"
-                    android:textColor="@color/colorPrimaryDark"/>
 
-        </LinearLayout>
+            </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:text="All prices include VAT"
-                android:layout_marginTop="@dimen/_10sdp" />
+                android:textColor="@color/colorBG" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="@dimen/_5sdp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_5sdp"
                     android:text="Receipt:"
-                    android:layout_marginEnd="@dimen/_5sdp"/>
+                    android:textColor="@color/colorBG" />
                 <TextView android:id="@+id/p_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="12:20 Am  12 Dec,2020"
                     android:textSize="@dimen/_10ssp"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/indicator"
                     android:layout_marginBottom="@dimen/_5sdp" />
             </LinearLayout>
-
+            <TextView
+                android:id="@+id/p_Quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:paddingEnd="@dimen/_5sdp"
+                android:text="5 in Stoke"
+                android:textColor="@color/indicator" />
 
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_10sdp">
+            android:layout_marginBottom="@dimen/_10sdp"
+            app:cardBackgroundColor="@color/colorAccent">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_margin="@dimen/_16ssp">
+                android:layout_margin="@dimen/_16ssp"
+                android:orientation="horizontal">
+
                 <Button
                     android:id="@+id/p_addCart"
                     android:layout_width="0dp"
@@ -144,9 +154,9 @@
                     android:layout_weight="1"
                     android:background="@drawable/solid_button_layout_ripple"
                     android:padding="@dimen/_2sdp"
+                    android:paddingEnd="@dimen/_2sdp"
                     android:tag="of"
                     android:text="ADD to Cart"
-                    android:paddingEnd="@dimen/_2sdp"
                     android:textColor="@color/colorBG" />
 
             </LinearLayout>
@@ -156,24 +166,30 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_10sdp">
+            android:layout_marginBottom="@dimen/_10sdp"
+            app:cardBackgroundColor="@color/colorAccent">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_margin="@dimen/_16ssp">
+                android:layout_margin="@dimen/_16ssp"
+                android:orientation="vertical">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Category" />
-                <TextView android:id="@+id/p_cat"
+                    android:text="Category"
+                    android:textColor="@color/colorBG" />
+
+                <TextView
+                    android:id="@+id/p_cat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_5sdp"
                     android:text="T-Shirt"
-                    android:textStyle="bold"
+                    android:textColor="@color/indicator"
                     android:textSize="@dimen/_14ssp"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:layout_marginBottom="@dimen/_5sdp" />
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
@@ -181,24 +197,29 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_10sdp">
+            android:layout_marginBottom="@dimen/_10sdp"
+            app:cardBackgroundColor="@color/colorAccent">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_margin="@dimen/_16ssp">
+                android:layout_margin="@dimen/_16ssp"
+                android:orientation="vertical">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Sold by:" />
+                    android:text="Sold by:"
+                    android:textColor="@color/colorBG" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_5sdp"
                     android:text="eCom Store"
-                    android:textStyle="bold"
+                    android:textColor="@color/indicator"
                     android:textSize="@dimen/_14ssp"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:layout_marginBottom="@dimen/_5sdp" />
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
@@ -206,24 +227,30 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_10sdp">
+            android:layout_marginBottom="@dimen/_10sdp"
+            app:cardBackgroundColor="@color/colorAccent">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_margin="@dimen/_16ssp">
+                android:layout_margin="@dimen/_16ssp"
+                android:orientation="vertical">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Brand:" />
-                <TextView android:id="@+id/p_owner"
+                    android:text="Brand:"
+                    android:textColor="@color/colorBG" />
+
+                <TextView
+                    android:id="@+id/p_owner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_5sdp"
                     android:text="breshka"
-                    android:textStyle="bold"
+                    android:textColor="@color/indicator"
                     android:textSize="@dimen/_14ssp"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:layout_marginBottom="@dimen/_5sdp" />
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
@@ -231,26 +258,30 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_10sdp">
+            android:layout_marginBottom="@dimen/_10sdp"
+            app:cardBackgroundColor="@color/colorAccent">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_margin="@dimen/_16ssp">
+                android:layout_margin="@dimen/_16ssp"
+                android:orientation="vertical">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Description"
-                    android:textStyle="bold"
+                    android:textColor="@color/colorBG"
                     android:textSize="@dimen/_14ssp"
-                    android:textColor="@color/colorPrimaryDark"
-                    />
-                <TextView android:id="@+id/p_desc"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/p_desc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_5sdp"
                     android:text="breshka"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:layout_marginBottom="@dimen/_5sdp" />
+                    android:textColor="@color/indicator" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>

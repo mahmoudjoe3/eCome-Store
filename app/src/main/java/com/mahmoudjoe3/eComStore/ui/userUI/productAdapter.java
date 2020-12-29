@@ -101,8 +101,16 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductV
         else {//user
             String temp="sold by " + "<b style=\"color:black;\">" + currentProduct.getmAdmin().getName() + "</b>";
             holder.mProductStoke.setText(Html.fromHtml(temp));
-            if(currentProduct.getQuantity()==0)
+            if(currentProduct.getQuantity()==0) {
                 holder.mAdd_cart.setEnabled(false);
+                holder.mAdd_cart.setTag("of");
+                holder.mAdd_cart.setImageResource(R.drawable.ic_add_cart);
+            }
+            else {
+                holder.mAdd_cart.setEnabled(true);
+                holder.mAdd_cart.setTag("on");
+                holder.mAdd_cart.setImageResource(R.drawable.ic_remove_cart);
+            }
             //////////fill fav and cart icon///////////
             if(mUser!=null&&mUser.getFavList()!=null&&mUser.getFavList().contains(currentProduct.getmId())){
                 holder.mAdd_fav.setTag("on");
@@ -112,7 +120,7 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductV
                 holder.mAdd_fav.setTag("of");
                 holder.mAdd_fav.setImageResource(R.drawable.ic_fav_off);
             }
-            if(mUser!=null&&mUser.getCartList()!=null&&mUser.getCartList().contains(currentProduct.getmId())){
+            if(mUser!=null&&mUser.getCartList()!=null&&mUser.getCartList().contains(currentProduct.getmId())&&currentProduct.getQuantity()>0){
                 holder.mAdd_cart.setTag("on");
                 holder.mAdd_cart.setImageResource(R.drawable.ic_remove_cart);
             }

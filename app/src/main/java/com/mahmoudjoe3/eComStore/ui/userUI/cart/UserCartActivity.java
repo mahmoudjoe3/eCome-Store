@@ -22,9 +22,11 @@ import com.google.android.material.snackbar.Snackbar;
 import com.mahmoudjoe3.eComStore.Logic.MyLogic;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
-import com.mahmoudjoe3.eComStore.model.Order;
+import com.mahmoudjoe3.eComStore.model.OrderUI;
 import com.mahmoudjoe3.eComStore.model.Product;
+import com.mahmoudjoe3.eComStore.model.SubOrderUI;
 import com.mahmoudjoe3.eComStore.ui.userUI.ViewProductActivity;
+import com.mahmoudjoe3.eComStore.ui.userUI.orderSummary.OrderSummaryActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,16 +58,16 @@ public class UserCartActivity extends AppCompatActivity {
     CardView card1;
     @BindView(R.id.card2)
     CardView card2;
-
+    String userKey;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_activity_cart);
         ButterKnife.bind(this);
         cartViewModel = new ViewModelProvider(this).get(UserCartViewModel.class);
-
+        userKey= getIntent().getStringExtra(UserCartActivity_User_Key);
         setSupportActionBar(oMyToolbar);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     @Override
     protected void onStart() {
@@ -87,8 +89,8 @@ public class UserCartActivity extends AppCompatActivity {
             snackbar.dismiss();
         }
 
-        String userKey = getIntent().getStringExtra(UserCartActivity_User_Key);
-        supOrderAdapter = new SupOrderAdapter(UserCartActivity.this, cartViewModel);
+
+        supOrderAdapter = new SupOrderAdapter(UserCartActivity.this);
 
         cartViewModel.getUserLiveData(userKey).observe(UserCartActivity.this, new Observer<AuthorizedUser>() {
             @Override
@@ -97,9 +99,9 @@ public class UserCartActivity extends AppCompatActivity {
                 cartViewModel.getProductsByIds(mUser.getCartList()).observe(UserCartActivity.this, new Observer<List<Product>>() {
                     @Override
                     public void onChanged(List<Product> products) {
-                        List<Order.SubOrderUI> list = new ArrayList<>();
+                        List<SubOrderUI> list = new ArrayList<>();
                         for (Product p : products) {
-                            list.add(new Order.SubOrderUI(p, 1));
+                            list.add(new SubOrderUI(p, 1));
                         }
                         supOrderAdapter.setList(list);
                     }
@@ -152,7 +154,7 @@ public class UserCartActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 //delete here
                                 cartViewModel.removeCart(product.getmId(), mUser);
-                                for (Order.SubOrderUI s : supOrderAdapter.getList()) {
+                                for (SubOrderUI s : supOrderAdapter.getList()) {
                                     if (s.getProduct().getmId() == product.getmId()) {
                                         supOrderAdapter.getList().remove(s);
                                         break;
@@ -170,7 +172,16 @@ public class UserCartActivity extends AppCompatActivity {
         oGoToCheckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(UserCartActivity.this, "hallo cart", Toast.LENGTH_SHORT).show();
+                if(supOrderAdapter.getList().size()>0) {
+                    OrderUI order = new OrderUI(supOrderAdapter.getList());
+                    Float totalPrice = total;
+                    Intent intent = new Intent(UserCartActivity.this, OrderSummaryActivity.class);
+                    intent.putExtra(OrderSummaryActivity.USER_KEY, mUser);
+                    intent.putExtra(OrderSummaryActivity.ORDER_KEY, order);
+                    intent.putExtra(OrderSummaryActivity.TotalPrice_KEY, totalPrice);
+                    startActivity(intent);
+                }
+                else Toast.makeText(UserCartActivity.this, "There is No Cart", Toast.LENGTH_SHORT).show();
             }
         });
     }

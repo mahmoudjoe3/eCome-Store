@@ -63,7 +63,7 @@ public class ViewProductActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_product);
+        setContentView(R.layout.user_activity_view_product);
         ButterKnife.bind(this);
         product = (Product) getIntent().getSerializableExtra(product_Key);
         inFav= getIntent().getBooleanExtra(inFav_Key,false);

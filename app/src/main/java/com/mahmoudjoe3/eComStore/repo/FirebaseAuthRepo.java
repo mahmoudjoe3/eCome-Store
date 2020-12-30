@@ -10,11 +10,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mahmoudjoe3.eComStore.model.Admin;
 import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
-import com.mahmoudjoe3.eComStore.model.User;
 import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
-
-import java.util.ArrayList;
 
 
 public class FirebaseAuthRepo {
@@ -23,6 +21,9 @@ public class FirebaseAuthRepo {
     public void setOnLoginListener(OnLoginListener onLoginListener) {
         mOnLoginListener = onLoginListener;
     }
+
+
+
     public interface OnLoginListener {
         void onLogeInSuccess(Object user);
         void onLogeInDenied(String errorMsg);
@@ -52,7 +53,7 @@ public class FirebaseAuthRepo {
         return instance;
     }
 
-    public void RegisterUser(String name, String phone, String password) {
+    public void RegisterUser(String name, String phone, String password,String date) {
 
         mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
 
@@ -65,7 +66,7 @@ public class FirebaseAuthRepo {
                     }
                 }
                 else {//safe to insert new user
-                    insertNewUser(name, phone, password);
+                    insertNewUser(name, phone, password,date);
                 }
             }
 
@@ -76,8 +77,8 @@ public class FirebaseAuthRepo {
         });
 
     }
-    private void insertNewUser(String name, String phone, String password) {
-        AuthorizedUser user=new AuthorizedUser(name,phone,password);
+    private void insertNewUser(String name, String phone, String password,String date) {
+        AuthorizedUser user=new AuthorizedUser(name,phone,password,date);
         mReference.child(phone).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -97,6 +98,35 @@ public class FirebaseAuthRepo {
     }
 
 
+    public void forgetPassword(boolean isAdmin, String phone, String newPassword) {
+        String refCollectionName = (isAdmin) ? Prevalent.refColName_Admin : Prevalent.refColName_User;
+        mReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.child(refCollectionName).child(phone).exists()) { //access done
+                    if (isAdmin) {
+                        Admin admin = snapshot.child(refCollectionName).child(phone).getValue(Admin.class);
+                        if (admin.getPhone().equals(phone)) {
+                            admin.setPassword(newPassword);
+                            mReference.child(refCollectionName).child(phone).setValue(admin);
+                        }
+                    }
+                    else {
+                        AuthorizedUser user = snapshot.child(refCollectionName).child(phone).getValue(AuthorizedUser.class);
+                        if (user.getPhone().equals(phone)) {
+                            user.setPassword(newPassword);
+                            mReference.child(refCollectionName).child(phone).setValue(user);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     public void login(boolean admin, String phone, String password, boolean rememberMe) {
 
@@ -107,17 +137,17 @@ public class FirebaseAuthRepo {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.child(refCollectionName).child(phone).exists()) { //access done
                     if(admin) {
-                        User user = snapshot.child(refCollectionName).child(phone).getValue(User.class);
-                        if (user.getPhone().equals(phone)) {
-                            if (user.getPassword().equals(password)) {
+                        Admin admin = snapshot.child(refCollectionName).child(phone).getValue(Admin.class);
+                        if (admin.getPhone().equals(phone)) {
+                            if (admin.getPassword().equals(password)) {
                                 //pref
                                 if (rememberMe) {
                                     if (mOnLoginListener != null) {
-                                        mOnLoginListener.onRemember(user);
+                                        mOnLoginListener.onRemember(admin);
                                     }
                                 }
                                 if (mOnLoginListener != null) {
-                                    mOnLoginListener.onLogeInSuccess(user);
+                                    mOnLoginListener.onLogeInSuccess(admin);
                                 }
                             } else {
                                 if (mOnLoginListener != null) {

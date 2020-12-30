@@ -42,7 +42,7 @@ mdays = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 # This module used to have hard-coded lists of day and month names, as
 # English strings.  The classes following emulate a read-only version of
 # that, but supply localized names.  Note that the values are computed
-# fresh on each call, in case the user changes locale between calls.
+# fresh on each call, in case the admin changes locale between calls.
 
 class _localized_month:
 

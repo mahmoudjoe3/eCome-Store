@@ -96,9 +96,9 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
         });
 
         if(orderUI.isDelivered())
-            holder.rSeekBar.setProgress(2);
-        if(orderUI.isApproved())
             holder.rSeekBar.setProgress(3);
+        else if(orderUI.isApproved())
+            holder.rSeekBar.setProgress(2);
         else
             holder.rSeekBar.setProgress(1);
     }

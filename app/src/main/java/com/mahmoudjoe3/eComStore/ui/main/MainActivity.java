@@ -15,8 +15,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.mahmoudjoe3.eComStore.Logic.MyLogic;
 import com.mahmoudjoe3.eComStore.R;
+import com.mahmoudjoe3.eComStore.model.Admin;
 import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
-import com.mahmoudjoe3.eComStore.model.User;
 import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
 import com.mahmoudjoe3.eComStore.repo.FirebaseAuthRepo;
 import com.mahmoudjoe3.eComStore.ui.adminUI.AdminHomeActivity;
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 else
                     intent = new Intent(MainActivity.this, UserHomeActivity.class);
                 if(isAdmin)
-                    intent.putExtra(Prevalent.USER_DATA, new User(name, phone, password));
+                    intent.putExtra(Prevalent.USER_DATA, new Admin(name, phone, password));
                 else intent.putExtra(Prevalent.USER_DATA, new AuthorizedUser(name, phone, password));
                 startActivity(intent);
             }
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                                 new Intent(MainActivity.this, AdminHomeActivity.class):
                                 new Intent(MainActivity.this, UserHomeActivity.class));
                         if(isAdmin)
-                            intent.putExtra(Prevalent.USER_DATA,(User)user);
+                            intent.putExtra(Prevalent.USER_DATA,(Admin)user);
                         else intent.putExtra(Prevalent.USER_DATA,(AuthorizedUser)user);
                         startActivity(intent);
 

@@ -1,9 +1,5 @@
 package com.mahmoudjoe3.eComStore.prevalent;
 
-import com.mahmoudjoe3.eComStore.model.User;
-
-import java.security.PublicKey;
-
 public class Prevalent {
     public final static String UserPhoneKey="phoneKey";
     public final static String UserPasswordKey="passwordKey";

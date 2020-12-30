@@ -5,7 +5,7 @@
                 Math.pow(data.length, is2d ? 0.25 : 0.4));
 
             // fallback if ax.d2c output BADNUMs
-            // e.g. when user try to plot categorical bins
+            // e.g. when admin try to plot categorical bins
             // on a layout.xaxis.type: 'linear'
             if(!isNumeric(size0)) size0 = 1;
         }

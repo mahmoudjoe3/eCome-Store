@@ -72,6 +72,8 @@ public class FirebaseRepo {
         this.mOnFindUserListener = mOnFindUserListener;
     }
 
+
+
     public interface onFindUserListener{
         void onSuccess(AuthorizedUser user);
     }
@@ -366,28 +368,59 @@ public class FirebaseRepo {
         void onFailure();
     }
 
-    public void fitchOrders(String userPhone) {
+    public void approveOn(OrderDB dbOrder) {
+        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference(Prevalent.refColName_order);
+        mRef.child(dbOrder.getId()).setValue(dbOrder);
+    }
+
+    public void deliver(OrderDB dbOrder) {
+        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference(Prevalent.refColName_order);
+        mRef.child(dbOrder.getId()).setValue(dbOrder);
+    }
+
+        public void fitchOrders(String userPhone) {
         DatabaseReference mRef=FirebaseDatabase.getInstance().getReference(Prevalent.refColName_order);
         List<OrderDB> orderDBList=new ArrayList<>();
-        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+        if(userPhone==null||userPhone.equals("")){//fitch all
+            mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                for(DataSnapshot snap:snapshot.getChildren()) {
-                    OrderDB orderDB = snap.getValue(OrderDB.class);
-                    if(orderDB.getPhone().equals(userPhone)){
-                        orderDBList.add(orderDB);
+                    for(DataSnapshot snap:snapshot.getChildren()) {
+                        OrderDB orderDB = snap.getValue(OrderDB.class);
+                            orderDBList.add(orderDB);
                     }
+                    if(mOnOrderRetrievedListener!=null)
+                        mOnOrderRetrievedListener.onComplete(orderDBList);
                 }
-                if(mOnOrderRetrievedListener!=null)
-                    mOnOrderRetrievedListener.onComplete(orderDBList);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        }
+        else {
+            mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        OrderDB orderDB = snap.getValue(OrderDB.class);
+                        if (orderDB.getPhone().equals(userPhone)) {
+                            orderDBList.add(orderDB);
+                        }
+                    }
+                    if (mOnOrderRetrievedListener != null)
+                        mOnOrderRetrievedListener.onComplete(orderDBList);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
     }
 
     onOrderRetrievedListener mOnOrderRetrievedListener;

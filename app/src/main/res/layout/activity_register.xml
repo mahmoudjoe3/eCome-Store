@@ -42,6 +42,23 @@
             android:layout_height="wrap_content"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:boxStrokeColor="@color/colorPrimary"
+            android:layout_marginTop="@dimen/_10sdp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/Edtxt_birthDate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Birthday"
+                android:inputType="date"
+                android:padding="@dimen/_13sdp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/colorPrimary"
             android:layout_marginTop="@dimen/_5sdp">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/Edtxt_phone"

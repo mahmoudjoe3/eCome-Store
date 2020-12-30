@@ -1,4 +1,4 @@
-package com.mahmoudjoe3.eComStore.ui.adminUI;
+package com.mahmoudjoe3.eComStore.ui.adminUI.addProduct;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,8 +21,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.mahmoudjoe3.eComStore.R;
+import com.mahmoudjoe3.eComStore.model.Admin;
 import com.mahmoudjoe3.eComStore.model.Product;
-import com.mahmoudjoe3.eComStore.model.User;
 import com.mahmoudjoe3.eComStore.repo.FirebaseRepo;
 import com.mahmoudjoe3.eComStore.viewModel.admin.AddProductViewModel;
 import com.squareup.picasso.Picasso;
@@ -81,7 +81,7 @@ public class AddProductFragment extends Fragment {
 
     private Uri[] mImageUri;
     private int mCurrentImgIndex = 0;
-    private static User mAdmin;
+    private static Admin mAdmin;
     private static String mCategory;
 
     private AddProductViewModel addProductViewModel;
@@ -108,7 +108,7 @@ public class AddProductFragment extends Fragment {
         return view;
     }
 
-    public static void sendDataToFragment(String Category, User Admin) {
+    public static void sendDataToFragment(String Category, Admin Admin) {
         mCategory = Category;
         mAdmin = Admin;
     }

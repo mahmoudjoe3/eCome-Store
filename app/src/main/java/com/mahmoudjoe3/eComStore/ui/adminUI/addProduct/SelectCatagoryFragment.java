@@ -1,4 +1,4 @@
-package com.mahmoudjoe3.eComStore.ui.adminUI;
+package com.mahmoudjoe3.eComStore.ui.adminUI.addProduct;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -72,14 +72,14 @@ public class SelectCatagoryFragment extends Fragment {
 
 
     void restoreButtonsBG() {
-        fashion.setBackgroundResource(R.color.colorWhite);
-        furniture.setBackgroundResource(R.color.colorWhite);
-        healthy.setBackgroundResource(R.color.colorWhite);
-        watches.setBackgroundResource(R.color.colorWhite);
-        pc.setBackgroundResource(R.color.colorWhite);
-        phones.setBackgroundResource(R.color.colorWhite);
-        tv.setBackgroundResource(R.color.colorWhite);
-        sports.setBackgroundResource(R.color.colorWhite);
+        fashion.setBackgroundResource(R.color.colorAccent);
+        furniture.setBackgroundResource(R.color.colorAccent);
+        healthy.setBackgroundResource(R.color.colorAccent);
+        watches.setBackgroundResource(R.color.colorAccent);
+        pc.setBackgroundResource(R.color.colorAccent);
+        phones.setBackgroundResource(R.color.colorAccent);
+        tv.setBackgroundResource(R.color.colorAccent);
+        sports.setBackgroundResource(R.color.colorAccent);
     }
 
     @OnClick({R.id.fashion, R.id.furniture, R.id.healthy, R.id.watches, R.id.pc, R.id.tv, R.id.phones, R.id.sports})
@@ -87,42 +87,42 @@ public class SelectCatagoryFragment extends Fragment {
         switch (view.getId()) {
             case R.id.fashion:
                 restoreButtonsBG();
-                fashion.setBackgroundResource(R.color.indicator);
+                fashion.setBackgroundResource(R.color.colorOpenMap);
                 mCat = "fashion";
                 break;
             case R.id.furniture:
                 restoreButtonsBG();
-                furniture.setBackgroundResource(R.color.indicator);
+                furniture.setBackgroundResource(R.color.colorOpenMap);
                 mCat = "furniture";
                 break;
             case R.id.healthy:
                 restoreButtonsBG();
-                healthy.setBackgroundResource(R.color.indicator);
+                healthy.setBackgroundResource(R.color.colorOpenMap);
                 mCat = "health & beauty";
                 break;
             case R.id.watches:
                 restoreButtonsBG();
-                watches.setBackgroundResource(R.color.indicator);
+                watches.setBackgroundResource(R.color.colorOpenMap);
                 mCat = "watches";
                 break;
             case R.id.pc:
                 restoreButtonsBG();
-                pc.setBackgroundResource(R.color.indicator);
+                pc.setBackgroundResource(R.color.colorOpenMap);
                 mCat = "pc & accessories";
                 break;
             case R.id.tv:
                 restoreButtonsBG();
-                tv.setBackgroundResource(R.color.indicator);
+                tv.setBackgroundResource(R.color.colorOpenMap);
                 mCat = "tvs";
                 break;
             case R.id.phones:
                 restoreButtonsBG();
-                phones.setBackgroundResource(R.color.indicator);
+                phones.setBackgroundResource(R.color.colorOpenMap);
                 mCat = "mobiles & tablets";
                 break;
             case R.id.sports:
                 restoreButtonsBG();
-                sports.setBackgroundResource(R.color.indicator);
+                sports.setBackgroundResource(R.color.colorOpenMap);
                 mCat = "sports";
                 break;
         }

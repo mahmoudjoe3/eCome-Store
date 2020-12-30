@@ -83,7 +83,7 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductV
             holder.mProductDate.setText(currentProduct.getmDate());
             if (currentProduct.getQuantity() > 0) {
                 holder.mProductStoke.setText(currentProduct.getQuantity() + " in stoke");
-                holder.mProductStoke.setTextColor(context.getResources().getColor(R.color.red));
+                holder.mProductStoke.setTextColor(context.getResources().getColor(R.color.indicator_1));
             } else {
                 holder.mProductStoke.setText("SOLD OUT");
                 holder.mProductStoke.setTextColor(context.getResources().getColor(R.color.colorOutStoke));

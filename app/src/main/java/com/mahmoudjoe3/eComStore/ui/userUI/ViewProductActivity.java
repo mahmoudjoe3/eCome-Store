@@ -149,26 +149,21 @@ public class ViewProductActivity extends AppCompatActivity {
                     viewModel.RemoveFav(product.getmId(),user);
                 else
                     viewModel.addFav(product.getmId(),user);
-
                 break;
             case R.id.p_cartAdded:
-                inCart=(!inCart);
-                updateCart();
-                if(!inCart)
-                    viewModel.removeCart(product.getmId(),user);
-                else
-                    viewModel.addCart(product.getmId(),user);
+            case R.id.p_addCart:
+                cartProcesses();
 
                 break;
-            case R.id.p_addCart:
-                //TODO intent to cart
-                inCart=(!inCart);
-                updateCart();
-                if(!inCart)
-                    viewModel.removeCart(product.getmId(),user);
-                else
-                    viewModel.addCart(product.getmId(),user);
-                break;
         }
+    }
+
+    private void cartProcesses() {
+        inCart = (!inCart);
+        updateCart();
+        if (!inCart)
+            viewModel.removeCart(product.getmId(), user);
+        else
+            viewModel.addCart(product.getmId(), user);
     }
 }

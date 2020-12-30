@@ -456,7 +456,7 @@ function initZoom(geo, projection) {
         .scale(projection.scale());
 }
 
-// sync zoom updates with user & full layout
+// sync zoom updates with admin & full layout
 function sync(geo, projection, cb) {
     var id = geo.id;
     var gd = geo.graphDiv;

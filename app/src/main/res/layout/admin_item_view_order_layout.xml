@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardBackgroundColor="@color/colorAccent"
+    app:cardCornerRadius="@dimen/_5sdp"
+    android:layout_marginBottom="@dimen/_16sdp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_16sdp">
+
+        <LinearLayout
+            android:id="@+id/no_l1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shipment no"
+                android:textAllCaps="true"
+                android:textColor="@color/colorBG" />
+
+            <TextView
+                android:id="@+id/vo_orderId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Muhufheyg63gdfejfn"
+                android:textAllCaps="true"
+                android:textColor="@color/indicator"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_toEndOf="@id/no_l1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="order date"
+                android:textAllCaps="true"
+                android:textColor="@color/colorBG" />
+
+            <TextView
+                android:id="@+id/vo_orderDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="18 Feb 2020"
+                android:textAllCaps="true"
+                android:textColor="@color/indicator"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <com.xw.repo.BubbleSeekBar
+            android:id="@+id/vo_seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:layout_below="@id/no_l1"
+            android:layout_marginTop="@dimen/_20sdp"
+            app:bsb_bubble_color="@color/colorBG"
+            app:bsb_bubble_text_color="@color/colorPrimaryDark"
+            app:bsb_max="3"
+            app:bsb_min="1"
+            app:bsb_progress="1"
+            app:bsb_second_track_color="@color/red"
+            app:bsb_section_count="2"
+            app:bsb_section_text_position="below_section_mark"
+            app:bsb_show_progress_in_float="true"
+            app:bsb_show_section_mark="true"
+            app:bsb_show_section_text="true"
+            app:bsb_section_text_size="@dimen/_8ssp"
+            app:bsb_show_thumb_text="true"
+            app:bsb_track_color="@color/colorBG" />
+
+        <TextView
+            android:id="@+id/vo_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/vo_seekBar"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:visibility="gone"
+            android:drawableLeft="@drawable/ic_baseline_pin_drop_24"
+            android:text="    Show Delivered Location on map"
+            android:textColor="@color/colorOpenMap"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/vo_expectedDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/vo_location"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:drawableLeft="@drawable/ic_baseline_local_shipping_24"
+            android:text="    Expected delivery 22 Feb 2020"
+            android:textColor="@color/indicator"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:layout_below="@id/vo_expectedDate"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@color/indicator" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/vo_productContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider"
+            android:layout_marginTop="@dimen/_5sdp"
+            tools:itemCount="2"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/user_item_summary_layout"/>
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:layout_below="@id/vo_productContainer"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@color/indicator_1" />
+        <TextView
+            android:id="@+id/vo_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider2"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:drawableLeft="@drawable/ic_baseline_monetization_on_24"
+            android:text="  GRAND TOTAL"
+            android:textColor="@color/indicator_1"
+            android:textSize="@dimen/_13sdp" />
+        <TextView
+            android:id="@+id/vo_totalPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider2"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="146.0 EGP"
+            android:textColor="@color/indicator_1"
+            android:textSize="@dimen/_13sdp"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/vo_approveOrder_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/vo_totalPrice"
+            android:layout_marginTop="@dimen/_11sdp"
+            android:background="@drawable/solid_button_layout_ripple_green"
+            android:text="Approve Order"
+            android:textAllCaps="false"
+            android:textColor="@color/colorLoginBG" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

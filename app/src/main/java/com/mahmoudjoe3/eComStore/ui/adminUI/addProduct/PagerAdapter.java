@@ -1,12 +1,8 @@
-package com.mahmoudjoe3.eComStore.ui.adminUI;
-
-import android.util.Log;
+package com.mahmoudjoe3.eComStore.ui.adminUI.addProduct;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-
-import com.mahmoudjoe3.eComStore.model.User;
 
 class PagerAdapter extends FragmentPagerAdapter {
     private int NUM_ITEMS = 2;

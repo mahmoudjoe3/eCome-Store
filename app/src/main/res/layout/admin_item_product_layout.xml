@@ -2,12 +2,13 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/_80sdp"
-    android:layout_margin="@dimen/_5sdp">
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_5sdp"
+    app:cardBackgroundColor="@color/colorAccent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <ImageView
@@ -17,11 +18,11 @@
             android:layout_margin="@dimen/_1sdp"
             android:layout_marginEnd="@dimen/_5sdp"
             android:layout_weight="1"
-            android:src="@color/cardview_dark_background" />
+            android:src="@drawable/fashion" />
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="2.5"
             android:orientation="vertical">
 
@@ -30,10 +31,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:maxLines="2"
                 android:text="chare"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="@dimen/_16ssp" />
+                android:textColor="@color/colorBG"
+                android:textSize="@dimen/_12ssp" />
 
             <TextView
                 android:id="@+id/item_productPrice"
@@ -42,8 +44,7 @@
                 android:layout_marginStart="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:text="40 EGP"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="@dimen/_10ssp" />
+                android:textColor="@color/indicator" />
 
             <TextView
                 android:id="@+id/stoke"
@@ -52,8 +53,8 @@
                 android:layout_marginStart="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginEnd="@dimen/_5sdp"
-                android:paddingStart="@dimen/_5sdp"
                 android:paddingEnd="@dimen/_5sdp"
+                android:textColor="@color/indicator"
                 android:text="out of stoke" />
 
             <TextView
@@ -65,6 +66,8 @@
                 android:layout_marginEnd="@dimen/_5sdp"
                 android:paddingStart="@dimen/_5sdp"
                 android:paddingEnd="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:textColor="@color/indicator"
                 android:text="10 Dec, 2020" />
 
         </LinearLayout>

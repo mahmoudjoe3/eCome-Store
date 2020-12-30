@@ -10,7 +10,6 @@
         android:id="@+id/track_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/llpar"
         android:padding="@dimen/_5sdp"
         tools:listitem="@layout/user_item_order_receipt_layout"
         />

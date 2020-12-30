@@ -9,6 +9,7 @@ public class AuthorizedUser implements Serializable {
     private String name;
     private String phone;
     private String password;
+    private String date;
 
     public AuthorizedUser( String name, String phone, String password) {
         this.cartList = new ArrayList<>();
@@ -18,9 +19,24 @@ public class AuthorizedUser implements Serializable {
         this.password = password;
     }
 
+    public AuthorizedUser(String name, String phone, String password, String date) {
+        this.name = name;
+        this.phone = phone;
+        this.password = password;
+        this.date = date;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public AuthorizedUser() {
     }
+
 
     public List<String> getCartList() {
         if(this.cartList==null)this.cartList=new ArrayList<>();

@@ -21,8 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.Product;
-import com.mahmoudjoe3.eComStore.model.User;
+import com.mahmoudjoe3.eComStore.model.Admin;
 import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
+import com.mahmoudjoe3.eComStore.ui.adminUI.addProduct.AdminAddProductActivity;
+import com.mahmoudjoe3.eComStore.ui.adminUI.viewOrder.AdminViewOrderActivity;
 import com.mahmoudjoe3.eComStore.ui.main.MainActivity;
 import com.mahmoudjoe3.eComStore.ui.userUI.productAdapter;
 import com.mahmoudjoe3.eComStore.viewModel.admin.AdminHomePageViewModel;
@@ -35,7 +37,7 @@ import butterknife.OnClick;
 
 public class AdminHomeActivity extends AppCompatActivity {
 
-    User mUser;
+    Admin mAdmin;
     SharedPreferences preferences;
     @BindView(R.id.addNewProduct)
     FloatingActionButton button2;
@@ -53,8 +55,10 @@ public class AdminHomeActivity extends AppCompatActivity {
         setContentView(R.layout.admin_activity_home);
         ButterKnife.bind(this);
 
+
         preferences = getSharedPreferences(Prevalent.LOGIN_PREF, Context.MODE_PRIVATE);
-        mUser = (User) getIntent().getSerializableExtra(Prevalent.USER_DATA);
+        mAdmin = (Admin) getIntent().getSerializableExtra(Prevalent.USER_DATA);
+        my_toolbar.setTitle(mAdmin.getName()+" Home page");
         setSupportActionBar(my_toolbar);
 
         initRecycle();
@@ -89,7 +93,7 @@ public class AdminHomeActivity extends AppCompatActivity {
 
     private void fitchDataByLiveDate() {
         mViewModel=new ViewModelProvider(this).get(AdminHomePageViewModel.class);
-        mViewModel.getProductsLiveData(mUser.getPhone()).observe(this, new Observer<List<Product>>() {
+        mViewModel.getProductsLiveData(mAdmin.getPhone()).observe(this, new Observer<List<Product>>() {
             @Override
             public void onChanged(List<Product> productList) {
                 mAdapter.setProductList(productList);
@@ -115,7 +119,15 @@ public class AdminHomeActivity extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.logoutMenu:
                 logout();
+                break;
+            case R.id.admin_orders:
+                Intent intent=new Intent(AdminHomeActivity.this, AdminViewOrderActivity.class);
+                intent.putExtra(AdminViewOrderActivity.AdminName, mAdmin.getName());
+                startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -128,8 +140,8 @@ public class AdminHomeActivity extends AppCompatActivity {
 
     @OnClick(R.id.addNewProduct)
     public void onViewClicked() {
-        Intent i=new Intent(this,AdminAddProductActivity.class);
-        i.putExtra(Prevalent.USER_DATA,mUser);
+        Intent i=new Intent(this, AdminAddProductActivity.class);
+        i.putExtra(Prevalent.USER_DATA, mAdmin);
         startActivity(i);
     }
 

@@ -2,16 +2,16 @@ package com.mahmoudjoe3.eComStore.model;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
+public class Admin implements Serializable {
     private String name,phone,password;
 
-    public User(String name, String phone, String password) {
+    public Admin(String name, String phone, String password) {
         this.name = name;
         this.phone = phone;
         this.password = password;
     }
 
-    public User() {
+    public Admin() {
     }
 
     public void setName(String name) {

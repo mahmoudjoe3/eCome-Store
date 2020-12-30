@@ -3,7 +3,6 @@ package com.mahmoudjoe3.eComStore.viewModel;
 
 import androidx.lifecycle.ViewModel;
 
-import com.mahmoudjoe3.eComStore.model.User;
 import com.mahmoudjoe3.eComStore.repo.FirebaseAuthRepo;
 
 public class FirebaseAuthViewModel extends ViewModel {
@@ -39,8 +38,8 @@ public class FirebaseAuthViewModel extends ViewModel {
         mOnLoginListener = onLoginListener;
     }
 
-    public void registerUser(String name, String phone, String password) {
-        repo.RegisterUser(name,phone,password);
+    public void registerUser(String name, String phone, String password,String date) {
+        repo.RegisterUser(name,phone,password,date);
         repo.setOnRegisterListener(new FirebaseAuthRepo.OnRegisterListener() {
             @Override
             public void onRegisterSuccess() {
@@ -62,4 +61,7 @@ public class FirebaseAuthViewModel extends ViewModel {
         mOnRegisterListener = OnRegisterListener;
     }
 
+    public void forgetPassword(boolean isAdmin, String phone, String newPassword) {
+        repo.forgetPassword(isAdmin,phone,newPassword);
+    }
 }

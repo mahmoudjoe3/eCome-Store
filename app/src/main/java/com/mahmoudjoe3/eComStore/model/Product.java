@@ -15,7 +15,7 @@ public class Product implements Serializable {
     private String mTime;
     private String mDate;
     private int mQuantity;
-    private User mAdmin;
+    private Admin mAdmin;
     private String mDescription;
 
     public Product() {
@@ -33,7 +33,7 @@ public class Product implements Serializable {
         this.mDate = p.mDate;
         this.mQuantity=p.mQuantity;
     }
-    public Product(User mAdmin, String mTitle, String mCategory, String mDescription, float mPrice, int quantity) {
+    public Product(Admin mAdmin, String mTitle, String mCategory, String mDescription, float mPrice, int quantity) {
         this.mTitle = mTitle;
         this.mCategory = mCategory;
         this.mDescription = mDescription;
@@ -69,11 +69,11 @@ public class Product implements Serializable {
 
 
 
-    public User getmAdmin() {
+    public Admin getmAdmin() {
         return mAdmin;
     }
 
-    public void setmAdmin(User mAdmin) {
+    public void setmAdmin(Admin mAdmin) {
         this.mAdmin = mAdmin;
     }
 

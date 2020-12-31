@@ -47,7 +47,7 @@
                 android:id="@+id/Edtxt_birthDate"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Birthday"
+                android:hint="Birthday click twice"
                 android:inputType="date"
                 android:padding="@dimen/_13sdp"
                 android:textColor="@color/colorPrimaryDark"
@@ -77,7 +77,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_5sdp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxStrokeColor="@color/colorPrimary">
+            app:boxStrokeColor="@color/colorPrimary"
+            app:passwordToggleEnabled="true">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/Edtxt_password"
                 android:layout_width="match_parent"
@@ -87,7 +88,8 @@
                 android:inputType="textPassword"
                 android:padding="@dimen/_13sdp"
                 android:textColor="@color/colorPrimaryDark"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
 

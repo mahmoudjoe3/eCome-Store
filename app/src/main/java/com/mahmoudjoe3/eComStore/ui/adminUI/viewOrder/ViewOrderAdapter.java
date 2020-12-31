@@ -46,7 +46,7 @@ public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.Trac
     public void setList(List<OrderUI> list) {
         if(list!=null)
             this.list = list;
-        List<OrderUI> removedList=new ArrayList<>();
+       List<OrderUI> removedList=new ArrayList<>();
         for(OrderUI orderUI:list){
             int ii=0;
             for (SubOrderUI subOrderUI:orderUI.getOrderList()){
@@ -73,7 +73,6 @@ public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.Trac
     public void onBindViewHolder(@NonNull TrackOrderViewHolder holder, int position) {
         OrderUI orderUI = list.get(position);
         ViewSubOrderAdapter adapter = new ViewSubOrderAdapter(context, adminName, orderUI.getOrderList());
-        Log.d(TAG, "onBindViewHolder: list_" + position + " size --> " + adapter.getList().size());
             //init inner recycle
             LinearLayoutManager layoutManager = new LinearLayoutManager(
                     holder.vo_ProductContainer.getContext(),
@@ -103,9 +102,7 @@ public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.Trac
                 holder.vo_approveOrder.setText("ORDER DELIVERED");
             }
             holder.vo_OrderExpectedDate.setText("    Expected delivery " + orderUI.getDeliveryDate());
-            for(SubOrderUI ordery:orderUI.getOrderList()){
 
-            }
             holder.vo_TotalPrice.setText(adapter.getTotal() + " EGP");
             holder.vo_Location.setOnClickListener(new View.OnClickListener() {
                 @Override

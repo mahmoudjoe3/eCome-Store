@@ -44,8 +44,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -183,12 +185,27 @@ public class OrderSummaryActivity extends AppCompatActivity {
     }
 
     private void upLoadOrder() {
-        OrderDB orderDB=createDBOrder();
-        viewModel.insertOrder(orderDB);
+        //OrderDB orderDB=createDBOrder();
+        List<OrderDB> orderDBList=new ArrayList<>();
+        List<OrderUI> orderUIList=createOrderList(order);
+        for(OrderUI o:orderUIList){
+            orderDBList.add(createDBOrder(o));
+        }
+
+        insertOrder_rec(0,orderDBList);
+
+    }
+
+    private void insertOrder_rec(int i, List<OrderDB> orderDBList) {
+        if(i>=orderDBList.size()) {
+            Snackbar.make(findViewById(android.R.id.content),"Order Placed successfully ",Snackbar.LENGTH_LONG).show();
+            return;
+        }
+        viewModel.insertOrder(orderDBList.get(i));
         viewModel.setOnOrderAddedListener(new FirebaseRepo.onOrderAddedListener() {
             @Override
             public void onSuccess() {
-                Snackbar.make(findViewById(android.R.id.content),"Order Placed successfully ",Snackbar.LENGTH_LONG).show();
+                insertOrder_rec(i+1,orderDBList);
             }
 
             @Override
@@ -205,19 +222,40 @@ public class OrderSummaryActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
-    private OrderDB createDBOrder() {
+    private OrderDB createDBOrder(OrderUI order) {
         List<SubOrderDB> orderDBList=new ArrayList<>();
         for(SubOrderUI s:order.getOrderList()){
             orderDBList.add(new SubOrderDB(s.getProduct().getmId(),s.getQty()));
         }
         String location=latitude+","+longitude;
-        return new OrderDB(orderDBList,user.getPhone(),finalPrice,location,delivaryDate,false,false);
+        return new OrderDB(orderDBList,user.getPhone(),order.getTotalPrice(),location,delivaryDate,false,false);
     }
 
-
+    private List<OrderUI> createOrderList(OrderUI orderUI){
+        List<OrderUI> list=new ArrayList<>();
+        List<SubOrderUI> productsList=orderUI.getOrderList();
+        Map<String ,List<SubOrderUI>> H=new HashMap<>();
+        String tempAdmin="";
+        for(SubOrderUI p:productsList){
+            if(!tempAdmin.equals(p.getProduct().getmAdmin().getName())){
+                tempAdmin=p.getProduct().getmAdmin().getName();
+                H.put(tempAdmin,new ArrayList<>());
+                H.get(tempAdmin).add(p);
+            }else {
+                H.get(tempAdmin).add(p);
+            }
+        }
+        for (Map.Entry<String,List<SubOrderUI>> entry : H.entrySet()){
+            Float tot=0f;
+            for (SubOrderUI s:entry.getValue()){
+                tot+=(s.getProduct().getmPrice()*s.getQty());
+            }
+            list.add(new OrderUI(entry.getValue(),null,null,tot,null,null,false,false));
+        }
+        return list;
+    }
 
     private void showMap() {
         String uri = "http://maps.google.com/maps?daddr=" + latitude + "," + longitude + " (" + "Where the party is at" + ")";

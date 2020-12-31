@@ -22,10 +22,12 @@ public class ViewSubOrderAdapter extends RecyclerView.Adapter<ViewSubOrderAdapte
     private List<SubOrderUI> list;
     private Context context;
     private String admin;
+    private Float Total;
     public ViewSubOrderAdapter(Context context,String admin,List<SubOrderUI> list) {
         this.list = new ArrayList<>();
         this.context = context;
         this.admin=admin;
+        Total=0f;
         this.list=getListByAdminName(list,admin);
     }
 
@@ -33,12 +35,20 @@ public class ViewSubOrderAdapter extends RecyclerView.Adapter<ViewSubOrderAdapte
         List<SubOrderUI> list1=new ArrayList<>();
         for(SubOrderUI subOrder:list){
             if(subOrder.getProduct().getmAdmin().getName().equalsIgnoreCase(admin)){
+                Total+=(subOrder.getProduct().getmPrice()*subOrder.getQty());
                 list1.add(subOrder);
             }
         }
         return list1;
     }
 
+    public Float getTotal() {
+        return Total;
+    }
+
+    public List<SubOrderUI> getList() {
+        return list;
+    }
 
     @NonNull
     @Override

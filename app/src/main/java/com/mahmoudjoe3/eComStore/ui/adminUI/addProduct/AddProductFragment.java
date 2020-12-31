@@ -269,6 +269,7 @@ public class AddProductFragment extends Fragment {
                 @Override
                 public void onFailure(String error) {
                     Toast.makeText(getActivity(),"Error::"+error,Toast.LENGTH_LONG).show();
+                    mAddProduct.setEnabled(true);
                     mProgressBar.setVisibility(View.GONE);
                 }
 
@@ -280,6 +281,9 @@ public class AddProductFragment extends Fragment {
                     clearData();
                 }
             });
+        }
+        else {
+            mAddProduct.setEnabled(true);
         }
     }
     void clearData(){

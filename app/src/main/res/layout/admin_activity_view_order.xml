@@ -26,7 +26,6 @@
         android:id="@+id/admin_view_order_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/admin_item_view_order_layout"
         android:layout_below="@id/llpar"
         android:layout_margin="@dimen/_5sdp"/>
 </RelativeLayout>

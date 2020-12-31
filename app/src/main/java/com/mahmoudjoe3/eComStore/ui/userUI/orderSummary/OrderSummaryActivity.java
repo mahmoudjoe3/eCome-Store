@@ -217,6 +217,8 @@ public class OrderSummaryActivity extends AppCompatActivity {
         return new OrderDB(orderDBList,user.getPhone(),finalPrice,location,delivaryDate,false,false);
     }
 
+
+
     private void showMap() {
         String uri = "http://maps.google.com/maps?daddr=" + latitude + "," + longitude + " (" + "Where the party is at" + ")";
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));

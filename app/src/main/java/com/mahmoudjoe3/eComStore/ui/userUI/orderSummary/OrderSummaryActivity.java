@@ -89,8 +89,8 @@ public class OrderSummaryActivity extends AppCompatActivity {
     @BindView(R.id.s_show_in_map)
     TextView sShowInMap;
 
-    double latitude;
-    double longitude;
+    String latitude;
+    String longitude;
     String addressLine;
     String delivaryDate;
     float finalPrice;
@@ -298,8 +298,8 @@ public class OrderSummaryActivity extends AppCompatActivity {
                                     ,1
                             );
                             //get location
-                            latitude=addresses.get(0).getLatitude();
-                            longitude=addresses.get(0).getLongitude();
+                            latitude=String.valueOf(addresses.get(0).getLatitude());
+                            longitude=String.valueOf(addresses.get(0).getLongitude());
                             addressLine=addresses.get(0).getAddressLine(0);
                             sUserAddress.setText(addressLine);
                             sShowInMap.setVisibility(View.VISIBLE);
@@ -307,6 +307,9 @@ public class OrderSummaryActivity extends AppCompatActivity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                    }
+                    else {
+                        Toast.makeText(OrderSummaryActivity.this, "open the GPS please!", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

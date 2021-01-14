@@ -54,7 +54,13 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
         mFirebaseAuthViewModel = new ViewModelProvider(this).get(FirebaseAuthViewModel.class);
-
+        EdtxtBirthDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus)
+                    openCalender();
+            }
+        });
         EdtxtBirthDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

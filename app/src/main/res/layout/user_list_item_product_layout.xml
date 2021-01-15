@@ -33,6 +33,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_5sdp"
                 android:maxLines="2"
+                android:lines="2"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:text="chare"
                 android:textColor="@color/colorBG"
                 android:textSize="@dimen/_12ssp" />

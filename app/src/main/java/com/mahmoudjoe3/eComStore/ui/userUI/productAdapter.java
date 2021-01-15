@@ -2,6 +2,7 @@ package com.mahmoudjoe3.eComStore.ui.userUI;
 
 import android.content.Context;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +26,14 @@ import java.util.List;
 
 public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductViewHolder> implements Filterable {
 
+    private static final String TAG = "productAdapter";
     private Context context;
     private List<Product> productList;
     private List<Product> productListFull;
     private int layoutId;
     private Boolean admin;
     AuthorizedUser mUser;
+
 
 
 
@@ -48,7 +51,7 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductV
     public productAdapter(Context context, int layoutId) {
         this.context = context;
         productList = new ArrayList<>();
-        this.layoutId = layoutId;//R.layout.admin_item_product_layout||R.layout.user_item_product_layout
+        this.layoutId = layoutId;//R.layout.admin_item_product_layout||R.layout.user_list_item_product_layout
         admin = (layoutId == R.layout.admin_item_product_layout);
     }
 
@@ -143,6 +146,7 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductV
                 public void onClick(View v) {
                     if (onImageButtonClickListener != null) {
                         onImageButtonClickListener.onFavClick(currentProduct,(ImageButton)v);
+                        Log.d(TAG, "onClick: fav");
                     }
                 }
             });

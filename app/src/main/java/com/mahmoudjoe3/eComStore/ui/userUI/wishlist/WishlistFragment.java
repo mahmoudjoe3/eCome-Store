@@ -2,7 +2,6 @@ package com.mahmoudjoe3.eComStore.ui.userUI.wishlist;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ public class WishlistFragment extends Fragment {
 
         pList = root.findViewById(R.id.w_pList);
 
-        productAdapter = new productAdapter(getActivity(), R.layout.user_item_product_layout);
+        productAdapter = new productAdapter(getActivity(), R.layout.user_list_item_product_layout);
         pList.setAdapter(productAdapter);
         pList.setHasFixedSize(true);
         pList.setLayoutManager(new LinearLayoutManager(getActivity()));

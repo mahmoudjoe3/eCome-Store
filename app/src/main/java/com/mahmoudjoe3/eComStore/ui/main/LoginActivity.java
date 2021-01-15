@@ -237,7 +237,8 @@ String TAG="kkkkkkk";
                     @Override
                     public void onVerificationFailed(@NonNull FirebaseException e) {
                         Log.d(TAG, "onVerificationFailed: "+e.getMessage());
-
+                        Toast.makeText(LoginActivity.this, "Verification Failed", Toast.LENGTH_SHORT).show();
+                        progress.dismiss();
                     }
                 }).build());
 

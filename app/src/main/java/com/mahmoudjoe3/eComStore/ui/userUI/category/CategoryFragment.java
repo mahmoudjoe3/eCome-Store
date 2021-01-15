@@ -1,38 +1,40 @@
 package com.mahmoudjoe3.eComStore.ui.userUI.category;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.SearchView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.google.android.material.navigation.NavigationView;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
 import com.mahmoudjoe3.eComStore.model.Product;
-import com.mahmoudjoe3.eComStore.ui.userUI.UserHomeActivity;
+import com.mahmoudjoe3.eComStore.ui.main.LoginActivity;
 import com.mahmoudjoe3.eComStore.ui.userUI.ViewProductActivity;
 import com.mahmoudjoe3.eComStore.ui.userUI.productAdapter;
 import com.mahmoudjoe3.eComStore.viewModel.ShardViewModel;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class CategoryFragment extends Fragment {
@@ -40,8 +42,12 @@ public class CategoryFragment extends Fragment {
     private CategoryViewModel categoryViewModel;
     String Cat;
     RecyclerView pList;
+    Button filter,sort;
+    ImageButton showAsGrid;
+    String sortType;
     private productAdapter productAdapter;
     AuthorizedUser mUser;
+    List<Product> mProducts;
     String userId;
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.user_fragment_catagory, container, false);
@@ -50,10 +56,10 @@ public class CategoryFragment extends Fragment {
 
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
 
-        pList = root.findViewById(R.id.pList);
+        findView(root);
         Cat = String.valueOf(((Toolbar) getActivity().findViewById(R.id.toolbar)).getTitle());
 
-        productAdapter = new productAdapter(getActivity(), R.layout.user_item_product_layout);
+        productAdapter = new productAdapter(getActivity(), R.layout.user_list_item_product_layout);
         pList.setAdapter(productAdapter);
         pList.setHasFixedSize(true);
         pList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -61,10 +67,100 @@ public class CategoryFragment extends Fragment {
         return root;
     }
 
+
+
+    private void findView(View root) {
+        pList = root.findViewById(R.id.pList);
+        filter=root.findViewById(R.id.filter);
+        sort=root.findViewById(R.id.sort);
+        showAsGrid=root.findViewById(R.id.showGrid);
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortByDialog().show();
+            }
+        });
+
+        showAsGrid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(showAsGrid.getTag().equals("grid")){
+                    MakeGrid();
+                }else MakeList();
+                AdapterListener();
+            }
+        });
+
+        AdapterListener();
+    }
+    private AlertDialog sortByDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View view=getLayoutInflater().inflate(R.layout.sortby_dialoge, null);
+        RadioButton highToLow=view.findViewById(R.id.highToLow);
+        builder.setView(view)
+                .setPositiveButton("Sort", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        if(highToLow.isChecked()) {
+                            sortType="HighToLow";
+                            SortByPrice(sortType);
+                        }
+                        else {
+                            sortType="LowToHigh";
+                            SortByPrice(sortType);
+                        }
+                    }
+                })
+                .setNegativeButton("Back", null);
+        return builder.create();
+    }
+
+    private void SortByPrice(String type) {
+        Collections.sort(mProducts, new SortByPrice(type));
+        productAdapter.setProductList(mProducts);
+    }
+
+    class SortByPrice implements Comparator<Product>
+    {
+        String type;
+        public SortByPrice(String type) {
+            this.type=type;
+        }
+
+        @Override
+        public int compare(Product o1, Product o2) {
+            return (type.equals("LowToHigh"))? (int) (o1.getmPrice()-o2.getmPrice()) : (int) (o2.getmPrice()-o1.getmPrice());
+        }
+    }
+
+    private void MakeList() {
+        showAsGrid.setImageResource(R.drawable.ic_grid);
+        showAsGrid.setTag("grid");
+
+        productAdapter = new productAdapter(getActivity(), R.layout.user_list_item_product_layout);
+        productAdapter.setProductList(mProducts, mUser);
+        pList.setAdapter(productAdapter);
+        pList.setHasFixedSize(true);
+        pList.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+    private void MakeGrid() {
+        showAsGrid.setImageResource(R.drawable.ic_list);
+        showAsGrid.setTag("list");
+
+        productAdapter = new productAdapter(getActivity(), R.layout.user_grid_item_product_layout);
+        productAdapter.setProductList(mProducts, mUser);
+        pList.setAdapter(productAdapter);
+        pList.setHasFixedSize(true);
+        pList.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+    }
+    private void AdapterListener() {
         productAdapter.setOnImageButtonClickListener(new productAdapter.onImageButtonClickListener() {
             @Override
             public void onCartClick(Product product, ImageButton v) {
@@ -95,6 +191,7 @@ public class CategoryFragment extends Fragment {
                     v.setImageResource(R.drawable.ic_fav_off);
                     categoryViewModel.RemoveFav(product.getmId(),mUser);
                 }
+                Log.d("productAdapter", "onFavClick: ");
             }
         });
 
@@ -128,7 +225,10 @@ public class CategoryFragment extends Fragment {
                     @Override
                     public void onChanged(AuthorizedUser user) {
                         mUser = user;
-                        productAdapter.setProductList(products, user);
+                        if(mProducts==null||mProducts.isEmpty())
+                            mProducts=products;
+
+                        productAdapter.setProductList(mProducts, user);
                     }
                 });
             }

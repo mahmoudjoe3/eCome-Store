@@ -10,5 +10,5 @@
         android:id="@+id/w_pList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/user_item_product_layout" />
+        tools:listitem="@layout/user_list_item_product_layout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

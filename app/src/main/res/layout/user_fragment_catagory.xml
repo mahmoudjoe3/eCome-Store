@@ -1,17 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.userUI.category.CategoryFragment"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorPrimaryDark"
+    android:orientation="vertical">
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/colorPrimary"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+            <Button android:id="@+id/filter"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_filter"
+                android:textColor="@color/colorBG"
+                android:text="Filter   "
+                android:textAlignment="textEnd"
+                android:padding="@dimen/_5sdp"
+                android:background="@color/colorPrimary"
+                />
+            <Button android:id="@+id/sort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_sort"
+                android:textColor="@color/colorBG"
+                android:text="sort "
+                android:textAlignment="textStart"
+                android:paddingStart="@dimen/_10sdp"
+                android:padding="@dimen/_5sdp"
+                android:background="@color/colorPrimary" />
+
+            <ImageButton android:id="@+id/showGrid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:tag="grid"
+                android:src="@drawable/ic_grid"
+                android:padding="@dimen/_5sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:background="@color/colorPrimary" />
+
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/user_item_product_layout" />
+        android:layout_gravity="center"
+        app:spanCount="2"
+        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+        tools:listitem="@layout/user_grid_item_product_layout" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

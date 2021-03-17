@@ -36,6 +36,7 @@ import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.OrderUI;
 import com.mahmoudjoe3.eComStore.model.SubOrderUI;
 import com.mahmoudjoe3.eComStore.ui.userUI.orderSummary.OrderSummaryAdapter;
+import com.mahmoudjoe3.eComStore.viewModel.ShardViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -191,4 +192,17 @@ public class TrackOrderFragment extends Fragment {
         }
     }
 
+    //new for search filter
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ShardViewModel shardViewModel=new ViewModelProvider(getActivity()).get(ShardViewModel.class);
+        shardViewModel.getLiveSearch().observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                trackOrdersAdapter.getFilter().filter(s);
+            }
+        });
+    }
 }

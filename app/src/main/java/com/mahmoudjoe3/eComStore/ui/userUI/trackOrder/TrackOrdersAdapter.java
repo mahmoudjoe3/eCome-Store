@@ -5,6 +5,8 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,9 +28,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.TrackOrderViewHolder> {
+public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.TrackOrderViewHolder> implements Filterable {
     private RecyclerView.RecycledViewPool viewPool=new RecyclerView.RecycledViewPool();
     private List<OrderUI> list;
+    private List<OrderUI> listFull;
     private Context context;
 
     public TrackOrdersAdapter(Context context) {
@@ -37,8 +40,10 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
     }
 
     public void setList(List<OrderUI> list) {
-        if(list!=null)
+        if(list!=null) {
             this.list = list;
+            listFull=new ArrayList<>(list);
+        }
     }
 
     @NonNull
@@ -152,4 +157,59 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
     interface onShowLocationListener{
         void onClick(String Lat,String Long);
     }
+
+
+    //new
+    ///////////////////////////// search filter ////////////////////////////
+    @Override
+    public Filter getFilter() {
+        return productFilter;
+    }
+
+    private Filter productFilter=new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            //performed in BG thread
+            List<OrderUI> filteredList=new ArrayList<>();
+            if(constraint==null||constraint.length()==0
+                    || constraint.toString().toLowerCase().trim().contains("all")){
+                filteredList.addAll(listFull);
+            }else {
+                String pattern=constraint.toString().toLowerCase().trim();
+                for(OrderUI o:listFull){
+                    if(o.getDeliveryDate().toLowerCase().contains(pattern)
+                            || o.getId().toLowerCase().startsWith(pattern)
+                            || checkproducts(o,pattern))
+                    {
+                        filteredList.add(o);
+                    }
+                }
+            }
+
+            FilterResults results=new FilterResults();
+            results.values=filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            list.clear();
+            if(results!=null&&results.values!=null)
+                list.addAll((List)results.values);
+            notifyDataSetChanged();
+        }
+    };
+
+    private boolean checkproducts(OrderUI o, String pattern) {
+        for(SubOrderUI s:o.getOrderList()){
+            if(s.getProduct().getmCategory().toLowerCase().startsWith(pattern)
+                    ||s.getProduct().getmAdmin().getName().toLowerCase().startsWith(pattern)
+                    ||s.getProduct().getmDescription().toLowerCase().startsWith(pattern)
+                    ||s.getProduct().getmTitle().toLowerCase().startsWith(pattern)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

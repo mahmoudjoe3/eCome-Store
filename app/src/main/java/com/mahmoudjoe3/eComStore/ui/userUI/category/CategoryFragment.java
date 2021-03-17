@@ -71,7 +71,7 @@ public class CategoryFragment extends Fragment {
 
     private void findView(View root) {
         pList = root.findViewById(R.id.pList);
-        filter=root.findViewById(R.id.filter);
+        //filter=root.findViewById(R.id.filter);
         sort=root.findViewById(R.id.sort);
         showAsGrid=root.findViewById(R.id.showGrid);
     }

@@ -18,6 +18,8 @@ allprojects {
     repositories {
         google()
         jcenter()
+        //AnyChart
+        maven { url 'https://jitpack.io' }
         //image slider
         maven {url "https://jitpack.io"}
     }

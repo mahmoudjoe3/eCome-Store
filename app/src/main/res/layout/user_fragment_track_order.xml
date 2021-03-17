@@ -13,4 +13,18 @@
         android:padding="@dimen/_5sdp"
         tools:listitem="@layout/user_item_order_receipt_layout"
         />
+    <Button android:id="@+id/showSummary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Summary"
+        android:textColor="#ffffff"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_16sdp"
+        android:background="@drawable/rounded_button_shap"
+        />
+
 </RelativeLayout>

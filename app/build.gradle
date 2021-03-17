@@ -13,6 +13,8 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        //AnyChart
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -99,5 +101,8 @@ dependencies {
 
     //bubble seekBar
     implementation 'com.xw.repo:bubbleseekbar:3.20-lite'
+
+    //AnyChart
+    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
 
 }

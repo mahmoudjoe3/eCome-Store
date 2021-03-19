@@ -35,7 +35,7 @@ public class SelectCatagoryFragment extends Fragment {
     @BindView(R.id.sports)
     LinearLayout sports;
 
-    private String mCat="fashion";
+    private  String mCat="fashion";
 
     public SelectCatagoryFragment() {
         // Required empty public constructor
@@ -45,6 +45,8 @@ public class SelectCatagoryFragment extends Fragment {
     public static SelectCatagoryFragment newInstance() {
         return new SelectCatagoryFragment();
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

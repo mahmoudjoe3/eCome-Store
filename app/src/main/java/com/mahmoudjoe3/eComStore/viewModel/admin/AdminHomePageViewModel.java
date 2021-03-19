@@ -15,6 +15,8 @@ import java.util.List;
 public class AdminHomePageViewModel extends AndroidViewModel {
     private FirebaseRepo repo;
     private MutableLiveData<List<Product>> productsLiveData;
+    private FirebaseRepo.onProductDeleted onProductDeleted;
+
 
     public AdminHomePageViewModel(@NonNull Application application) {
         super(application);
@@ -45,6 +47,15 @@ public class AdminHomePageViewModel extends AndroidViewModel {
 
     public void deleteProduct(Product product){
         repo.deleteProduct(product);
+        repo.setOnProductDeleted(new FirebaseRepo.onProductDeleted() {
+            @Override
+            public void onSuccess() {
+                if(onProductDeleted!=null)onProductDeleted.onSuccess();
+            }
+        });
+    }
+    public void setOnProductDeleted(FirebaseRepo.onProductDeleted onProductDeleted) {
+        this.onProductDeleted = onProductDeleted;
     }
 
 

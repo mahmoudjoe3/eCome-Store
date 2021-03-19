@@ -11,5 +11,6 @@ public class Prevalent {
     public final static String refStorage_productImage="product image";
     public final static String ADMIN="admin";
     public final static String USER_DATA ="userData";
+    public static final String APP_URL = "https://drive.google.com/drive/folders/1eJdHsUv-RryNwWQua5aOQ6QbClgFQIFJ?usp=sharing";
     public static String refColName_order="orders";
 }

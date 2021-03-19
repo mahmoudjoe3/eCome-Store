@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -23,6 +25,7 @@ import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.Product;
 import com.mahmoudjoe3.eComStore.model.Admin;
 import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
+import com.mahmoudjoe3.eComStore.repo.FirebaseRepo;
 import com.mahmoudjoe3.eComStore.ui.adminUI.addProduct.AdminAddProductActivity;
 import com.mahmoudjoe3.eComStore.ui.adminUI.viewOrder.AdminViewOrderActivity;
 import com.mahmoudjoe3.eComStore.ui.main.MainActivity;
@@ -58,7 +61,7 @@ public class AdminHomeActivity extends AppCompatActivity {
 
         preferences = getSharedPreferences(Prevalent.LOGIN_PREF, Context.MODE_PRIVATE);
         mAdmin = (Admin) getIntent().getSerializableExtra(Prevalent.USER_DATA);
-        my_toolbar.setTitle(mAdmin.getName()+" Home page");
+        my_toolbar.setTitle(mAdmin.getName());
         setSupportActionBar(my_toolbar);
 
         initRecycle();
@@ -68,6 +71,10 @@ public class AdminHomeActivity extends AppCompatActivity {
             @Override
             public void onClick(Product product) {
                 //TODO intent to add product frag
+                Intent i=new Intent(AdminHomeActivity.this, AdminAddProductActivity.class);
+                i.putExtra(Prevalent.USER_DATA, mAdmin);
+                i.putExtra(Prevalent.refColName_product,product);
+                startActivity(i);
             }
 
             @Override
@@ -81,7 +88,15 @@ public class AdminHomeActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //delete here
+                                AlertDialog mAlertDialog = createDialoge("Delete Product", "Please wait while Deleting Product...").create();
+                                mAlertDialog.show();
                                 mViewModel.deleteProduct(product);
+                                mViewModel.setOnProductDeleted(new FirebaseRepo.onProductDeleted() {
+                                    @Override
+                                    public void onSuccess() {
+                                        mAlertDialog.dismiss();
+                                    }
+                                });
                             }
                         })
                         .setPositiveButton("Back",null)
@@ -90,6 +105,19 @@ public class AdminHomeActivity extends AppCompatActivity {
         });
 
     }
+
+    private AlertDialog.Builder createDialoge(String tit, String msg) {
+        View view=getLayoutInflater().inflate(R.layout.progress_dialog_layout,null);
+        TextView title=view.findViewById(R.id.dialog_title);
+        title.setText(tit);
+        TextView message=view.findViewById(R.id.dialog_message);
+        message.setText(msg);
+
+        return new AlertDialog.Builder(this)
+                .setView(view)
+                .setCancelable(false);
+    }
+
 
     private void fitchDataByLiveDate() {
         mViewModel=new ViewModelProvider(this).get(AdminHomePageViewModel.class);
@@ -142,6 +170,7 @@ public class AdminHomeActivity extends AppCompatActivity {
     public void onViewClicked() {
         Intent i=new Intent(this, AdminAddProductActivity.class);
         i.putExtra(Prevalent.USER_DATA, mAdmin);
+
         startActivity(i);
     }
 

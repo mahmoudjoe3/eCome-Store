@@ -19,6 +19,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
 import com.mahmoudjoe3.eComStore.model.Product;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -66,11 +68,14 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductV
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         
         Product currentProduct = productList.get(position);
+
+        //for caching
         Picasso.get()
                 .load(currentProduct.getmImageUri().get(0))
                 .fit()
                 .centerCrop()
                 .into(holder.mProductImage);
+
         holder.mProductTitle.setText(currentProduct.getmTitle());
         holder.mProductPrice.setText(currentProduct.getmPrice() + " EGP");
 

@@ -37,6 +37,14 @@
                     android:padding="10dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/add_image" />
+                <ProgressBar
+                    android:id="@+id/img_progressBar1"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_height="match_parent"
+                    android:indeterminate="true"
+                    android:padding="@dimen/_16sdp"
+                    android:indeterminateTint="@color/indicator_1" />
 
                 <ImageButton
                     android:id="@+id/remove_img1"
@@ -67,7 +75,14 @@
                     android:padding="10dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/add_image" />
-
+                <ProgressBar
+                    android:id="@+id/img_progressBar2"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_height="match_parent"
+                    android:indeterminate="true"
+                    android:padding="@dimen/_16sdp"
+                    android:indeterminateTint="@color/indicator_1" />
                 <ImageButton
                     android:id="@+id/remove_img2"
                     android:layout_width="20dp"
@@ -97,7 +112,14 @@
                     android:padding="10dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/add_image" />
-
+                <ProgressBar
+                    android:id="@+id/img_progressBar3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:indeterminate="true"
+                    android:padding="@dimen/_16sdp"
+                    android:indeterminateTint="@color/indicator_1" />
                 <ImageButton
                     android:id="@+id/remove_img3"
                     android:layout_width="20dp"
@@ -127,6 +149,14 @@
                     android:padding="10dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/add_image" />
+                <ProgressBar
+                    android:id="@+id/img_progressBar4"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_height="match_parent"
+                    android:indeterminate="true"
+                    android:padding="@dimen/_16sdp"
+                    android:indeterminateTint="@color/indicator_1" />
 
                 <ImageButton
                     android:id="@+id/remove_img4"

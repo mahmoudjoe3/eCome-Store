@@ -34,7 +34,6 @@ public class FirebaseRepo {
     static StorageReference mProductImageReference;
     static DatabaseReference mReference;
 
-    ArrayList<String>url = new ArrayList<>();
     Product mProduct;
     public static synchronized FirebaseRepo getInstance(){
         if(instance==null)
@@ -43,7 +42,8 @@ public class FirebaseRepo {
         }
         mProductImageReference= FirebaseStorage.getInstance().getReference(Prevalent.refStorage_productImage);
         mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_product);
-
+        //for caching
+        mReference.keepSynced(true);
         return instance;
     }
 
@@ -192,7 +192,14 @@ public class FirebaseRepo {
 
         date=DateFormat.format(calendar.getTime());
         time=TimeFormat.format(calendar.getTime());
-        productKey = mImageUri[0].getLastPathSegment() + date + time  ;
+        if(mImageUri[0]!=null)
+            productKey = mImageUri[0].getLastPathSegment() + date + time  ;
+        else if(mImageUri[1]!=null)
+            productKey = mImageUri[1].getLastPathSegment() + date + time  ;
+        else if(mImageUri[2]!=null)
+            productKey = mImageUri[2].getLastPathSegment() + date + time  ;
+        else
+            productKey = mImageUri[3].getLastPathSegment() + date + time  ;
 
         product.setDate(date);
         product.setTime(time);
@@ -270,7 +277,12 @@ public class FirebaseRepo {
     }
     void delete(Product product,int i){
         if(i>=product.getmImageUri().size()){
-            mReference.child(product.getmId()).removeValue();
+            mReference.child(product.getmId()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    if(onProductDeleted!=null)onProductDeleted.onSuccess();
+                }
+            });
             DatabaseReference mRef=FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
             mRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -291,6 +303,7 @@ public class FirebaseRepo {
 
                 }
             });
+
             return;
         }
         StorageReference deletedRef = FirebaseStorage.getInstance().getReferenceFromUrl(product.getmImageUri().get(i));
@@ -429,5 +442,15 @@ public class FirebaseRepo {
     }
     public interface onOrderRetrievedListener{
         void onComplete(List<OrderDB> orderDBList);
+    }
+
+    onProductDeleted onProductDeleted;
+
+    public void setOnProductDeleted(FirebaseRepo.onProductDeleted onProductDeleted) {
+        this.onProductDeleted = onProductDeleted;
+    }
+
+    public interface onProductDeleted{
+        void onSuccess();
     }
 }

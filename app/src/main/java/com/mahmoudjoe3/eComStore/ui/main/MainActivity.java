@@ -1,8 +1,11 @@
 package com.mahmoudjoe3.eComStore.ui.main;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.mahmoudjoe3.eComStore.BuildConfig;
 import com.mahmoudjoe3.eComStore.Logic.MyLogic;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.Admin;
@@ -65,7 +69,40 @@ public class MainActivity extends AppCompatActivity {
 
             //online
             if (MyLogic.haveNetworkConnection(this)) {
-                FireStore(phone, password);
+                mFirebaseAuthViewModel.checkVersionName(BuildConfig.VERSION_NAME);
+                mFirebaseAuthViewModel.setmOnVersionListener( new FirebaseAuthRepo.OnVersionListener() {
+                            @Override
+                            public void onRealVersion() {
+                                FireStore(phone, password);
+                            }
+
+                            @Override
+                            public void onOldVersion(String NewVersion) {
+                                mAlertDialog=new AlertDialog
+                                        .Builder(MainActivity.this)
+                                        .setTitle("Update Version")
+                                        .setCancelable(false)
+                                        .setMessage(getResources().getString(R.string.app_name)+" has new Version "+NewVersion+" Please Update..")
+                                        .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Intent intent=new Intent(Intent.ACTION_VIEW);
+                                                intent.setData(Uri.parse(Prevalent.APP_URL));
+                                                startActivity(intent);
+                                            }
+                                        })
+                                        .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                MainActivity.this.finish();
+
+                                            }
+                                        })
+                                        .create();
+                                mAlertDialog.show();
+
+                            }
+                        });
                 return;
             }
 

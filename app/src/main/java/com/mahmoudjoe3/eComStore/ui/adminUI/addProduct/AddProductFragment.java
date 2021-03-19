@@ -50,7 +50,7 @@ public class AddProductFragment extends Fragment {
 
 
     private final static int Gallary_Req = 1;
-    private static final String TAG ="Add Product" ;
+    private static final String TAG = "Add Product";
     @BindView(R.id.img1)
     ImageView mImg1;
     @BindView(R.id.add_img1)
@@ -92,13 +92,23 @@ public class AddProductFragment extends Fragment {
     TextView hintImage;
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
+    @BindView(R.id.img_progressBar1)
+    ProgressBar imgProgressBar1;
+    @BindView(R.id.img_progressBar2)
+    ProgressBar imgProgressBar2;
+    @BindView(R.id.img_progressBar3)
+    ProgressBar imgProgressBar3;
+    @BindView(R.id.img_progressBar4)
+    ProgressBar imgProgressBar4;
 
     private Uri[] mImageUri;
     private int mCurrentImgIndex = 0;
     private static Admin mAdmin;
     private static String mCategory;
+    private static Product mProduct;
 
     private AddProductViewModel addProductViewModel;
+
     public AddProductFragment() {
     }
 
@@ -107,24 +117,67 @@ public class AddProductFragment extends Fragment {
         return new AddProductFragment();
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageUri = new Uri[4];
-        addProductViewModel= new ViewModelProvider(this).get(AddProductViewModel.class);
+        addProductViewModel = new ViewModelProvider(this).get(AddProductViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.admin_fragment_add_product, container, false);
         ButterKnife.bind(this, view);
-
+        if(mProduct!=null){
+            initData();
+            //mAddProduct.setEnabled(false);
+        }
         return view;
     }
 
+    private void initData() {
+        for(int i=0;i<mProduct.getmImageUri().size();i++){
+            String uri=mProduct.getmImageUri().get(i);
+
+            if(uri!=null){
+                switch (i) {
+                    case 0:
+                        Picasso.get().load(uri).fit().centerCrop().into(mImg1);
+                        mRemoveImg1.setVisibility(View.VISIBLE);
+                        break;
+                    case 1:
+                        Picasso.get().load(uri).fit().centerCrop().into(mImg2);
+                        mRemoveImg2.setVisibility(View.VISIBLE);
+                        break;
+                    case 2:
+                        Picasso.get().load(uri).fit().centerCrop().into(mImg3);
+                        mRemoveImg3.setVisibility(View.VISIBLE);
+                        break;
+                    case 3:
+                        Picasso.get().load(uri).fit().centerCrop().into(mImg4);
+                        mRemoveImg4.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+        }
+        mTitle.setText(mProduct.getmTitle());
+        mPrice.setText(mProduct.getmPrice()+"");
+        mDescription.setText(mProduct.getmDescription());
+        mQuantity.setText(mProduct.getQuantity()+"");
+        mCategory=mProduct.getmCategory();
+    }
+
+    //come from cat fragment
     public static void sendDataToFragment(String Category, Admin Admin) {
         mCategory = Category;
         mAdmin = Admin;
+    }
+    //come from viewProduct fragment
+    public static void fitchDataFromOutSide(Product product, Admin Admin) {
+        mAdmin=Admin;
+        mProduct=product;
     }
 
     @Override
@@ -175,7 +228,7 @@ public class AddProductFragment extends Fragment {
     }
 
     private void removeImage(int i) {
-        switch (i){
+        switch (i) {
             case 1:
                 int mCurrentRemovedImgIndex = 0;
                 mImg1.setImageResource(android.R.color.transparent);
@@ -214,6 +267,7 @@ public class AddProductFragment extends Fragment {
         }
 
     }
+
     private Boolean IsPermissionGranted() {
         return (
                 ContextCompat.checkSelfPermission(getActivity()
@@ -225,6 +279,7 @@ public class AddProductFragment extends Fragment {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(intent, Gallary_Req);
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -254,6 +309,7 @@ public class AddProductFragment extends Fragment {
         }
         return bitmap;
     }
+
     public Uri bitMapToUri(Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -269,9 +325,11 @@ public class AddProductFragment extends Fragment {
         if (requestCode == Gallary_Req && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
             mImageUri[mCurrentImgIndex] = data.getData();
             //new
+            showProgress(mCurrentImgIndex);
             new Handler().postDelayed(new Runnable() {
                 public void run() {
                     // do something...
+
                     // compress image
                     //[1] convert uri to bitmap
                     Bitmap bitmap = uriToBitmap(mImageUri[mCurrentImgIndex]);
@@ -284,24 +342,45 @@ public class AddProductFragment extends Fragment {
 
                     switch (mCurrentImgIndex) {
                         case 0:
+                            imgProgressBar1.setVisibility(View.GONE);
                             Picasso.get().load(mImageUri[mCurrentImgIndex]).fit().centerCrop().into(mImg1);
                             mRemoveImg1.setVisibility(View.VISIBLE);
                             break;
                         case 1:
+                            imgProgressBar2.setVisibility(View.GONE);
                             Picasso.get().load(mImageUri[mCurrentImgIndex]).fit().centerCrop().into(mImg2);
                             mRemoveImg2.setVisibility(View.VISIBLE);
                             break;
                         case 2:
+                            imgProgressBar3.setVisibility(View.GONE);
                             Picasso.get().load(mImageUri[mCurrentImgIndex]).fit().centerCrop().into(mImg3);
                             mRemoveImg3.setVisibility(View.VISIBLE);
                             break;
                         case 3:
+                            imgProgressBar4.setVisibility(View.GONE);
                             Picasso.get().load(mImageUri[mCurrentImgIndex]).fit().centerCrop().into(mImg4);
                             mRemoveImg4.setVisibility(View.VISIBLE);
                             break;
                     }
                 }
             }, 100);
+        }
+    }
+
+    private void showProgress(int mCurrentImgIndex) {
+        switch (mCurrentImgIndex) {
+            case 0:
+                imgProgressBar1.setVisibility(View.VISIBLE);
+                break;
+            case 1:
+                imgProgressBar2.setVisibility(View.VISIBLE);
+                break;
+            case 2:
+                imgProgressBar3.setVisibility(View.VISIBLE);
+                break;
+            case 3:
+                imgProgressBar4.setVisibility(View.VISIBLE);
+                break;
         }
     }
 
@@ -312,63 +391,65 @@ public class AddProductFragment extends Fragment {
     }
 
     private void AddProduct() {
-        boolean valid=true;
+        boolean valid = true;
         if (mImageUri[0] == null && mImageUri[1] == null && mImageUri[2] == null && mImageUri[3] == null) {
             hintImage.setError("Please insert at least one image!");
-            valid=false;
-        }
-        else
+            valid = false;
+        } else
             hintImage.setError(null);
         if (mTitle.getText().toString().isEmpty()) {
             mTitle.setError("Title is Required");
-            valid=false;
+            valid = false;
         }
-        if (mPrice.getText().toString().isEmpty()){
+        if (mPrice.getText().toString().isEmpty()) {
             mPrice.setError("Price is Required");
-            valid=false;
+            valid = false;
         }
-        if (mQuantity.getText().toString().isEmpty()){
+        if (mQuantity.getText().toString().isEmpty()) {
             mQuantity.setError("Price is Required");
-            valid=false;
+            valid = false;
         }
-        if (mDescription.getText().toString().isEmpty()){
+        if (mDescription.getText().toString().isEmpty()) {
             mDescription.setError("description is Required");
-            valid=false;
+            valid = false;
         }
-        if(valid) {
-            String title,price,description,Quantity;
-            title=mTitle.getText().toString();
-            price=mPrice.getText().toString();
-            description=mDescription.getText().toString();
-            Quantity=mQuantity.getText().toString();
-            Product product=new Product(mAdmin,title,mCategory,description,Float.parseFloat(price), Integer.parseInt(Quantity));
-
+        if (valid) {
+            String title, price, description, Quantity;
+            title = mTitle.getText().toString();
+            price = mPrice.getText().toString();
+            description = mDescription.getText().toString();
+            Quantity = mQuantity.getText().toString();
+            Product product = new Product(mAdmin, title, mCategory, description, Float.parseFloat(price), Integer.parseInt(Quantity));
+            if(mProduct!=null)
+                product.setmId(mProduct.getmId());
             mProgressBar.setVisibility(View.VISIBLE);
 
-            addProductViewModel.insertProduct(product,mImageUri);
+
+
+            addProductViewModel.insertProduct(product, mImageUri);
 
             addProductViewModel.setmOnAddProductListener(new FirebaseRepo.OnAddProductListener() {
                 @Override
                 public void onFailure(String error) {
-                    Toast.makeText(getActivity(),"Error::"+error,Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Error::" + error, Toast.LENGTH_LONG).show();
                     mAddProduct.setEnabled(true);
                     mProgressBar.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onSuccess() {
-                    Snackbar.make(getActivity().findViewById(android.R.id.content),"Product Uploaded",Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Product Uploaded", Snackbar.LENGTH_LONG).show();
                     mAddProduct.setEnabled(true);
                     mProgressBar.setVisibility(View.GONE);
                     clearData();
                 }
             });
-        }
-        else {
+        } else {
             mAddProduct.setEnabled(true);
         }
     }
-    void clearData(){
+
+    void clearData() {
         removeImage(1);
         removeImage(2);
         removeImage(3);

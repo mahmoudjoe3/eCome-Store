@@ -1,6 +1,8 @@
 package com.mahmoudjoe3.eComStore.repo;
 
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -17,6 +19,7 @@ import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
 
 public class FirebaseAuthRepo {
 
+    private static final String TAG = "FirebaseAuthRepoTag";
     private OnLoginListener mOnLoginListener;
     public void setOnLoginListener(OnLoginListener onLoginListener) {
         mOnLoginListener = onLoginListener;
@@ -51,6 +54,40 @@ public class FirebaseAuthRepo {
         }
         mReference = FirebaseDatabase.getInstance().getReference();
         return instance;
+    }
+
+
+    ///////////////check Version/////////////////
+    OnVersionListener onVersionListener;
+    public void setOnVersionListener(OnVersionListener onVersionListener) {
+        this.onVersionListener = onVersionListener;
+    }
+    public interface OnVersionListener{
+        void onRealVersion();
+        void onOldVersion(String NewVersion);
+    }
+
+    public void checkVersionName(String version){
+        mReference=FirebaseDatabase.getInstance().getReference("APP_VERSION");
+        mReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String netVersion= snapshot.child("VER_NAME").getValue(String.class);
+                if(netVersion.equals(version)){
+                    onVersionListener.onRealVersion();
+                    Log.d(TAG, "onDataChange: RealVersion -->"+version);
+                }else {
+                    onVersionListener.onOldVersion(netVersion);
+                    Log.d(TAG, "onDataChange: OldVersion -->"+version);
+                    Log.d(TAG, "onDataChange: RealVersion -->"+netVersion);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     public void RegisterUser(String name, String phone, String password,String date) {

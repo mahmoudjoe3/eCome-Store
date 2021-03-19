@@ -10,9 +10,25 @@ public class FirebaseAuthViewModel extends ViewModel {
     private FirebaseAuthRepo repo;
     private FirebaseAuthRepo.OnLoginListener mOnLoginListener;
     private FirebaseAuthRepo.OnRegisterListener mOnRegisterListener;
+    private FirebaseAuthRepo.OnVersionListener mOnVersionListener;
 
     public FirebaseAuthViewModel() {
         repo=FirebaseAuthRepo.getInstance();
+    }
+
+    public void checkVersionName(String ver){
+        repo.checkVersionName(ver);
+        repo.setOnVersionListener(new FirebaseAuthRepo.OnVersionListener() {
+            @Override
+            public void onRealVersion() {
+                mOnVersionListener.onRealVersion();
+            }
+
+            @Override
+            public void onOldVersion(String NewVersion) {
+                mOnVersionListener.onOldVersion(NewVersion);
+            }
+        });
     }
 
     public void login(boolean isAdmin, String phone, String password, boolean rememberMe){
@@ -57,6 +73,11 @@ public class FirebaseAuthViewModel extends ViewModel {
             }
         });
     }
+
+    public void setmOnVersionListener(FirebaseAuthRepo.OnVersionListener mOnVersionListener) {
+        this.mOnVersionListener = mOnVersionListener;
+    }
+
     public void setOnRegisterListener(FirebaseAuthRepo.OnRegisterListener OnRegisterListener) {
         mOnRegisterListener = OnRegisterListener;
     }

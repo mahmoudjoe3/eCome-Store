@@ -23,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.TrackOrderViewHolder> implements Filterable {
@@ -71,6 +72,7 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
 
     public void setList(List<OrderUI> list) {
         if (list != null) {
+            Collections.reverse(list);
             this.list = list;
             listFull = new ArrayList<>(list);
         }

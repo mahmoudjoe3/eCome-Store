@@ -48,8 +48,8 @@ public class FirebaseAuthRepo {
     }
 
     public void checkVersionName(String version) {
-        mReference = FirebaseDatabase.getInstance().getReference("APP_VERSION");
-        mReference.addValueEventListener(new ValueEventListener() {
+        DatabaseReference Reference = FirebaseDatabase.getInstance().getReference("APP_VERSION");
+        Reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String netVersion = snapshot.child("VER_NAME").getValue(String.class);

@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseAuthViewModel = new ViewModelProvider(this).get(FirebaseAuthViewModel.class);
 
         //delay for one sec
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);

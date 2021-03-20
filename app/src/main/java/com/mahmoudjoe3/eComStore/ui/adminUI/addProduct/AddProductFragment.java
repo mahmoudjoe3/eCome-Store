@@ -330,7 +330,7 @@ public class AddProductFragment extends Fragment {
                     //[1] convert uri to bitmap
                     Bitmap bitmap = uriToBitmap(mImageUri[mCurrentImgIndex]);
                     //[2] encode image
-                    String code = ImageCompressor.encode_Image_To_String(bitmap, 20);
+                    String code = ImageCompressor.encode_Image_To_String(bitmap, 55);
                     //[3] decode image
                     Bitmap CodedBitmap = ImageCompressor.decode_String_To_Image(code);
                     //[4] convert bitmap to uri

@@ -20,13 +20,13 @@ public class AdminHomePageViewModel extends AndroidViewModel {
 
     public AdminHomePageViewModel(@NonNull Application application) {
         super(application);
-        repo=FirebaseRepo.getInstance();
-        productsLiveData= new MutableLiveData<>();
+        repo = FirebaseRepo.getInstance();
+        productsLiveData = new MutableLiveData<>();
 
     }
 
-    void fitchProduct(String productOwner){
-        repo.fitchProducts(productOwner,null);
+    void fitchProduct(String productOwner) {
+        repo.fitchProducts(productOwner, null);
         repo.setOnFitchProductListener(new FirebaseRepo.OnFitchProductListener() {
             @Override
             public void onFailure(String error) {
@@ -45,19 +45,19 @@ public class AdminHomePageViewModel extends AndroidViewModel {
         return productsLiveData;
     }
 
-    public void deleteProduct(Product product){
+    public void deleteProduct(Product product) {
         repo.deleteProduct(product);
         repo.setOnProductDeleted(new FirebaseRepo.onProductDeleted() {
             @Override
             public void onSuccess() {
-                if(onProductDeleted!=null)onProductDeleted.onSuccess();
+                if (onProductDeleted != null) onProductDeleted.onSuccess();
             }
         });
     }
+
     public void setOnProductDeleted(FirebaseRepo.onProductDeleted onProductDeleted) {
         this.onProductDeleted = onProductDeleted;
     }
-
 
 
 }

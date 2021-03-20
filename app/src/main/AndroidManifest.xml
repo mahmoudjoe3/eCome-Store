@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.mahmoudjoe3.eComStore">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".App.EcommerceApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name=".App.EcommerceApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.adminUI.viewOrder.AdminViewOrderActivity"
+        <activity
+            android:name=".ui.adminUI.viewOrder.AdminViewOrderActivity"
             android:parentActivityName=".ui.adminUI.AdminHomeActivity"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.userUI.orderSummary.OrderSummaryActivity"
             android:parentActivityName=".ui.userUI.cart.UserCartActivity"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.userUI.cart.UserCartActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.userUI.UserHomeActivity"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.userUI.UserHomeActivity"
             android:label="@string/title_activity_user_home"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.userUI.ViewProductActivity"
             android:parentActivityName=".ui.userUI.UserHomeActivity"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.adminUI.AdminHomeActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.adminUI.addProduct.AdminAddProductActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.adminUI.AdminHomeActivity"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.main.RegisterActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.main.MainActivity"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.main.LoginActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.main.MainActivity"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTop"

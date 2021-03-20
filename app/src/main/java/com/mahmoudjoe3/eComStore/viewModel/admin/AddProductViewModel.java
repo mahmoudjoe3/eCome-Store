@@ -13,23 +13,24 @@ public class AddProductViewModel extends AndroidViewModel {
 
     private FirebaseRepo repo;
     private FirebaseRepo.OnAddProductListener mOnAddProductListener;
+
     public AddProductViewModel(@NonNull Application application) {
         super(application);
-        repo= FirebaseRepo.getInstance();
+        repo = FirebaseRepo.getInstance();
     }
 
-    public void insertProduct(Product product, Uri[] mImageUri){
-        repo.insertProduct(product,mImageUri);
+    public void insertProduct(Product product, Uri[] mImageUri) {
+        repo.insertProduct(product, mImageUri);
         repo.setOnAddProductListener(new FirebaseRepo.OnAddProductListener() {
             @Override
             public void onFailure(String error) {
-                if(mOnAddProductListener!=null)
+                if (mOnAddProductListener != null)
                     mOnAddProductListener.onFailure(error);
             }
 
             @Override
             public void onSuccess() {
-                if(mOnAddProductListener!=null)
+                if (mOnAddProductListener != null)
                     mOnAddProductListener.onSuccess();
             }
         });

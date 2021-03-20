@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,10 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.OrderUI;
-import com.mahmoudjoe3.eComStore.model.Product;
 import com.mahmoudjoe3.eComStore.model.SubOrderUI;
 import com.mahmoudjoe3.eComStore.ui.userUI.orderSummary.OrderSummaryAdapter;
-import com.squareup.picasso.Picasso;
 import com.xw.repo.BubbleSeekBar;
 
 import java.text.ParseException;
@@ -29,10 +26,43 @@ import java.util.Calendar;
 import java.util.List;
 
 public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.TrackOrderViewHolder> implements Filterable {
-    private RecyclerView.RecycledViewPool viewPool=new RecyclerView.RecycledViewPool();
+    private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
     private List<OrderUI> list;
     private List<OrderUI> listFull;
     private Context context;
+    private onShowLocationListener onShowLocationListener;
+    private Filter productFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            //performed in BG thread
+            List<OrderUI> filteredList = new ArrayList<>();
+            if (constraint == null || constraint.length() == 0
+                    || constraint.toString().toLowerCase().trim().contains("all")) {
+                filteredList.addAll(listFull);
+            } else {
+                String pattern = constraint.toString().toLowerCase().trim();
+                for (OrderUI o : listFull) {
+                    if (o.getDeliveryDate().toLowerCase().contains(pattern)
+                            || o.getId().toLowerCase().startsWith(pattern)
+                            || checkproducts(o, pattern)) {
+                        filteredList.add(o);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            list.clear();
+            if (results != null && results.values != null)
+                list.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 
     public TrackOrdersAdapter(Context context) {
         this.list = new ArrayList<>();
@@ -40,26 +70,26 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
     }
 
     public void setList(List<OrderUI> list) {
-        if(list!=null) {
+        if (list != null) {
             this.list = list;
-            listFull=new ArrayList<>(list);
+            listFull = new ArrayList<>(list);
         }
     }
 
     @NonNull
     @Override
     public TrackOrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new TrackOrdersAdapter.TrackOrderViewHolder(LayoutInflater.from(context).inflate(R.layout.user_item_order_receipt_layout,parent,false));
+        return new TrackOrdersAdapter.TrackOrderViewHolder(LayoutInflater.from(context).inflate(R.layout.user_item_order_receipt_layout, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull TrackOrderViewHolder holder, int position) {
         OrderUI orderUI = list.get(position);
         //init inner recycle
-        LinearLayoutManager layoutManager=new LinearLayoutManager(
-          holder.rProductContainer.getContext(),
-          LinearLayoutManager.VERTICAL,
-          false
+        LinearLayoutManager layoutManager = new LinearLayoutManager(
+                holder.rProductContainer.getContext(),
+                LinearLayoutManager.VERTICAL,
+                false
         );
         layoutManager.setInitialPrefetchItemCount(orderUI.getOrderList().size());
 
@@ -73,17 +103,17 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
         holder.rOrderId.setText(orderUI.getId());
 
         //init date
-        String orderDate=getDateBefore(orderUI.getDeliveryDate(),-3);
+        String orderDate = getDateBefore(orderUI.getDeliveryDate(), -3);
         holder.rOrderDate.setText(orderDate);
 
-        holder.rOrderExpectedDate.setText("    Expected delivery "+orderUI.getDeliveryDate());
-        holder.rTotalPrice.setText(orderUI.getTotalPrice()+" EGP");
+        holder.rOrderExpectedDate.setText("    Expected delivery " + orderUI.getDeliveryDate());
+        holder.rTotalPrice.setText(orderUI.getTotalPrice() + " EGP");
         holder.rLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String lat=orderUI.getLocation().split(",")[0];
-                String lng=orderUI.getLocation().split(",")[1];
-                if(onShowLocationListener!=null)onShowLocationListener.onClick(lat,lng);
+                String lat = orderUI.getLocation().split(",")[0];
+                String lng = orderUI.getLocation().split(",")[1];
+                if (onShowLocationListener != null) onShowLocationListener.onClick(lat, lng);
             }
         });
 
@@ -93,24 +123,22 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
             @Override
             public SparseArray<String> onCustomize(int sectionCount, @NonNull SparseArray<String> array) {
                 array.clear();
-                array.put(0,"InProcessing");
-                array.put(1,"Shipped");
-                array.put(2,"Delivered");
+                array.put(0, "InProcessing");
+                array.put(1, "Shipped");
+                array.put(2, "Delivered");
                 return array;
             }
         });
 
-        if(orderUI.isDelivered())
+        if (orderUI.isDelivered())
             holder.rSeekBar.setProgress(3);
-        else if(orderUI.isApproved())
+        else if (orderUI.isApproved())
             holder.rSeekBar.setProgress(2);
         else
             holder.rSeekBar.setProgress(1);
     }
 
-
-
-    private String getDateBefore(String deliveryDate,int x) {
+    private String getDateBefore(String deliveryDate, int x) {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat DateFormat = new SimpleDateFormat("MMM dd, yyyy");
         try {
@@ -127,37 +155,9 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
         return list.size();
     }
 
-
-    public class TrackOrderViewHolder extends RecyclerView.ViewHolder{
-        TextView rOrderId;
-        TextView rOrderDate;
-        TextView rOrderExpectedDate;
-        TextView rLocation;
-        TextView rTotalPrice;
-        RecyclerView rProductContainer;
-        BubbleSeekBar rSeekBar;
-        public TrackOrderViewHolder(@NonNull View itemView) {
-            super(itemView);
-            rOrderId=itemView.findViewById(R.id.r_orderId);
-            rOrderDate=itemView.findViewById(R.id.r_orderDate);
-            rOrderExpectedDate=itemView.findViewById(R.id.r_expectedDate);
-            rLocation=itemView.findViewById(R.id.r_location);
-            rTotalPrice=itemView.findViewById(R.id.r_totalPrice);
-            rProductContainer=itemView.findViewById(R.id.r_productContainer);
-            rSeekBar=itemView.findViewById(R.id.r_seekBar);
-        }
-    }
-
-    private onShowLocationListener onShowLocationListener;
-
     public void setOnShowLocationListener(TrackOrdersAdapter.onShowLocationListener onShowLocationListener) {
         this.onShowLocationListener = onShowLocationListener;
     }
-
-    interface onShowLocationListener{
-        void onClick(String Lat,String Long);
-    }
-
 
     //new
     ///////////////////////////// search filter ////////////////////////////
@@ -166,50 +166,41 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
         return productFilter;
     }
 
-    private Filter productFilter=new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            //performed in BG thread
-            List<OrderUI> filteredList=new ArrayList<>();
-            if(constraint==null||constraint.length()==0
-                    || constraint.toString().toLowerCase().trim().contains("all")){
-                filteredList.addAll(listFull);
-            }else {
-                String pattern=constraint.toString().toLowerCase().trim();
-                for(OrderUI o:listFull){
-                    if(o.getDeliveryDate().toLowerCase().contains(pattern)
-                            || o.getId().toLowerCase().startsWith(pattern)
-                            || checkproducts(o,pattern))
-                    {
-                        filteredList.add(o);
-                    }
-                }
-            }
-
-            FilterResults results=new FilterResults();
-            results.values=filteredList;
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            list.clear();
-            if(results!=null&&results.values!=null)
-                list.addAll((List)results.values);
-            notifyDataSetChanged();
-        }
-    };
-
     private boolean checkproducts(OrderUI o, String pattern) {
-        for(SubOrderUI s:o.getOrderList()){
-            if(s.getProduct().getmCategory().toLowerCase().startsWith(pattern)
-                    ||s.getProduct().getmAdmin().getName().toLowerCase().startsWith(pattern)
-                    ||s.getProduct().getmDescription().toLowerCase().startsWith(pattern)
-                    ||s.getProduct().getmTitle().toLowerCase().startsWith(pattern)){
+        for (SubOrderUI s : o.getOrderList()) {
+            if (s.getProduct().getmCategory().toLowerCase().startsWith(pattern)
+                    || s.getProduct().getmAdmin().getName().toLowerCase().startsWith(pattern)
+                    || s.getProduct().getmDescription().toLowerCase().startsWith(pattern)
+                    || s.getProduct().getmTitle().toLowerCase().startsWith(pattern)) {
                 return true;
             }
         }
         return false;
+    }
+
+    interface onShowLocationListener {
+        void onClick(String Lat, String Long);
+    }
+
+    public class TrackOrderViewHolder extends RecyclerView.ViewHolder {
+        TextView rOrderId;
+        TextView rOrderDate;
+        TextView rOrderExpectedDate;
+        TextView rLocation;
+        TextView rTotalPrice;
+        RecyclerView rProductContainer;
+        BubbleSeekBar rSeekBar;
+
+        public TrackOrderViewHolder(@NonNull View itemView) {
+            super(itemView);
+            rOrderId = itemView.findViewById(R.id.r_orderId);
+            rOrderDate = itemView.findViewById(R.id.r_orderDate);
+            rOrderExpectedDate = itemView.findViewById(R.id.r_expectedDate);
+            rLocation = itemView.findViewById(R.id.r_location);
+            rTotalPrice = itemView.findViewById(R.id.r_totalPrice);
+            rProductContainer = itemView.findViewById(R.id.r_productContainer);
+            rSeekBar = itemView.findViewById(R.id.r_seekBar);
+        }
     }
 
 }

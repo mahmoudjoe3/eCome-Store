@@ -23,19 +23,20 @@ public class ViewSubOrderAdapter extends RecyclerView.Adapter<ViewSubOrderAdapte
     private Context context;
     private String admin;
     private Float Total;
-    public ViewSubOrderAdapter(Context context,String admin,List<SubOrderUI> list) {
+
+    public ViewSubOrderAdapter(Context context, String admin, List<SubOrderUI> list) {
         this.list = new ArrayList<>();
         this.context = context;
-        this.admin=admin;
-        Total=0f;
-        this.list=getListByAdminName(list,admin);
+        this.admin = admin;
+        Total = 0f;
+        this.list = getListByAdminName(list, admin);
     }
 
     private List<SubOrderUI> getListByAdminName(List<SubOrderUI> list, String admin) {
-        List<SubOrderUI> list1=new ArrayList<>();
-        for(SubOrderUI subOrder:list){
-            if(subOrder.getProduct().getmAdmin().getName().equalsIgnoreCase(admin)){
-                Total+=(subOrder.getProduct().getmPrice()*subOrder.getQty());
+        List<SubOrderUI> list1 = new ArrayList<>();
+        for (SubOrderUI subOrder : list) {
+            if (subOrder.getProduct().getmAdmin().getName().equalsIgnoreCase(admin)) {
+                Total += (subOrder.getProduct().getmPrice() * subOrder.getQty());
                 list1.add(subOrder);
             }
         }
@@ -53,7 +54,7 @@ public class ViewSubOrderAdapter extends RecyclerView.Adapter<ViewSubOrderAdapte
     @NonNull
     @Override
     public ViewOrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewSubOrderAdapter.ViewOrderViewHolder(LayoutInflater.from(context).inflate(R.layout.user_item_summary_layout,parent,false));
+        return new ViewSubOrderAdapter.ViewOrderViewHolder(LayoutInflater.from(context).inflate(R.layout.user_item_summary_layout, parent, false));
     }
 
     @Override
@@ -62,7 +63,7 @@ public class ViewSubOrderAdapter extends RecyclerView.Adapter<ViewSubOrderAdapte
         Product product = subOrder.getProduct();
         holder.pTitle.setText(product.getmTitle());
         holder.pOwner.setText(product.getmAdmin().getName());
-        holder.pQty.setText("Qty:"+subOrder.getQty());
+        holder.pQty.setText("Qty:" + subOrder.getQty());
         Picasso.get()
                 .load(product.getmImageUri().get(0))
                 .fit()
@@ -76,19 +77,20 @@ public class ViewSubOrderAdapter extends RecyclerView.Adapter<ViewSubOrderAdapte
         return list.size();
     }
 
-    public class ViewOrderViewHolder extends RecyclerView.ViewHolder{
+    public class ViewOrderViewHolder extends RecyclerView.ViewHolder {
         ImageView pImage;
         TextView pTitle;
         TextView pOwner;
         TextView pQty;
         TextView pPrice;
+
         public ViewOrderViewHolder(@NonNull View itemView) {
             super(itemView);
-            pImage=itemView.findViewById(R.id.s_image);
-            pTitle=itemView.findViewById(R.id.s_title);
-            pOwner=itemView.findViewById(R.id.s_owner);
-            pQty=itemView.findViewById(R.id.s_Qty);
-            pPrice=itemView.findViewById(R.id.s_price);
+            pImage = itemView.findViewById(R.id.s_image);
+            pTitle = itemView.findViewById(R.id.s_title);
+            pOwner = itemView.findViewById(R.id.s_owner);
+            pQty = itemView.findViewById(R.id.s_Qty);
+            pPrice = itemView.findViewById(R.id.s_price);
         }
     }
 }

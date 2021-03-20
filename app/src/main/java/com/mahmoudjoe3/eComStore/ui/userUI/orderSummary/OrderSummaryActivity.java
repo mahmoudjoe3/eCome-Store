@@ -37,7 +37,6 @@ import com.mahmoudjoe3.eComStore.model.OrderUI;
 import com.mahmoudjoe3.eComStore.model.SubOrderDB;
 import com.mahmoudjoe3.eComStore.model.SubOrderUI;
 import com.mahmoudjoe3.eComStore.repo.FirebaseRepo;
-import com.mahmoudjoe3.eComStore.ui.adminUI.AdminHomeActivity;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -95,12 +94,13 @@ public class OrderSummaryActivity extends AppCompatActivity {
     String delivaryDate;
     float finalPrice;
     private OrderSummaryViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_activity_order_summary);
         ButterKnife.bind(this);
-        viewModel=new ViewModelProvider(this).get(OrderSummaryViewModel.class);
+        viewModel = new ViewModelProvider(this).get(OrderSummaryViewModel.class);
         setSupportActionBar(oMyToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         user = (AuthorizedUser) getIntent().getSerializableExtra(USER_KEY);
@@ -116,10 +116,10 @@ public class OrderSummaryActivity extends AppCompatActivity {
         sTotal1.setText(totalPrice + " EGP");
         if (totalPrice >= 350) {
             sFreeShipping.setText("FREE Shipping");
-            finalPrice=totalPrice+5;
+            finalPrice = totalPrice + 5;
         } else {
             sFreeShipping.setText("25.0 EGP");
-            finalPrice=totalPrice + 5 + 25;
+            finalPrice = totalPrice + 5 + 25;
         }
         sTotal2.setText((finalPrice) + " EGP");
         sUserPhone.setText(user.getPhone());
@@ -149,7 +149,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
         sContainer.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    @OnClick({R.id.s_pickLocation_btn, R.id.s_placeOrder_btn,R.id.s_show_in_map})
+    @OnClick({R.id.s_pickLocation_btn, R.id.s_placeOrder_btn, R.id.s_show_in_map})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.s_pickLocation_btn:
@@ -172,46 +172,46 @@ public class OrderSummaryActivity extends AppCompatActivity {
                 .setNegativeButton("Place", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(!sUserAddress.getText().toString().toLowerCase().equals("no address"))
+                        if (!sUserAddress.getText().toString().toLowerCase().equals("no address"))
                             upLoadOrder();
                         else {
                             sPickLocationBtn.setError("you should enter your address!");
                         }
                     }
                 })
-                .setPositiveButton("Back",null)
+                .setPositiveButton("Back", null)
                 .create().show();
 
     }
 
     private void upLoadOrder() {
         //OrderDB orderDB=createDBOrder();
-        List<OrderDB> orderDBList=new ArrayList<>();
-        List<OrderUI> orderUIList=createOrderList(order);
-        for(OrderUI o:orderUIList){
+        List<OrderDB> orderDBList = new ArrayList<>();
+        List<OrderUI> orderUIList = createOrderList(order);
+        for (OrderUI o : orderUIList) {
             orderDBList.add(createDBOrder(o));
         }
 
-        insertOrder_rec(0,orderDBList);
+        insertOrder_rec(0, orderDBList);
 
     }
 
     private void insertOrder_rec(int i, List<OrderDB> orderDBList) {
-        if(i>=orderDBList.size()) {
-            Snackbar.make(findViewById(android.R.id.content),"Order Placed successfully ",Snackbar.LENGTH_LONG).show();
+        if (i >= orderDBList.size()) {
+            Snackbar.make(findViewById(android.R.id.content), "Order Placed successfully ", Snackbar.LENGTH_LONG).show();
             return;
         }
         viewModel.insertOrder(orderDBList.get(i));
         viewModel.setOnOrderAddedListener(new FirebaseRepo.onOrderAddedListener() {
             @Override
             public void onSuccess() {
-                insertOrder_rec(i+1,orderDBList);
+                insertOrder_rec(i + 1, orderDBList);
             }
 
             @Override
             public void onFailure() {
-                if(!MyLogic.haveNetworkConnection(OrderSummaryActivity.this)){
-                    Snackbar.make(findViewById(android.R.id.content),"Error No internet connection",Snackbar.LENGTH_LONG)
+                if (!MyLogic.haveNetworkConnection(OrderSummaryActivity.this)) {
+                    Snackbar.make(findViewById(android.R.id.content), "Error No internet connection", Snackbar.LENGTH_LONG)
                             .setAction("Exit", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -225,34 +225,34 @@ public class OrderSummaryActivity extends AppCompatActivity {
     }
 
     private OrderDB createDBOrder(OrderUI order) {
-        List<SubOrderDB> orderDBList=new ArrayList<>();
-        for(SubOrderUI s:order.getOrderList()){
-            orderDBList.add(new SubOrderDB(s.getProduct().getmId(),s.getQty()));
+        List<SubOrderDB> orderDBList = new ArrayList<>();
+        for (SubOrderUI s : order.getOrderList()) {
+            orderDBList.add(new SubOrderDB(s.getProduct().getmId(), s.getQty()));
         }
-        String location=latitude+","+longitude;
-        return new OrderDB(orderDBList,user.getPhone(),order.getTotalPrice(),location,delivaryDate,false,false);
+        String location = latitude + "," + longitude;
+        return new OrderDB(orderDBList, user.getPhone(), order.getTotalPrice(), location, delivaryDate, false, false);
     }
 
-    private List<OrderUI> createOrderList(OrderUI orderUI){
-        List<OrderUI> list=new ArrayList<>();
-        List<SubOrderUI> productsList=orderUI.getOrderList();
-        Map<String ,List<SubOrderUI>> H=new HashMap<>();
-        String tempAdmin="";
-        for(SubOrderUI p:productsList){
-            if(!tempAdmin.equals(p.getProduct().getmAdmin().getName())){
-                tempAdmin=p.getProduct().getmAdmin().getName();
-                H.put(tempAdmin,new ArrayList<>());
+    private List<OrderUI> createOrderList(OrderUI orderUI) {
+        List<OrderUI> list = new ArrayList<>();
+        List<SubOrderUI> productsList = orderUI.getOrderList();
+        Map<String, List<SubOrderUI>> H = new HashMap<>();
+        String tempAdmin = "";
+        for (SubOrderUI p : productsList) {
+            if (!tempAdmin.equals(p.getProduct().getmAdmin().getName())) {
+                tempAdmin = p.getProduct().getmAdmin().getName();
+                H.put(tempAdmin, new ArrayList<>());
                 H.get(tempAdmin).add(p);
-            }else {
+            } else {
                 H.get(tempAdmin).add(p);
             }
         }
-        for (Map.Entry<String,List<SubOrderUI>> entry : H.entrySet()){
-            Float tot=0f;
-            for (SubOrderUI s:entry.getValue()){
-                tot+=(s.getProduct().getmPrice()*s.getQty());
+        for (Map.Entry<String, List<SubOrderUI>> entry : H.entrySet()) {
+            Float tot = 0f;
+            for (SubOrderUI s : entry.getValue()) {
+                tot += (s.getProduct().getmPrice() * s.getQty());
             }
-            list.add(new OrderUI(entry.getValue(),null,null,tot,null,null,false,false));
+            list.add(new OrderUI(entry.getValue(), null, null, tot, null, null, false, false));
         }
         return list;
     }
@@ -261,63 +261,55 @@ public class OrderSummaryActivity extends AppCompatActivity {
         String uri = "http://maps.google.com/maps?daddr=" + latitude + "," + longitude + " (" + "Where the party is at" + ")";
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setPackage("com.google.android.apps.maps");
-        try
-        {
+        try {
             startActivity(intent);
-        }
-        catch(ActivityNotFoundException ex)
-        {
-            try
-            {
+        } catch (ActivityNotFoundException ex) {
+            try {
                 Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 startActivity(unrestrictedIntent);
-            }
-            catch(ActivityNotFoundException innerEx)
-            {
+            } catch (ActivityNotFoundException innerEx) {
                 Toast.makeText(this, "Please install a maps application", Toast.LENGTH_LONG).show();
             }
         }
     }
 
     private void getLocation() {
-        FusedLocationProviderClient locationProviderClient= LocationServices.getFusedLocationProviderClient(OrderSummaryActivity.this);
-        if(ActivityCompat.checkSelfPermission(OrderSummaryActivity.this
-                , Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED){
+        FusedLocationProviderClient locationProviderClient = LocationServices.getFusedLocationProviderClient(OrderSummaryActivity.this);
+        if (ActivityCompat.checkSelfPermission(OrderSummaryActivity.this
+                , Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             //get location
             locationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
-                    Location location=task.getResult();
-                    if(location!=null){
+                    Location location = task.getResult();
+                    if (location != null) {
                         try {
-                            Geocoder geocoder=new Geocoder(OrderSummaryActivity.this
+                            Geocoder geocoder = new Geocoder(OrderSummaryActivity.this
                                     , Locale.getDefault());
-                            List<Address> addresses= geocoder.getFromLocation(
+                            List<Address> addresses = geocoder.getFromLocation(
                                     location.getLatitude()
-                                    ,location.getLongitude()
-                                    ,1
+                                    , location.getLongitude()
+                                    , 1
                             );
                             //get location
-                            latitude=String.valueOf(addresses.get(0).getLatitude());
-                            longitude=String.valueOf(addresses.get(0).getLongitude());
-                            addressLine=addresses.get(0).getAddressLine(0);
+                            latitude = String.valueOf(addresses.get(0).getLatitude());
+                            longitude = String.valueOf(addresses.get(0).getLongitude());
+                            addressLine = addresses.get(0).getAddressLine(0);
                             sUserAddress.setText(addressLine);
                             sShowInMap.setVisibility(View.VISIBLE);
 
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    }
-                    else {
+                    } else {
                         Toast.makeText(OrderSummaryActivity.this, "open the GPS please!", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
-        }
-        else {
+        } else {
             ActivityCompat.requestPermissions(OrderSummaryActivity.this
-                    ,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
-                    ,44);
+                    , new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
+                    , 44);
         }
     }
 

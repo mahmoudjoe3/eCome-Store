@@ -1,17 +1,17 @@
 package com.mahmoudjoe3.eComStore.ui.adminUI.viewOrder;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.widget.Toast;
 
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.OrderDB;
@@ -20,19 +20,19 @@ import com.mahmoudjoe3.eComStore.model.OrderUI;
 import java.util.List;
 
 public class AdminViewOrderActivity extends AppCompatActivity {
+    public static final String AdminName = "AdminViewOrderActivity_adminName";
     private ViewOrderViewModel viewOrderViewModel;
     private RecyclerView mContainer;
     private ViewOrderAdapter viewOrderAdapter;
     private String adminName;
     private Toolbar pMyToolbar;
-    public static final String AdminName = "AdminViewOrderActivity_adminName";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_activity_view_order);
 
-        pMyToolbar=findViewById(R.id.vo_my_toolbar);
+        pMyToolbar = findViewById(R.id.vo_my_toolbar);
         setSupportActionBar(pMyToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -53,7 +53,7 @@ public class AdminViewOrderActivity extends AppCompatActivity {
         viewOrderAdapter.setOnClickListener(new ViewOrderAdapter.onClickListener() {
             @Override
             public void onShowLocationClick(String Lat, String Long) {
-                showMap(Lat,Long);
+                showMap(Lat, Long);
             }
 
             @Override

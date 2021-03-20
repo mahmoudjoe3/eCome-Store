@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.adminUI.viewOrder.AdminViewOrderActivity"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorPrimaryDark"
+    tools:context=".ui.adminUI.viewOrder.AdminViewOrderActivity">
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/llpar"
         android:layout_width="match_parent"
@@ -22,10 +23,11 @@
             app:titleTextColor="@color/colorBG" />
 
     </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/admin_view_order_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/llpar"
-        android:layout_margin="@dimen/_5sdp"/>
+        android:layout_margin="@dimen/_5sdp" />
 </RelativeLayout>

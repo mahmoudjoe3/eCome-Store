@@ -22,8 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mahmoudjoe3.eComStore.R;
-import com.mahmoudjoe3.eComStore.model.Product;
 import com.mahmoudjoe3.eComStore.model.Admin;
+import com.mahmoudjoe3.eComStore.model.Product;
 import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
 import com.mahmoudjoe3.eComStore.repo.FirebaseRepo;
 import com.mahmoudjoe3.eComStore.ui.adminUI.addProduct.AdminAddProductActivity;
@@ -70,10 +70,9 @@ public class AdminHomeActivity extends AppCompatActivity {
         mAdapter.setListener(new productAdapter.onClickListener() {
             @Override
             public void onClick(Product product) {
-                //TODO intent to add product frag
-                Intent i=new Intent(AdminHomeActivity.this, AdminAddProductActivity.class);
+                Intent i = new Intent(AdminHomeActivity.this, AdminAddProductActivity.class);
                 i.putExtra(Prevalent.USER_DATA, mAdmin);
-                i.putExtra(Prevalent.refColName_product,product);
+                i.putExtra(Prevalent.refColName_product, product);
                 startActivity(i);
             }
 
@@ -99,7 +98,7 @@ public class AdminHomeActivity extends AppCompatActivity {
                                 });
                             }
                         })
-                        .setPositiveButton("Back",null)
+                        .setPositiveButton("Back", null)
                         .create().show();
             }
         });
@@ -107,10 +106,10 @@ public class AdminHomeActivity extends AppCompatActivity {
     }
 
     private AlertDialog.Builder createDialoge(String tit, String msg) {
-        View view=getLayoutInflater().inflate(R.layout.progress_dialog_layout,null);
-        TextView title=view.findViewById(R.id.dialog_title);
+        View view = getLayoutInflater().inflate(R.layout.progress_dialog_layout, null);
+        TextView title = view.findViewById(R.id.dialog_title);
         title.setText(tit);
-        TextView message=view.findViewById(R.id.dialog_message);
+        TextView message = view.findViewById(R.id.dialog_message);
         message.setText(msg);
 
         return new AlertDialog.Builder(this)
@@ -120,7 +119,7 @@ public class AdminHomeActivity extends AppCompatActivity {
 
 
     private void fitchDataByLiveDate() {
-        mViewModel=new ViewModelProvider(this).get(AdminHomePageViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(AdminHomePageViewModel.class);
         mViewModel.getProductsLiveData(mAdmin.getPhone()).observe(this, new Observer<List<Product>>() {
             @Override
             public void onChanged(List<Product> productList) {
@@ -130,7 +129,7 @@ public class AdminHomeActivity extends AppCompatActivity {
     }
 
     private void initRecycle() {
-        mAdapter=new productAdapter(this,R.layout.admin_item_product_layout);
+        mAdapter = new productAdapter(this, R.layout.admin_item_product_layout);
         mRecycleView.setAdapter(mAdapter);
         mRecycleView.setHasFixedSize(true);
         mRecycleView.setLayoutManager(new LinearLayoutManager(this));
@@ -139,7 +138,7 @@ public class AdminHomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.admin_menu,menu);
+        getMenuInflater().inflate(R.menu.admin_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -147,12 +146,12 @@ public class AdminHomeActivity extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.logoutMenu:
                 logout();
                 break;
             case R.id.admin_orders:
-                Intent intent=new Intent(AdminHomeActivity.this, AdminViewOrderActivity.class);
+                Intent intent = new Intent(AdminHomeActivity.this, AdminViewOrderActivity.class);
                 intent.putExtra(AdminViewOrderActivity.AdminName, mAdmin.getName());
                 startActivity(intent);
         }
@@ -168,7 +167,7 @@ public class AdminHomeActivity extends AppCompatActivity {
 
     @OnClick(R.id.addNewProduct)
     public void onViewClicked() {
-        Intent i=new Intent(this, AdminAddProductActivity.class);
+        Intent i = new Intent(this, AdminAddProductActivity.class);
         i.putExtra(Prevalent.USER_DATA, mAdmin);
 
         startActivity(i);

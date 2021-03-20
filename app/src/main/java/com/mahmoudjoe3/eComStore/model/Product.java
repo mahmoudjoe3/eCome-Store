@@ -31,20 +31,17 @@ public class Product implements Serializable {
         this.mId = p.mId;
         this.mTime = p.mTime;
         this.mDate = p.mDate;
-        this.mQuantity=p.mQuantity;
+        this.mQuantity = p.mQuantity;
     }
+
     public Product(Admin mAdmin, String mTitle, String mCategory, String mDescription, float mPrice, int quantity) {
         this.mTitle = mTitle;
         this.mCategory = mCategory;
         this.mDescription = mDescription;
         this.mPrice = mPrice;
-        this.mAdmin=mAdmin;
+        this.mAdmin = mAdmin;
         this.mQuantity = quantity;
-        this.mImageUri=new ArrayList<>();
-    }
-
-    public void setmId(String mId) {
-        this.mId = mId;
+        this.mImageUri = new ArrayList<>();
     }
 
     public void setTime(String time) {
@@ -59,6 +56,10 @@ public class Product implements Serializable {
         return mId;
     }
 
+    public void setmId(String mId) {
+        this.mId = mId;
+    }
+
     public String getmTime() {
         return mTime;
     }
@@ -66,7 +67,6 @@ public class Product implements Serializable {
     public String getmDate() {
         return mDate;
     }
-
 
 
     public Admin getmAdmin() {

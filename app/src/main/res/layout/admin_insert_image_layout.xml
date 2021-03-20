@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
-    <TextView android:id="@+id/hintImage"
+
+    <TextView
+        android:id="@+id/hintImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:textColor="@color/colorBG"
         android:text="* Add Product Photos"
+        android:textColor="@color/colorBG"
         android:textSize="@dimen/_10ssp" />
 
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:scrollbarThumbHorizontal="@color/colorOutStoke"
-        android:layout_marginBottom="@dimen/_5sdp">
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:scrollbarThumbHorizontal="@color/colorOutStoke">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -37,14 +39,15 @@
                     android:padding="10dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/add_image" />
+
                 <ProgressBar
                     android:id="@+id/img_progressBar1"
                     android:layout_width="match_parent"
-                    android:visibility="gone"
                     android:layout_height="match_parent"
                     android:indeterminate="true"
+                    android:indeterminateTint="@color/indicator_1"
                     android:padding="@dimen/_16sdp"
-                    android:indeterminateTint="@color/indicator_1" />
+                    android:visibility="gone" />
 
                 <ImageButton
                     android:id="@+id/remove_img1"
@@ -75,14 +78,16 @@
                     android:padding="10dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/add_image" />
+
                 <ProgressBar
                     android:id="@+id/img_progressBar2"
                     android:layout_width="match_parent"
-                    android:visibility="gone"
                     android:layout_height="match_parent"
                     android:indeterminate="true"
+                    android:indeterminateTint="@color/indicator_1"
                     android:padding="@dimen/_16sdp"
-                    android:indeterminateTint="@color/indicator_1" />
+                    android:visibility="gone" />
+
                 <ImageButton
                     android:id="@+id/remove_img2"
                     android:layout_width="20dp"
@@ -112,14 +117,16 @@
                     android:padding="10dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/add_image" />
+
                 <ProgressBar
                     android:id="@+id/img_progressBar3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"
                     android:indeterminate="true"
+                    android:indeterminateTint="@color/indicator_1"
                     android:padding="@dimen/_16sdp"
-                    android:indeterminateTint="@color/indicator_1" />
+                    android:visibility="gone" />
+
                 <ImageButton
                     android:id="@+id/remove_img3"
                     android:layout_width="20dp"
@@ -149,14 +156,15 @@
                     android:padding="10dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/add_image" />
+
                 <ProgressBar
                     android:id="@+id/img_progressBar4"
                     android:layout_width="match_parent"
-                    android:visibility="gone"
                     android:layout_height="match_parent"
                     android:indeterminate="true"
+                    android:indeterminateTint="@color/indicator_1"
                     android:padding="@dimen/_16sdp"
-                    android:indeterminateTint="@color/indicator_1" />
+                    android:visibility="gone" />
 
                 <ImageButton
                     android:id="@+id/remove_img4"

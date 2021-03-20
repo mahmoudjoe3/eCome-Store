@@ -25,32 +25,32 @@ public class AdminAddProductActivity extends AppCompatActivity {
     SpringIndicator indicator;
 
     Product product;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_activity_add_product);
         ButterKnife.bind(this);
-        mAdmin= (Admin) getIntent().getSerializableExtra(Prevalent.USER_DATA);
+        mAdmin = (Admin) getIntent().getSerializableExtra(Prevalent.USER_DATA);
 
         pagerAdapter = new PagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         indicator.setViewPager(viewPager);
 
-        product=(Product) getIntent().getSerializableExtra(Prevalent.refColName_product);
-        if(product!=null) {
-            AddProductFragment.fitchDataFromOutSide(product,mAdmin);
+        product = (Product) getIntent().getSerializableExtra(Prevalent.refColName_product);
+        if (product != null) {
+            AddProductFragment.fitchDataFromOutSide(product, mAdmin);
             viewPager.setCurrentItem(2);
-        }else {
-            AddProductFragment.fitchDataFromOutSide(null,mAdmin);
+        } else {
+            AddProductFragment.fitchDataFromOutSide(null, mAdmin);
         }
 
     }
 
-    public void sendDataToActivity(String Category){
-            mCAT = Category;
-            AddProductFragment.sendDataToFragment(mCAT, mAdmin);
+    public void sendDataToActivity(String Category) {
+        mCAT = Category;
+        AddProductFragment.sendDataToFragment(mCAT, mAdmin);
     }
-
 
 
 }

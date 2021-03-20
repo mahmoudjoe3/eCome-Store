@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="wrap_content"
     android:layout_width="@dimen/_145sdp"
+    android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/_10sdp"
     android:layout_marginTop="@dimen/_10sdp"
     app:cardBackgroundColor="@color/colorAccent">
@@ -16,25 +16,27 @@
             android:id="@id/add_to_fav"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_fav_off"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/_5sdp"
             android:layout_marginTop="@dimen/_5sdp"
-            app:fabSize="mini"
-            android:tag="of" />
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:src="@drawable/ic_fav_off"
+            android:tag="of"
+            app:fabSize="mini" />
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@id/add_to_cart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_above="@id/tmp"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/_5sdp"
             android:src="@drawable/ic_add_cart"
+            android:tag="of"
             android:text="Add to Cart"
             android:textColor="@color/colorBG"
-            android:layout_alignParentEnd="true"
-            android:layout_above="@id/tmp"
-            app:fabSize="mini"
             android:visibility="gone"
-            android:tag="of"
-            android:layout_margin="@dimen/_5sdp" />
+            app:fabSize="mini" />
+
         <ImageView
             android:id="@id/item_productImage"
             android:layout_width="match_parent"
@@ -42,7 +44,8 @@
             android:scaleType="centerCrop"
             android:src="@drawable/fashion" />
 
-        <LinearLayout android:id="@+id/tmp"
+        <LinearLayout
+            android:id="@+id/tmp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/item_productImage"
@@ -54,8 +57,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_5sdp"
-                android:maxLines="2"
                 android:lines="2"
+                android:maxLines="2"
                 android:text="chare kendendj endj3nn3jdnj3njdn3jndj3ndjjdn3nj"
                 android:textColor="@color/colorBG"
                 android:textSize="@dimen/_12ssp" />
@@ -81,11 +84,11 @@
                     android:layout_below="@id/stoke"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
                     android:text="40 EGP"
                     android:textColor="@color/indicator_1"
                     android:textSize="@dimen/_10ssp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="@dimen/_5sdp"/>
+                    android:textStyle="bold" />
 
             </RelativeLayout>
 

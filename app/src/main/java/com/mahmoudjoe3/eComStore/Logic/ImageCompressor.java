@@ -7,7 +7,7 @@ import android.util.Base64;
 import java.io.ByteArrayOutputStream;
 
 public class ImageCompressor {
-    public static String encode_Image_To_String(Bitmap bitmap,int quality) {
+    public static String encode_Image_To_String(Bitmap bitmap, int quality) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         //compress bitmap to stream
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream);

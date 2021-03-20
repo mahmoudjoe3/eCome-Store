@@ -54,8 +54,8 @@
                 android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginEnd="@dimen/_5sdp"
                 android:paddingEnd="@dimen/_5sdp"
-                android:textColor="@color/indicator"
-                android:text="out of stoke" />
+                android:text="out of stoke"
+                android:textColor="@color/indicator" />
 
             <TextView
                 android:id="@+id/Date"
@@ -64,11 +64,11 @@
                 android:layout_gravity="end"
                 android:layout_marginStart="@dimen/_5sdp"
                 android:layout_marginEnd="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
                 android:paddingStart="@dimen/_5sdp"
                 android:paddingEnd="@dimen/_5sdp"
-                android:layout_marginBottom="@dimen/_5sdp"
-                android:textColor="@color/indicator"
-                android:text="10 Dec, 2020" />
+                android:text="10 Dec, 2020"
+                android:textColor="@color/indicator" />
 
         </LinearLayout>
     </LinearLayout>

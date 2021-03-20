@@ -1,16 +1,12 @@
 package com.mahmoudjoe3.eComStore.ui.main;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -57,7 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
         EdtxtBirthDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus)
+                if (!hasFocus)
                     openCalender();
             }
         });
@@ -79,20 +75,20 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void openCalender() {
-        Calendar calendar=Calendar.getInstance();
-        int y,m,d;
-        y=calendar.get(Calendar.YEAR);
-        m=calendar.get(Calendar.MONTH);
-        d=calendar.get(Calendar.DAY_OF_MONTH);
+        Calendar calendar = Calendar.getInstance();
+        int y, m, d;
+        y = calendar.get(Calendar.YEAR);
+        m = calendar.get(Calendar.MONTH);
+        d = calendar.get(Calendar.DAY_OF_MONTH);
         new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(year,month,dayOfMonth);
+                calendar.set(year, month, dayOfMonth);
                 SimpleDateFormat DateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
                 EdtxtBirthDate.setText(DateFormat.format(calendar.getTime()));
             }
-        },y,m,d).show();
+        }, y, m, d).show();
     }
 
 
@@ -117,12 +113,11 @@ public class RegisterActivity extends AppCompatActivity {
             mPassword.setError("Password is Empty!");
         } else if (password.length() < 8) {
             mPassword.setError("Weak Password!");
-        }
-        else if (EdtxtBirthDate.getText().toString().isEmpty()) {
+        } else if (EdtxtBirthDate.getText().toString().isEmpty()) {
             EdtxtBirthDate.setError("Enter your birthday please!");
-        }else {
+        } else {
             if (MyLogic.haveNetworkConnection(this)) {
-                mFirebaseAuthViewModel.registerUser(name, phone, password,EdtxtBirthDate.getText().toString());
+                mFirebaseAuthViewModel.registerUser(name, phone, password, EdtxtBirthDate.getText().toString());
                 mFirebaseAuthViewModel.setOnRegisterListener(new FirebaseAuthRepo.OnRegisterListener() {
                     @Override
                     public void onRegisterSuccess() {
@@ -160,7 +155,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onStop();
         finish();
     }
-
 
 
 }

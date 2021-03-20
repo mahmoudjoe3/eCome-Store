@@ -28,11 +28,12 @@ import java.util.List;
 
 public class WishlistFragment extends Fragment {
 
-    private WishlistViewModel wishlistViewModel;
     String userId;
     RecyclerView pList;
-    private productAdapter productAdapter;
     AuthorizedUser mUser;
+    private WishlistViewModel wishlistViewModel;
+    private productAdapter productAdapter;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         wishlistViewModel = new ViewModelProvider(this).get(WishlistViewModel.class);
@@ -109,7 +110,7 @@ public class WishlistFragment extends Fragment {
         wishlistViewModel.getUserLiveData(userId).observe(getViewLifecycleOwner(), new Observer<AuthorizedUser>() {
             @Override
             public void onChanged(AuthorizedUser user) {
-                mUser=user;
+                mUser = user;
                 wishlistViewModel.getProductsByIds(user.getFavList()).observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
                     @Override
                     public void onChanged(List<Product> products) {
@@ -120,7 +121,7 @@ public class WishlistFragment extends Fragment {
             }
         });
 
-        ShardViewModel shardViewModel=new ViewModelProvider(getActivity()).get(ShardViewModel.class);
+        ShardViewModel shardViewModel = new ViewModelProvider(getActivity()).get(ShardViewModel.class);
         shardViewModel.getLiveSearch().observe(getActivity(), new Observer<String>() {
             @Override
             public void onChanged(String s) {

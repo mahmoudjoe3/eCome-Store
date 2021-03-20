@@ -15,7 +15,7 @@ public class OrderUI implements Serializable {
 
     public OrderUI(List<SubOrderUI> orderList) {
         this.orderList = orderList;
-        this.id =null;
+        this.id = null;
     }
 
     public OrderUI(List<SubOrderUI> orderList, String id, String phone, float totalPrice

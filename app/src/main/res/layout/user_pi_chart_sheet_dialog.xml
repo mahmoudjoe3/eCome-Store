@@ -2,22 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAccent"
-    android:orientation="vertical"
     android:layout_gravity="center"
+    android:background="@color/colorAccent"
     android:gravity="center"
-    >
+    android:orientation="vertical">
+
     <ProgressBar
         android:id="@+id/progressBarsheet"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:indeterminate="true"
-        android:indeterminateTint="@color/colorInStoke" />
+        android:indeterminateTint="@color/colorInStoke"
+        android:visibility="gone" />
 
     <com.anychart.AnyChartView
         android:id="@+id/pi_chart_view"
         android:layout_width="400dp"
-        android:layout_height="400dp"
-        />
+        android:layout_height="400dp" />
 </LinearLayout>

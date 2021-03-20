@@ -33,30 +33,38 @@ public class FirebaseRepo {
 
     static StorageReference mProductImageReference;
     static DatabaseReference mReference;
+    public onFindUserListener mOnFindUserListener;
+    public OnGetProductListener mOnGetProductListener;
 
+
+    /////////////////////////////////////   get user data     //////////////////////////////////////
+    public OnFitchProductListener mOnFitchProductListener;
+    public OnAddProductListener mOnAddProductListener;
     Product mProduct;
-    public static synchronized FirebaseRepo getInstance(){
-        if(instance==null)
-        {
-            instance=new FirebaseRepo();
+    onOrderAddedListener mOnOrderAddedListener;
+
+    /////////////////////////////////////   get product data     //////////////////////////////////////
+    onOrderRetrievedListener mOnOrderRetrievedListener;
+    onProductDeleted onProductDeleted;
+
+    public static synchronized FirebaseRepo getInstance() {
+        if (instance == null) {
+            instance = new FirebaseRepo();
         }
-        mProductImageReference= FirebaseStorage.getInstance().getReference(Prevalent.refStorage_productImage);
+        mProductImageReference = FirebaseStorage.getInstance().getReference(Prevalent.refStorage_productImage);
         mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_product);
         //for caching
         mReference.keepSynced(true);
         return instance;
     }
 
-
-    /////////////////////////////////////   get user data     //////////////////////////////////////
-
-    public void getUserById(String userId){
-        mReference= FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
+    public void getUserById(String userId) {
+        mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
         mReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                AuthorizedUser user=snapshot.child(userId).getValue(AuthorizedUser.class);
-                if(mOnFindUserListener!=null)
+                AuthorizedUser user = snapshot.child(userId).getValue(AuthorizedUser.class);
+                if (mOnFindUserListener != null)
                     mOnFindUserListener.onSuccess(user);
             }
 
@@ -67,28 +75,22 @@ public class FirebaseRepo {
         });
     }
 
-    public onFindUserListener mOnFindUserListener;
+
+    /////////////////////////////////////   manage fav and cart list      //////////////////////////////////////
+
     public void setOnFindUserListener(onFindUserListener mOnFindUserListener) {
         this.mOnFindUserListener = mOnFindUserListener;
     }
 
-
-
-    public interface onFindUserListener{
-        void onSuccess(AuthorizedUser user);
-    }
-
-    /////////////////////////////////////   get product data     //////////////////////////////////////
-
-    public void getProductListByIds(List<String> productIds){
-        mReference= FirebaseDatabase.getInstance().getReference(Prevalent.refColName_product);
+    public void getProductListByIds(List<String> productIds) {
+        mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_product);
         mReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Product> products=new ArrayList<>();
-                for (String key: productIds)
+                List<Product> products = new ArrayList<>();
+                for (String key : productIds)
                     products.add(snapshot.child(key).getValue(Product.class));
-                if(mOnGetProductListener!=null)mOnGetProductListener.onSuccess(products);
+                if (mOnGetProductListener != null) mOnGetProductListener.onSuccess(products);
             }
 
             @Override
@@ -98,23 +100,19 @@ public class FirebaseRepo {
         });
     }
 
-    public OnGetProductListener mOnGetProductListener;
     public void setOnGetProductListener(OnGetProductListener mOnGetProductListener) {
         this.mOnGetProductListener = mOnGetProductListener;
     }
-    public interface OnGetProductListener{
-        void onSuccess(List<Product> products);
-    }
-
-
-    /////////////////////////////////////   manage fav and cart list      //////////////////////////////////////
-
 
     public void addCart(String cart, AuthorizedUser user) {
         mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
         user.getCartList().add(cart);
         mReference.child(user.getPhone()).setValue(user);
     }
+
+
+    /////////////////////////////////////    product fitch    //////////////////////////////////////
+
     public void removeCart(String cart, AuthorizedUser user) {
         mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
         user.getCartList().remove(cart);
@@ -133,36 +131,30 @@ public class FirebaseRepo {
         mReference.child(user.getPhone()).setValue(user);
     }
 
-
-    /////////////////////////////////////    product fitch    //////////////////////////////////////
-
-    public void fitchProducts(String ProductOwner,String cat){
+    public void fitchProducts(String ProductOwner, String cat) {
         mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_product);
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Product> products=new ArrayList<>();
+                List<Product> products = new ArrayList<>();
 
-                for(DataSnapshot snap:snapshot.getChildren()) {
-                    Product product=snap.getValue(Product.class);
-                    if(ProductOwner==null&&cat==null) { //fitch all to user
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Product product = snap.getValue(Product.class);
+                    if (ProductOwner == null && cat == null) { //fitch all to user
                         products.add(product);
-                    }
-                    else if(ProductOwner==null&&product.getmCategory().equalsIgnoreCase(cat)) { //fitch cat to user
+                    } else if (ProductOwner == null && product.getmCategory().equalsIgnoreCase(cat)) { //fitch cat to user
                         products.add(product);
-                    }
-
-                    else if (product.getmAdmin().getPhone().equalsIgnoreCase(ProductOwner)) {//fitch to admin
+                    } else if (product.getmAdmin().getPhone().equalsIgnoreCase(ProductOwner)) {//fitch to admin
                         products.add(product);
                     }
                 }
-                if(mOnFitchProductListener!=null)
+                if (mOnFitchProductListener != null)
                     mOnFitchProductListener.onSuccess(products);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                if(mOnFitchProductListener!=null)
+                if (mOnFitchProductListener != null)
                     mOnFitchProductListener.onFailure(error.getMessage());
             }
         });
@@ -170,58 +162,50 @@ public class FirebaseRepo {
 
     }
 
-    public OnFitchProductListener mOnFitchProductListener;
     public void setOnFitchProductListener(OnFitchProductListener mOnFitchProductListener) {
         this.mOnFitchProductListener = mOnFitchProductListener;
     }
 
-    public interface OnFitchProductListener{
-        void onFailure(String error);
-        void onSuccess(List<Product> productList);
-    }
-
-
-
     /////////////////////////////////////    product insertion    //////////////////////////////////////
     public void insertProduct(Product product, Uri[] mImageUri) {
         mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_product);
-        String date,time,productKey;
-        Calendar calendar=Calendar.getInstance();
-        SimpleDateFormat DateFormat= new SimpleDateFormat("MMM dd, yyyy");
-        SimpleDateFormat TimeFormat= new SimpleDateFormat("HH:mm:ss a");
+        String date, time, productKey;
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat DateFormat = new SimpleDateFormat("MMM dd, yyyy");
+        SimpleDateFormat TimeFormat = new SimpleDateFormat("HH:mm:ss a");
 
-        date=DateFormat.format(calendar.getTime());
-        time=TimeFormat.format(calendar.getTime());
-        if(mImageUri[0]!=null)
-            productKey = mImageUri[0].getLastPathSegment() + date + time  ;
-        else if(mImageUri[1]!=null)
-            productKey = mImageUri[1].getLastPathSegment() + date + time  ;
-        else if(mImageUri[2]!=null)
-            productKey = mImageUri[2].getLastPathSegment() + date + time  ;
+        date = DateFormat.format(calendar.getTime());
+        time = TimeFormat.format(calendar.getTime());
+        if (mImageUri[0] != null)
+            productKey = mImageUri[0].getLastPathSegment() + date + time;
+        else if (mImageUri[1] != null)
+            productKey = mImageUri[1].getLastPathSegment() + date + time;
+        else if (mImageUri[2] != null)
+            productKey = mImageUri[2].getLastPathSegment() + date + time;
         else
-            productKey = mImageUri[3].getLastPathSegment() + date + time  ;
+            productKey = mImageUri[3].getLastPathSegment() + date + time;
 
         product.setDate(date);
         product.setTime(time);
-        mProduct=new Product(product);
-        ArrayList<Uri> imageUri=new ArrayList<>();
-        for(Uri u: mImageUri)
-            if (u!=null)
+        mProduct = new Product(product);
+        ArrayList<Uri> imageUri = new ArrayList<>();
+        for (Uri u : mImageUri)
+            if (u != null)
                 imageUri.add(u);
 
-        uploadImage(imageUri,0,productKey);
-        Log.d(TAG, "insertProduct: "+mProduct);
+        uploadImage(imageUri, 0, productKey);
+        Log.d(TAG, "insertProduct: " + mProduct);
     }
 
     void uploadImage(ArrayList<Uri> mImageUri, int i, String productKey) {
-        if(i>=mImageUri.size()) {
+        if (i >= mImageUri.size()) {
             insertProductTodatabase();
             Log.d(TAG, "onSuccess: Done");
             return;
         }
         if (mImageUri.get(i) != null) {
             mProductImageReference
-                    .child(productKey + "_" + i )
+                    .child(productKey + "_" + i)
                     .putFile(mImageUri.get(i))
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -235,7 +219,7 @@ public class FirebaseRepo {
                                             String imageUrl = uri.toString();
                                             mProduct.getmImageUri().add(imageUrl);
                                             Log.d(TAG, "onSuccess: " + i + "  " + imageUrl);
-                                            uploadImage(mImageUri,i+1,productKey);
+                                            uploadImage(mImageUri, i + 1, productKey);
                                         }
                                     });
                                 }
@@ -252,48 +236,43 @@ public class FirebaseRepo {
         }
     }
 
-
     private void insertProductTodatabase() {
         mProduct.setmId(mReference.push().getKey());
         mReference.child(mProduct.getmId()).setValue(mProduct);
-        if(mOnAddProductListener!=null)
+        if (mOnAddProductListener != null)
             mOnAddProductListener.onSuccess();
     }
 
-    public OnAddProductListener mOnAddProductListener;
     public void setOnAddProductListener(OnAddProductListener mOnAddProductListener) {
         this.mOnAddProductListener = mOnAddProductListener;
     }
-    public interface OnAddProductListener{
-        void onFailure(String error);
-        void onSuccess();
+
+    public void deleteProduct(Product product) {
+        mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_product);
+        delete(product, 0);
+
     }
     /////////////////////////////////////    delete product     //////////////////////////////////////
 
-    public void deleteProduct(Product  product){
-        mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_product);
-        delete(product,0);
-
-    }
-    void delete(Product product,int i){
-        if(i>=product.getmImageUri().size()){
+    void delete(Product product, int i) {
+        if (i >= product.getmImageUri().size()) {
             mReference.child(product.getmId()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    if(onProductDeleted!=null)onProductDeleted.onSuccess();
+                    if (onProductDeleted != null) onProductDeleted.onSuccess();
                 }
             });
-            DatabaseReference mRef=FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
+            DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
             mRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for(DataSnapshot snap:snapshot.getChildren()) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
                         AuthorizedUser user = snap.getValue(AuthorizedUser.class);
-                        if(user.getCartList().contains(product.getmId())){
-                            removeCart(product.getmId(),user);
+                        if (user.getCartList().contains(product.getmId())) {
+                            removeCart(product.getmId(), user);
                         }
-                        if(user.getFavList().contains(product.getmId())){
-                            removeFav(product.getmId(),user);
+                        if (user.getFavList().contains(product.getmId())) {
+                            removeFav(product.getmId(), user);
                         }
                     }
                 }
@@ -311,47 +290,47 @@ public class FirebaseRepo {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.d(TAG, "onSuccess: ");
-                delete(product,i+1);
+                delete(product, i + 1);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "onFailure: "+e.getMessage());
+                Log.d(TAG, "onFailure: " + e.getMessage());
             }
         });
 
     }
 
-
-    ///////////////////////////////////////////  insert order  /////////////////////////////////////////////
-
     public void insertOrder(OrderDB orderDB) {
-        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference(Prevalent.refColName_order);
-        String key=mRef.push().getKey();
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_order);
+        String key = mRef.push().getKey();
         orderDB.setId(key);
         mRef.child(orderDB.getId()).setValue(orderDB).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 decreaseQty(orderDB.getOrderList());
                 deleteCart(orderDB.getPhone());
-                if(mOnOrderAddedListener!=null)mOnOrderAddedListener.onSuccess();
+                if (mOnOrderAddedListener != null) mOnOrderAddedListener.onSuccess();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                if(mOnOrderAddedListener!=null)mOnOrderAddedListener.onFailure();
+                if (mOnOrderAddedListener != null) mOnOrderAddedListener.onFailure();
             }
         });
     }
 
+
+    ///////////////////////////////////////////  insert order  /////////////////////////////////////////////
+
     private void deleteCart(String phone) {
-        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
         mRef.child(phone).child("cartList").setValue(null);
     }
 
     private void decreaseQty(List<SubOrderDB> orderList) {
-        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference(Prevalent.refColName_product);
-        for(SubOrderDB subOrderDB:orderList) {
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_product);
+        for (SubOrderDB subOrderDB : orderList) {
             mRef.child(subOrderDB.getProduct_Key()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -370,40 +349,33 @@ public class FirebaseRepo {
         }
     }
 
-    onOrderAddedListener mOnOrderAddedListener;
-
     public void setOnOrderAddedListener(onOrderAddedListener mOnOrderAddedListener) {
         this.mOnOrderAddedListener = mOnOrderAddedListener;
     }
 
-    public interface onOrderAddedListener{
-        void onSuccess();
-        void onFailure();
-    }
-
     public void approveOn(OrderDB dbOrder) {
-        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference(Prevalent.refColName_order);
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_order);
         mRef.child(dbOrder.getId()).setValue(dbOrder);
     }
 
     public void deliver(OrderDB dbOrder) {
-        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference(Prevalent.refColName_order);
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_order);
         mRef.child(dbOrder.getId()).setValue(dbOrder);
     }
 
-        public void fitchOrders(String userPhone) {
-        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference(Prevalent.refColName_order);
-        List<OrderDB> orderDBList=new ArrayList<>();
-        if(userPhone==null||userPhone.equals("")){//fitch all
+    public void fitchOrders(String userPhone) {
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_order);
+        List<OrderDB> orderDBList = new ArrayList<>();
+        if (userPhone == null || userPhone.equals("")) {//fitch all
             mRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                    for(DataSnapshot snap:snapshot.getChildren()) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
                         OrderDB orderDB = snap.getValue(OrderDB.class);
-                            orderDBList.add(orderDB);
+                        orderDBList.add(orderDB);
                     }
-                    if(mOnOrderRetrievedListener!=null)
+                    if (mOnOrderRetrievedListener != null)
                         mOnOrderRetrievedListener.onComplete(orderDBList);
                 }
 
@@ -412,8 +384,7 @@ public class FirebaseRepo {
 
                 }
             });
-        }
-        else {
+        } else {
             mRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -436,21 +407,45 @@ public class FirebaseRepo {
         }
     }
 
-    onOrderRetrievedListener mOnOrderRetrievedListener;
     public void setonOrderRetrievedListener(onOrderRetrievedListener mOnOrderRetrievedListener) {
         this.mOnOrderRetrievedListener = mOnOrderRetrievedListener;
     }
-    public interface onOrderRetrievedListener{
-        void onComplete(List<OrderDB> orderDBList);
-    }
-
-    onProductDeleted onProductDeleted;
 
     public void setOnProductDeleted(FirebaseRepo.onProductDeleted onProductDeleted) {
         this.onProductDeleted = onProductDeleted;
     }
 
-    public interface onProductDeleted{
+    public interface onFindUserListener {
+        void onSuccess(AuthorizedUser user);
+    }
+
+    public interface OnGetProductListener {
+        void onSuccess(List<Product> products);
+    }
+
+    public interface OnFitchProductListener {
+        void onFailure(String error);
+
+        void onSuccess(List<Product> productList);
+    }
+
+    public interface OnAddProductListener {
+        void onFailure(String error);
+
+        void onSuccess();
+    }
+
+    public interface onOrderAddedListener {
+        void onSuccess();
+
+        void onFailure();
+    }
+
+    public interface onOrderRetrievedListener {
+        void onComplete(List<OrderDB> orderDBList);
+    }
+
+    public interface onProductDeleted {
         void onSuccess();
     }
 }

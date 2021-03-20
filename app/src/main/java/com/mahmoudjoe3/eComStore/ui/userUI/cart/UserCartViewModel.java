@@ -1,7 +1,5 @@
 package com.mahmoudjoe3.eComStore.ui.userUI.cart;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -18,10 +16,11 @@ public class UserCartViewModel extends ViewModel {
     private FirebaseRepo repo;
     private MutableLiveData<AuthorizedUser> userLiveData;
     private MutableLiveData<List<Product>> productsLiveData;
+
     public UserCartViewModel() {
         repo = FirebaseRepo.getInstance();
         userLiveData = new MutableLiveData<>();
-        productsLiveData=new MutableLiveData<>();
+        productsLiveData = new MutableLiveData<>();
     }
 
     public LiveData<List<Product>> getProductsByIds(List<String> productIds) {

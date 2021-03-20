@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-
 import com.mahmoudjoe3.eComStore.R;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 import com.squareup.picasso.Picasso;
@@ -21,7 +20,7 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.Holder> {
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.slider_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.slider_item, parent, false);
         return new Holder(view);
     }
 
@@ -37,11 +36,12 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.Holder> {
         return this.mImageUri.size();
     }
 
-    public class Holder extends SliderViewAdapter.ViewHolder  {
+    public class Holder extends SliderViewAdapter.ViewHolder {
         ImageView imageView;
+
         public Holder(View itemView) {
             super(itemView);
-            imageView=itemView.findViewById(R.id.Slider_image);
+            imageView = itemView.findViewById(R.id.Slider_image);
         }
     }
 }

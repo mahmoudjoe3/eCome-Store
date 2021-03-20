@@ -59,16 +59,18 @@ public class UserCartActivity extends AppCompatActivity {
     @BindView(R.id.card2)
     CardView card2;
     String userKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_activity_cart);
         ButterKnife.bind(this);
         cartViewModel = new ViewModelProvider(this).get(UserCartViewModel.class);
-        userKey= getIntent().getStringExtra(UserCartActivity_User_Key);
+        userKey = getIntent().getStringExtra(UserCartActivity_User_Key);
         setSupportActionBar(oMyToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -83,7 +85,7 @@ public class UserCartActivity extends AppCompatActivity {
                             UserCartActivity.this.finish();
                         }
                     }).show();
-        }else if(snackbar.isShown()) {
+        } else if (snackbar.isShown()) {
             card1.setVisibility(View.VISIBLE);
             card2.setVisibility(View.VISIBLE);
             snackbar.dismiss();
@@ -172,7 +174,7 @@ public class UserCartActivity extends AppCompatActivity {
         oGoToCheckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(supOrderAdapter.getList().size()>0) {
+                if (supOrderAdapter.getList().size() > 0) {
                     OrderUI order = new OrderUI(supOrderAdapter.getList());
                     Float totalPrice = total;
                     Intent intent = new Intent(UserCartActivity.this, OrderSummaryActivity.class);
@@ -180,8 +182,8 @@ public class UserCartActivity extends AppCompatActivity {
                     intent.putExtra(OrderSummaryActivity.ORDER_KEY, order);
                     intent.putExtra(OrderSummaryActivity.TotalPrice_KEY, totalPrice);
                     startActivity(intent);
-                }
-                else Toast.makeText(UserCartActivity.this, "There is No Cart", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(UserCartActivity.this, "There is No Cart", Toast.LENGTH_SHORT).show();
             }
         });
     }

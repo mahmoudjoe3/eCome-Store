@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/_80sdp"
     android:layout_margin="@dimen/_5sdp"
-    app:cardBackgroundColor="@color/colorAccent"
-    >
+    app:cardBackgroundColor="@color/colorAccent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,9 +31,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_5sdp"
-                android:maxLines="2"
-                android:lines="2"
                 android:layout_marginTop="@dimen/_5sdp"
+                android:lines="2"
+                android:maxLines="2"
                 android:text="chare"
                 android:textColor="@color/colorBG"
                 android:textSize="@dimen/_12ssp" />
@@ -69,25 +68,26 @@
                     android:id="@+id/add_to_fav"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_fav_off"
-                    app:fabSize="mini"
-                    android:tag="of"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="@dimen/_8sdp"
                     android:layout_marginTop="@dimen/_3sdp"
-                    android:layout_marginEnd="@dimen/_8sdp"/>
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:layout_marginBottom="@dimen/_8sdp"
+                    android:src="@drawable/ic_fav_off"
+                    android:tag="of"
+                    app:fabSize="mini" />
+
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/add_to_cart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_add_cart"
-                    app:fabSize="mini"
-                    android:tag="of"
-                    android:layout_toLeftOf="@id/add_to_fav"
                     android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="@dimen/_4sdp"
                     android:layout_marginBottom="@dimen/_8sdp"
-                    android:layout_marginEnd="@dimen/_4sdp" />
+                    android:layout_toLeftOf="@id/add_to_fav"
+                    android:src="@drawable/ic_add_cart"
+                    android:tag="of"
+                    app:fabSize="mini" />
 
             </RelativeLayout>
 

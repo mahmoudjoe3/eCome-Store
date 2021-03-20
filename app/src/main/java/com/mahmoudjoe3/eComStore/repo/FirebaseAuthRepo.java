@@ -20,33 +20,12 @@ import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
 public class FirebaseAuthRepo {
 
     private static final String TAG = "FirebaseAuthRepoTag";
-    private OnLoginListener mOnLoginListener;
-    public void setOnLoginListener(OnLoginListener onLoginListener) {
-        mOnLoginListener = onLoginListener;
-    }
-
-
-
-    public interface OnLoginListener {
-        void onLogeInSuccess(Object user);
-        void onLogeInDenied(String errorMsg);
-        void onRemember(Object user);
-    }
-
-    private OnRegisterListener mOnRegisterListener;
-    public void setOnRegisterListener(OnRegisterListener OnRegisterListener) {
-        mOnRegisterListener = OnRegisterListener;
-    }
-    public interface OnRegisterListener {
-        void onRegisterSuccess();
-        void onRegisterExist();
-        void onRegisterFailure();
-    }
-
-
     static FirebaseAuthRepo instance;
-
     static DatabaseReference mReference;
+    ///////////////check Version/////////////////
+    OnVersionListener onVersionListener;
+    private OnLoginListener mOnLoginListener;
+    private OnRegisterListener mOnRegisterListener;
 
     public static synchronized FirebaseAuthRepo getInstance() {
         if (instance == null) {
@@ -56,30 +35,31 @@ public class FirebaseAuthRepo {
         return instance;
     }
 
+    public void setOnLoginListener(OnLoginListener onLoginListener) {
+        mOnLoginListener = onLoginListener;
+    }
 
-    ///////////////check Version/////////////////
-    OnVersionListener onVersionListener;
+    public void setOnRegisterListener(OnRegisterListener OnRegisterListener) {
+        mOnRegisterListener = OnRegisterListener;
+    }
+
     public void setOnVersionListener(OnVersionListener onVersionListener) {
         this.onVersionListener = onVersionListener;
     }
-    public interface OnVersionListener{
-        void onRealVersion();
-        void onOldVersion(String NewVersion);
-    }
 
-    public void checkVersionName(String version){
-        mReference=FirebaseDatabase.getInstance().getReference("APP_VERSION");
+    public void checkVersionName(String version) {
+        mReference = FirebaseDatabase.getInstance().getReference("APP_VERSION");
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String netVersion= snapshot.child("VER_NAME").getValue(String.class);
-                if(netVersion.equals(version)){
+                String netVersion = snapshot.child("VER_NAME").getValue(String.class);
+                if (netVersion.equals(version)) {
                     onVersionListener.onRealVersion();
-                    Log.d(TAG, "onDataChange: RealVersion -->"+version);
-                }else {
+                    Log.d(TAG, "onDataChange: RealVersion -->" + version);
+                } else {
                     onVersionListener.onOldVersion(netVersion);
-                    Log.d(TAG, "onDataChange: OldVersion -->"+version);
-                    Log.d(TAG, "onDataChange: RealVersion -->"+netVersion);
+                    Log.d(TAG, "onDataChange: OldVersion -->" + version);
+                    Log.d(TAG, "onDataChange: RealVersion -->" + netVersion);
                 }
             }
 
@@ -90,7 +70,7 @@ public class FirebaseAuthRepo {
         });
     }
 
-    public void RegisterUser(String name, String phone, String password,String date) {
+    public void RegisterUser(String name, String phone, String password, String date) {
 
         mReference = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
 
@@ -98,12 +78,11 @@ public class FirebaseAuthRepo {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.child(phone).exists()) { //phone number is exist in database
-                    if(mOnRegisterListener!=null){
+                    if (mOnRegisterListener != null) {
                         mOnRegisterListener.onRegisterExist();
                     }
-                }
-                else {//safe to insert new user
-                    insertNewUser(name, phone, password,date);
+                } else {//safe to insert new user
+                    insertNewUser(name, phone, password, date);
                 }
             }
 
@@ -114,26 +93,26 @@ public class FirebaseAuthRepo {
         });
 
     }
-    private void insertNewUser(String name, String phone, String password,String date) {
-        AuthorizedUser user=new AuthorizedUser(name,phone,password,date);
+
+    private void insertNewUser(String name, String phone, String password, String date) {
+        AuthorizedUser user = new AuthorizedUser(name, phone, password, date);
         mReference.child(phone).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                if(mOnRegisterListener!=null){
+                if (mOnRegisterListener != null) {
                     mOnRegisterListener.onRegisterSuccess();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                if(mOnRegisterListener!=null){
+                if (mOnRegisterListener != null) {
                     mOnRegisterListener.onRegisterFailure();
                 }
             }
         });
 
     }
-
 
     public void forgetPassword(boolean isAdmin, String phone, String newPassword) {
         String refCollectionName = (isAdmin) ? Prevalent.refColName_Admin : Prevalent.refColName_User;
@@ -147,8 +126,7 @@ public class FirebaseAuthRepo {
                             admin.setPassword(newPassword);
                             mReference.child(refCollectionName).child(phone).setValue(admin);
                         }
-                    }
-                    else {
+                    } else {
                         AuthorizedUser user = snapshot.child(refCollectionName).child(phone).getValue(AuthorizedUser.class);
                         if (user.getPhone().equals(phone)) {
                             user.setPassword(newPassword);
@@ -173,7 +151,7 @@ public class FirebaseAuthRepo {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.child(refCollectionName).child(phone).exists()) { //access done
-                    if(admin) {
+                    if (admin) {
                         Admin admin = snapshot.child(refCollectionName).child(phone).getValue(Admin.class);
                         if (admin.getPhone().equals(phone)) {
                             if (admin.getPassword().equals(password)) {
@@ -192,8 +170,7 @@ public class FirebaseAuthRepo {
                                 }
                             }
                         }
-                    }
-                    else {
+                    } else {
                         AuthorizedUser user = snapshot.child(refCollectionName).child(phone).getValue(AuthorizedUser.class);
                         if (user.getPhone().equals(phone)) {
                             if (user.getPassword().equals(password)) {
@@ -226,6 +203,29 @@ public class FirebaseAuthRepo {
 
             }
         });
+    }
+
+    public interface OnLoginListener {
+        void onLogeInSuccess(Object user);
+
+        void onLogeInDenied(String errorMsg);
+
+        void onRemember(Object user);
+    }
+
+
+    public interface OnRegisterListener {
+        void onRegisterSuccess();
+
+        void onRegisterExist();
+
+        void onRegisterFailure();
+    }
+
+    public interface OnVersionListener {
+        void onRealVersion();
+
+        void onOldVersion(String NewVersion);
     }
 }
 

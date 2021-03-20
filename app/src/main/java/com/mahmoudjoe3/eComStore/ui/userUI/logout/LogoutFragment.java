@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
@@ -29,9 +28,9 @@ public class LogoutFragment extends Fragment {
     }
 
     private void LogOut() {
-        preferences= Objects.requireNonNull(getActivity()).getSharedPreferences(Prevalent.LOGIN_PREF, Context.MODE_PRIVATE);
+        preferences = Objects.requireNonNull(getActivity()).getSharedPreferences(Prevalent.LOGIN_PREF, Context.MODE_PRIVATE);
 
-        if(preferences.contains(Prevalent.UserPhoneKey))
+        if (preferences.contains(Prevalent.UserPhoneKey))
             preferences.edit().clear().apply();
         startActivity(new Intent(getActivity(), MainActivity.class));
         getActivity().finish();

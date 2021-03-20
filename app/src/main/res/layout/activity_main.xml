@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainActivity"
+    android:background="@color/colorBG"
     android:padding="@dimen/_16sdp"
-    android:background="@color/colorBG">
+    tools:context=".ui.main.MainActivity">
+
     <ImageView
         android:id="@+id/logo"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_250sdp"
-        android:src="@drawable/logo_transparent"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:src="@drawable/logo_transparent" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/M_Btn_join"
-        android:textColor="@color/colorPrimary"
-        android:text="@string/find_discover_choose_and_buy_anything_online"
-        android:textSize="@dimen/_16ssp"
         android:layout_marginBottom="@dimen/_50sdp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="@string/find_discover_choose_and_buy_anything_online"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/_16ssp" />
 
-    <Button android:id="@+id/M_Btn_join"
+    <Button
+        android:id="@+id/M_Btn_join"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50sdp"
         android:layout_above="@id/M_Btn_login"
         android:layout_marginBottom="@dimen/_5sdp"
         android:background="@drawable/transparent_button_layout_ripple"
-        android:text="@string/join_now"/>
+        android:text="@string/join_now" />
 
     <Button
         android:id="@+id/M_Btn_login"

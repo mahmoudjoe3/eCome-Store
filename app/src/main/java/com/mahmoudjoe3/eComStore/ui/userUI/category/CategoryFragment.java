@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,7 +27,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
 import com.mahmoudjoe3.eComStore.model.Product;
-import com.mahmoudjoe3.eComStore.ui.main.LoginActivity;
 import com.mahmoudjoe3.eComStore.ui.userUI.ViewProductActivity;
 import com.mahmoudjoe3.eComStore.ui.userUI.productAdapter;
 import com.mahmoudjoe3.eComStore.viewModel.ShardViewModel;
@@ -39,16 +37,17 @@ import java.util.List;
 
 public class CategoryFragment extends Fragment {
     private static final String TAG = "CategoryFragment.me";
-    private CategoryViewModel categoryViewModel;
     String Cat;
     RecyclerView pList;
-    Button filter,sort;
+    Button filter, sort;
     ImageButton showAsGrid;
     String sortType;
-    private productAdapter productAdapter;
     AuthorizedUser mUser;
     List<Product> mProducts;
     String userId;
+    private CategoryViewModel categoryViewModel;
+    private productAdapter productAdapter;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.user_fragment_catagory, container, false);
         NavigationView navView = (NavigationView) getActivity().findViewById(R.id.nav_view);
@@ -68,12 +67,11 @@ public class CategoryFragment extends Fragment {
     }
 
 
-
     private void findView(View root) {
         pList = root.findViewById(R.id.pList);
         //filter=root.findViewById(R.id.filter);
-        sort=root.findViewById(R.id.sort);
-        showAsGrid=root.findViewById(R.id.showGrid);
+        sort = root.findViewById(R.id.sort);
+        showAsGrid = root.findViewById(R.id.showGrid);
     }
 
     @Override
@@ -90,30 +88,30 @@ public class CategoryFragment extends Fragment {
         showAsGrid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(showAsGrid.getTag().equals("grid")){
+                if (showAsGrid.getTag().equals("grid")) {
                     MakeGrid();
-                }else MakeList();
+                } else MakeList();
                 AdapterListener();
             }
         });
 
         AdapterListener();
     }
+
     private AlertDialog sortByDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View view=getLayoutInflater().inflate(R.layout.sortby_dialoge, null);
-        RadioButton highToLow=view.findViewById(R.id.highToLow);
+        View view = getLayoutInflater().inflate(R.layout.sortby_dialoge, null);
+        RadioButton highToLow = view.findViewById(R.id.highToLow);
         builder.setView(view)
                 .setPositiveButton("Sort", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
 
-                        if(highToLow.isChecked()) {
-                            sortType="HighToLow";
+                        if (highToLow.isChecked()) {
+                            sortType = "HighToLow";
                             SortByPrice(sortType);
-                        }
-                        else {
-                            sortType="LowToHigh";
+                        } else {
+                            sortType = "LowToHigh";
                             SortByPrice(sortType);
                         }
                     }
@@ -127,19 +125,6 @@ public class CategoryFragment extends Fragment {
         productAdapter.setProductList(mProducts);
     }
 
-    class SortByPrice implements Comparator<Product>
-    {
-        String type;
-        public SortByPrice(String type) {
-            this.type=type;
-        }
-
-        @Override
-        public int compare(Product o1, Product o2) {
-            return (type.equals("LowToHigh"))? (int) (o1.getmPrice()-o2.getmPrice()) : (int) (o2.getmPrice()-o1.getmPrice());
-        }
-    }
-
     private void MakeList() {
         showAsGrid.setImageResource(R.drawable.ic_grid);
         showAsGrid.setTag("grid");
@@ -150,6 +135,7 @@ public class CategoryFragment extends Fragment {
         pList.setHasFixedSize(true);
         pList.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
+
     private void MakeGrid() {
         showAsGrid.setImageResource(R.drawable.ic_list);
         showAsGrid.setTag("list");
@@ -158,38 +144,37 @@ public class CategoryFragment extends Fragment {
         productAdapter.setProductList(mProducts, mUser);
         pList.setAdapter(productAdapter);
         pList.setHasFixedSize(true);
-        pList.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        pList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
     }
+
     private void AdapterListener() {
         productAdapter.setOnImageButtonClickListener(new productAdapter.onImageButtonClickListener() {
             @Override
             public void onCartClick(Product product, ImageButton v) {
-                if(v.getTag().equals("of")){
+                if (v.getTag().equals("of")) {
                     v.setTag("on");
                     v.setImageResource(R.drawable.ic_remove_cart);
                     //mUser.getCartList().add(product.getmId());
-                    categoryViewModel.addCart(product.getmId(),mUser);
+                    categoryViewModel.addCart(product.getmId(), mUser);
 
-                }
-                else {
+                } else {
                     v.setTag("of");
                     v.setImageResource(R.drawable.ic_add_cart);
                     //mUser.getCartList().remove(product.getmId());
-                    categoryViewModel.removeCart(product.getmId(),mUser);
+                    categoryViewModel.removeCart(product.getmId(), mUser);
                 }
             }
 
             @Override
             public void onFavClick(Product product, ImageButton v) {
-                if(v.getTag().equals("of")){
+                if (v.getTag().equals("of")) {
                     v.setTag("on");
                     v.setImageResource(R.drawable.ic_fav_on);
-                    categoryViewModel.addFav(product.getmId(),mUser);
-                }
-                else {
+                    categoryViewModel.addFav(product.getmId(), mUser);
+                } else {
                     v.setTag("of");
                     v.setImageResource(R.drawable.ic_fav_off);
-                    categoryViewModel.RemoveFav(product.getmId(),mUser);
+                    categoryViewModel.RemoveFav(product.getmId(), mUser);
                 }
                 Log.d("productAdapter", "onFavClick: ");
             }
@@ -198,13 +183,13 @@ public class CategoryFragment extends Fragment {
         productAdapter.setListener(new productAdapter.onClickListener() {
             @Override
             public void onClick(Product product) {
-                boolean inFav= mUser.getFavList().contains(product.getmId());
-                boolean inCart= mUser.getCartList().contains(product.getmId());
-                Intent i=new Intent(getActivity(), ViewProductActivity.class);
-                i.putExtra(ViewProductActivity.inFav_Key,inFav);
-                i.putExtra(ViewProductActivity.inCart_Key,inCart);
-                i.putExtra(ViewProductActivity.product_Key,product);
-                i.putExtra(ViewProductActivity.user_Key,mUser);
+                boolean inFav = mUser.getFavList().contains(product.getmId());
+                boolean inCart = mUser.getCartList().contains(product.getmId());
+                Intent i = new Intent(getActivity(), ViewProductActivity.class);
+                i.putExtra(ViewProductActivity.inFav_Key, inFav);
+                i.putExtra(ViewProductActivity.inCart_Key, inCart);
+                i.putExtra(ViewProductActivity.product_Key, product);
+                i.putExtra(ViewProductActivity.user_Key, mUser);
                 startActivity(i);
             }
 
@@ -225,8 +210,8 @@ public class CategoryFragment extends Fragment {
                     @Override
                     public void onChanged(AuthorizedUser user) {
                         mUser = user;
-                        if(mProducts==null||mProducts.isEmpty())
-                            mProducts=products;
+                        if (mProducts == null || mProducts.isEmpty())
+                            mProducts = products;
 
                         productAdapter.setProductList(mProducts, user);
                     }
@@ -234,7 +219,7 @@ public class CategoryFragment extends Fragment {
             }
         });
 
-        ShardViewModel shardViewModel=new ViewModelProvider(getActivity()).get(ShardViewModel.class);
+        ShardViewModel shardViewModel = new ViewModelProvider(getActivity()).get(ShardViewModel.class);
         shardViewModel.getLiveSearch().observe(getActivity(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -242,6 +227,19 @@ public class CategoryFragment extends Fragment {
             }
         });
 
+    }
+
+    class SortByPrice implements Comparator<Product> {
+        String type;
+
+        public SortByPrice(String type) {
+            this.type = type;
+        }
+
+        @Override
+        public int compare(Product o1, Product o2) {
+            return (type.equals("LowToHigh")) ? (int) (o1.getmPrice() - o2.getmPrice()) : (int) (o2.getmPrice() - o1.getmPrice());
+        }
     }
 
 }

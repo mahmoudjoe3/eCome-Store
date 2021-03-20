@@ -5,7 +5,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -35,7 +32,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.OrderUI;
 import com.mahmoudjoe3.eComStore.model.SubOrderUI;
-import com.mahmoudjoe3.eComStore.ui.userUI.orderSummary.OrderSummaryAdapter;
 import com.mahmoudjoe3.eComStore.viewModel.ShardViewModel;
 
 import java.util.ArrayList;
@@ -46,15 +42,14 @@ import java.util.Map;
 public class TrackOrderFragment extends Fragment {
 
     private static final String TAG = "TrackOrderFragment.me";
+    //new
+    Map<String, Integer> cat_freq = new HashMap<>();
+    Button showSummary;
+    ProgressBar progressBar;
     private TrackOrderViewModel trackOrderViewModel;
     private RecyclerView mContainer;
     private TrackOrdersAdapter trackOrdersAdapter;
     private String userId;
-
-    //new
-    Map<String,Integer> cat_freq=new HashMap<>();
-    Button showSummary;
-    ProgressBar progressBar;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -63,7 +58,7 @@ public class TrackOrderFragment extends Fragment {
 
         NavigationView navView = (NavigationView) getActivity().findViewById(R.id.nav_view);
         userId = ((TextView) navView.getHeaderView(0).findViewById(R.id.profile_phone)).getText().toString();
-        mContainer=root.findViewById(R.id.track_container);
+        mContainer = root.findViewById(R.id.track_container);
 
         trackOrdersAdapter = new TrackOrdersAdapter(getActivity());
 
@@ -71,10 +66,10 @@ public class TrackOrderFragment extends Fragment {
             @Override
             public void onChanged(List<OrderUI> orderUIS) {
                 trackOrdersAdapter.setList(orderUIS);
-                mContainer.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+                mContainer.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
                 mContainer.setAdapter(trackOrdersAdapter);
                 //new
-                if(!orderUIS.isEmpty()) {
+                if (!orderUIS.isEmpty()) {
                     cat_freq = fill_cat_freq_Map(orderUIS);
                 }
 
@@ -83,19 +78,18 @@ public class TrackOrderFragment extends Fragment {
         trackOrdersAdapter.setOnShowLocationListener(new TrackOrdersAdapter.onShowLocationListener() {
             @Override
             public void onClick(String Lat, String Long) {
-                showMap(Lat,Long);
+                showMap(Lat, Long);
             }
         });
 
         //new
-        showSummary=root.findViewById(R.id.showSummary);
+        showSummary = root.findViewById(R.id.showSummary);
         showSummary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!cat_freq.isEmpty()) {
+                if (!cat_freq.isEmpty()) {
                     BuildSheetDialog();
-                }
-                else Toast.makeText(getActivity(), "No Orders yet..", Toast.LENGTH_SHORT).show();
+                } else Toast.makeText(getActivity(), "No Orders yet..", Toast.LENGTH_SHORT).show();
             }
         });
         return root;
@@ -104,13 +98,13 @@ public class TrackOrderFragment extends Fragment {
     //new
     @SuppressLint("ResourceAsColor")
     private void BuildSheetDialog() {
-        BottomSheetDialog sheetDialog=new BottomSheetDialog(getActivity());
+        BottomSheetDialog sheetDialog = new BottomSheetDialog(getActivity());
         sheetDialog.setContentView(R.layout.user_pi_chart_sheet_dialog);
 
         //init sheet data
-        AnyChartView chartView=sheetDialog.findViewById(R.id.pi_chart_view);
+        AnyChartView chartView = sheetDialog.findViewById(R.id.pi_chart_view);
 
-        List<DataEntry> data=init_PiChart_Data();
+        List<DataEntry> data = init_PiChart_Data();
 
         Pie pie = AnyChart.pie();
         pie.data(data);
@@ -131,7 +125,7 @@ public class TrackOrderFragment extends Fragment {
         chartView.setChart(pie);
         chartView.setBackgroundColor("#334253");
 
-        progressBar=sheetDialog.findViewById(R.id.progressBarsheet);
+        progressBar = sheetDialog.findViewById(R.id.progressBarsheet);
 
         chartView.setProgressBar(progressBar);
 
@@ -143,50 +137,45 @@ public class TrackOrderFragment extends Fragment {
     //new
     // make freq itemSet of size 1
     private Map<String, Integer> fill_cat_freq_Map(List<OrderUI> orderUIS) {
-        Map<String, Integer> cat_map=new HashMap<>();
-        for(OrderUI orderUI:orderUIS){
-            for(SubOrderUI subOrderUI:orderUI.getOrderList()){
+        Map<String, Integer> cat_map = new HashMap<>();
+        for (OrderUI orderUI : orderUIS) {
+            for (SubOrderUI subOrderUI : orderUI.getOrderList()) {
 
-                String cat=subOrderUI.getProduct().getmCategory();
-                int quantity=subOrderUI.getQty();
+                String cat = subOrderUI.getProduct().getmCategory();
+                int quantity = subOrderUI.getQty();
 
-                if(cat_map.containsKey(cat)){
-                    cat_map.put(cat,cat_map.get(cat)+quantity);
-                }else {
-                    cat_map.put(cat,quantity);
+                if (cat_map.containsKey(cat)) {
+                    cat_map.put(cat, cat_map.get(cat) + quantity);
+                } else {
+                    cat_map.put(cat, quantity);
                 }
 
             }
         }
         return cat_map;
     }
+
     //new
     //convert map to list<DataEntry>
-    private List<DataEntry> init_PiChart_Data(){
+    private List<DataEntry> init_PiChart_Data() {
         List<DataEntry> data = new ArrayList<>();
-        for(Map.Entry<String, Integer> pair : cat_freq.entrySet()){
-            data.add(new ValueDataEntry(pair.getKey(),pair.getValue()));
+        for (Map.Entry<String, Integer> pair : cat_freq.entrySet()) {
+            data.add(new ValueDataEntry(pair.getKey(), pair.getValue()));
         }
         return data;
     }
 
-    private void showMap(String latitude,String longitude) {
+    private void showMap(String latitude, String longitude) {
         String uri = "http://maps.google.com/maps?daddr=" + latitude + "," + longitude + " (" + "Where the party is at" + ")";
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setPackage("com.google.android.apps.maps");
-        try
-        {
+        try {
             startActivity(intent);
-        }
-        catch(ActivityNotFoundException ex)
-        {
-            try
-            {
+        } catch (ActivityNotFoundException ex) {
+            try {
                 Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 startActivity(unrestrictedIntent);
-            }
-            catch(ActivityNotFoundException innerEx)
-            {
+            } catch (ActivityNotFoundException innerEx) {
                 Toast.makeText(getActivity(), "Please install a maps application", Toast.LENGTH_LONG).show();
             }
         }
@@ -197,7 +186,7 @@ public class TrackOrderFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ShardViewModel shardViewModel=new ViewModelProvider(getActivity()).get(ShardViewModel.class);
+        ShardViewModel shardViewModel = new ViewModelProvider(getActivity()).get(ShardViewModel.class);
         shardViewModel.getLiveSearch().observe(getActivity(), new Observer<String>() {
             @Override
             public void onChanged(String s) {

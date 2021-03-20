@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginBottom="@dimen/_16sdp"
     app:cardBackgroundColor="@color/colorAccent"
-    app:cardCornerRadius="@dimen/_5sdp"
-    android:layout_marginBottom="@dimen/_16sdp">
+    app:cardCornerRadius="@dimen/_5sdp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -64,9 +64,9 @@
             android:id="@+id/vo_seekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="false"
             android:layout_below="@id/no_l1"
             android:layout_marginTop="@dimen/_20sdp"
+            android:enabled="false"
             app:bsb_bubble_color="@color/colorBG"
             app:bsb_bubble_text_color="@color/colorPrimaryDark"
             app:bsb_max="3"
@@ -75,10 +75,10 @@
             app:bsb_second_track_color="@color/red"
             app:bsb_section_count="2"
             app:bsb_section_text_position="below_section_mark"
+            app:bsb_section_text_size="@dimen/_8ssp"
             app:bsb_show_progress_in_float="true"
             app:bsb_show_section_mark="true"
             app:bsb_show_section_text="true"
-            app:bsb_section_text_size="@dimen/_8ssp"
             app:bsb_show_thumb_text="true"
             app:bsb_track_color="@color/colorBG" />
 
@@ -89,11 +89,11 @@
             android:layout_below="@id/vo_seekBar"
             android:layout_marginStart="@dimen/_2sdp"
             android:layout_marginTop="@dimen/_5sdp"
-            android:visibility="gone"
             android:drawableLeft="@drawable/ic_baseline_pin_drop_24"
             android:text="    Show Delivered Location on map"
             android:textColor="@color/colorOpenMap"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/vo_expectedDate"
@@ -114,15 +114,17 @@
             android:layout_below="@id/vo_expectedDate"
             android:layout_marginTop="@dimen/_8sdp"
             android:background="@color/indicator" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/vo_productContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/divider"
             android:layout_marginTop="@dimen/_5sdp"
-            tools:itemCount="2"
             android:nestedScrollingEnabled="false"
-            tools:listitem="@layout/user_item_summary_layout"/>
+            tools:itemCount="2"
+            tools:listitem="@layout/user_item_summary_layout" />
+
         <View
             android:id="@+id/divider2"
             android:layout_width="match_parent"
@@ -130,6 +132,7 @@
             android:layout_below="@id/vo_productContainer"
             android:layout_marginTop="@dimen/_8sdp"
             android:background="@color/indicator_1" />
+
         <TextView
             android:id="@+id/vo_temp"
             android:layout_width="wrap_content"
@@ -141,6 +144,7 @@
             android:text="  GRAND TOTAL"
             android:textColor="@color/indicator_1"
             android:textSize="@dimen/_13sdp" />
+
         <TextView
             android:id="@+id/vo_totalPrice"
             android:layout_width="wrap_content"
@@ -153,6 +157,7 @@
             android:textColor="@color/indicator_1"
             android:textSize="@dimen/_13sdp"
             android:textStyle="bold" />
+
         <Button
             android:id="@+id/vo_approveOrder_btn"
             android:layout_width="match_parent"

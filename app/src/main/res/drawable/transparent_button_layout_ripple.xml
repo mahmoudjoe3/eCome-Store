@@ -16,7 +16,9 @@
                 android:startColor="@color/colorBG"
                 android:type="linear" />
             <corners android:radius="@dimen/_3sdp" />
-            <stroke android:width="5px" android:color="@color/colorPrimary" />
+            <stroke
+                android:width="5px"
+                android:color="@color/colorPrimary" />
         </shape>
     </item>
 </ripple>

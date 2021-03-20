@@ -14,15 +14,15 @@ public class OrderDB implements Serializable {
     private boolean approved;
 
     public OrderDB(List<SubOrderDB> orderList, String phone, float totalPrice, String location
-            , String deliveryDate,boolean delivered,boolean approved) {
+            , String deliveryDate, boolean delivered, boolean approved) {
         this.id = null;
         this.orderList = orderList;
         this.phone = phone;
         this.totalPrice = totalPrice;
         this.location = location;
         this.deliveryDate = deliveryDate;
-        this.delivered =delivered;
-        this.approved=approved;
+        this.delivered = delivered;
+        this.approved = approved;
     }
 
     public OrderDB() {

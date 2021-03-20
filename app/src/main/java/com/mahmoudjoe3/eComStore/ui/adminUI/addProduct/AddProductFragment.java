@@ -51,6 +51,9 @@ public class AddProductFragment extends Fragment {
 
     private final static int Gallary_Req = 1;
     private static final String TAG = "Add Product";
+    private static Admin mAdmin;
+    private static String mCategory;
+    private static Product mProduct;
     @BindView(R.id.img1)
     ImageView mImg1;
     @BindView(R.id.add_img1)
@@ -75,7 +78,6 @@ public class AddProductFragment extends Fragment {
     ImageButton mRemoveImg3;
     @BindView(R.id.remove_img4)
     ImageButton mRemoveImg4;
-
     @BindView(R.id.Category)
     TextInputEditText mCategoryTXT;
     @BindView(R.id.Title)
@@ -100,13 +102,8 @@ public class AddProductFragment extends Fragment {
     ProgressBar imgProgressBar3;
     @BindView(R.id.img_progressBar4)
     ProgressBar imgProgressBar4;
-
     private Uri[] mImageUri;
     private int mCurrentImgIndex = 0;
-    private static Admin mAdmin;
-    private static String mCategory;
-    private static Product mProduct;
-
     private AddProductViewModel addProductViewModel;
 
     public AddProductFragment() {
@@ -117,7 +114,17 @@ public class AddProductFragment extends Fragment {
         return new AddProductFragment();
     }
 
+    //come from cat fragment
+    public static void sendDataToFragment(String Category, Admin Admin) {
+        mCategory = Category;
+        mAdmin = Admin;
+    }
 
+    //come from viewProduct fragment
+    public static void fitchDataFromOutSide(Product product, Admin Admin) {
+        mAdmin = Admin;
+        mProduct = product;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,7 +137,7 @@ public class AddProductFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.admin_fragment_add_product, container, false);
         ButterKnife.bind(this, view);
-        if(mProduct!=null){
+        if (mProduct != null) {
             initData();
             //mAddProduct.setEnabled(false);
         }
@@ -138,10 +145,10 @@ public class AddProductFragment extends Fragment {
     }
 
     private void initData() {
-        for(int i=0;i<mProduct.getmImageUri().size();i++){
-            String uri=mProduct.getmImageUri().get(i);
+        for (int i = 0; i < mProduct.getmImageUri().size(); i++) {
+            String uri = mProduct.getmImageUri().get(i);
 
-            if(uri!=null){
+            if (uri != null) {
                 switch (i) {
                     case 0:
                         Picasso.get().load(uri).fit().centerCrop().into(mImg1);
@@ -163,21 +170,10 @@ public class AddProductFragment extends Fragment {
             }
         }
         mTitle.setText(mProduct.getmTitle());
-        mPrice.setText(mProduct.getmPrice()+"");
+        mPrice.setText(mProduct.getmPrice() + "");
         mDescription.setText(mProduct.getmDescription());
-        mQuantity.setText(mProduct.getQuantity()+"");
-        mCategory=mProduct.getmCategory();
-    }
-
-    //come from cat fragment
-    public static void sendDataToFragment(String Category, Admin Admin) {
-        mCategory = Category;
-        mAdmin = Admin;
-    }
-    //come from viewProduct fragment
-    public static void fitchDataFromOutSide(Product product, Admin Admin) {
-        mAdmin=Admin;
-        mProduct=product;
+        mQuantity.setText(mProduct.getQuantity() + "");
+        mCategory = mProduct.getmCategory();
     }
 
     @Override
@@ -420,10 +416,9 @@ public class AddProductFragment extends Fragment {
             description = mDescription.getText().toString();
             Quantity = mQuantity.getText().toString();
             Product product = new Product(mAdmin, title, mCategory, description, Float.parseFloat(price), Integer.parseInt(Quantity));
-            if(mProduct!=null)
+            if (mProduct != null)
                 product.setmId(mProduct.getmId());
             mProgressBar.setVisibility(View.VISIBLE);
-
 
 
             addProductViewModel.insertProduct(product, mImageUri);

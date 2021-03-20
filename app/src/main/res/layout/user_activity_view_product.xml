@@ -5,11 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.userUI.ViewProductActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/colorPrimaryDark">
+        android:background="@color/colorPrimaryDark"
+        android:orientation="vertical">
+
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,76 +27,82 @@
                 app:titleTextColor="@color/colorBG" />
 
         </com.google.android.material.appbar.AppBarLayout>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/_300sdp">
-        <com.smarteist.autoimageslider.SliderView android:id="@+id/slider"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:sliderScrollTimeInSec="2"
-            android:background="@color/colorPrimaryDark"
-            app:sliderStartAutoCycle="true"
-            app:sliderAutoCycleDirection="back_and_forth"
-            app:sliderIndicatorPadding="@dimen/_3sdp"
-            app:sliderIndicatorRadius="@dimen/_1sdp"
-            app:sliderIndicatorSelectedColor="@color/colorPrimaryDark"
-            app:sliderIndicatorUnselectedColor="@color/colorBG"
-            app:sliderAnimationDuration="1000"
-            app:sliderIndicatorOrientation="horizontal"
-            app:sliderIndicatorGravity="center_horizontal|bottom"
-            />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/p_fav"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_fav_off"
-        app:fabSize="mini"
-        android:tag="of"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/_16sdp"
-        android:layout_marginBottom="@dimen/_16sdp"/>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/p_cartAdded"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_add_cart"
-        app:fabSize="mini"
-        android:tag="of"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@id/p_fav"
-        android:layout_marginEnd="@dimen/_16sdp"
-        android:layout_marginBottom="@dimen/_6sdp"/>
-</RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_300sdp">
+
+            <com.smarteist.autoimageslider.SliderView
+                android:id="@+id/slider"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimaryDark"
+                app:sliderAnimationDuration="1000"
+                app:sliderAutoCycleDirection="back_and_forth"
+                app:sliderIndicatorGravity="center_horizontal|bottom"
+                app:sliderIndicatorOrientation="horizontal"
+                app:sliderIndicatorPadding="@dimen/_3sdp"
+                app:sliderIndicatorRadius="@dimen/_1sdp"
+                app:sliderIndicatorSelectedColor="@color/colorPrimaryDark"
+                app:sliderIndicatorUnselectedColor="@color/colorBG"
+                app:sliderScrollTimeInSec="2"
+                app:sliderStartAutoCycle="true" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/p_fav"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:layout_marginBottom="@dimen/_16sdp"
+                android:src="@drawable/ic_fav_off"
+                android:tag="of"
+                app:fabSize="mini" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/p_cartAdded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/p_fav"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:layout_marginBottom="@dimen/_6sdp"
+                android:src="@drawable/ic_add_cart"
+                android:tag="of"
+                app:fabSize="mini" />
+        </RelativeLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_margin="@dimen/_14sdp">
+            android:layout_margin="@dimen/_14sdp"
+            android:orientation="vertical">
 
 
-
-            <TextView android:id="@+id/p_title"
+            <TextView
+                android:id="@+id/p_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_10sdp"
                 android:text="Title"
-                android:textSize="@dimen/_16ssp"
                 android:textColor="@color/colorBG"
-                android:layout_marginBottom="@dimen/_10sdp"/>
+                android:textSize="@dimen/_16ssp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
-                android:orientation="horizontal"
-                >
-                <TextView android:id="@+id/p_price"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/p_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="99.00 EGP"
+                    android:textColor="@color/indicator_1"
                     android:textSize="@dimen/_16ssp"
-                    android:textStyle="bold"
-                    android:textColor="@color/indicator_1"/>
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -104,11 +112,12 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:text="All prices include VAT"
                 android:textColor="@color/colorBG" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="@dimen/_5sdp">
+                android:layout_marginTop="@dimen/_5sdp"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -116,14 +125,17 @@
                     android:layout_marginEnd="@dimen/_5sdp"
                     android:text="Receipt:"
                     android:textColor="@color/colorBG" />
-                <TextView android:id="@+id/p_date"
+
+                <TextView
+                    android:id="@+id/p_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_5sdp"
                     android:text="12:20 Am  12 Dec,2020"
-                    android:textSize="@dimen/_10ssp"
                     android:textColor="@color/indicator"
-                    android:layout_marginBottom="@dimen/_5sdp" />
+                    android:textSize="@dimen/_10ssp" />
             </LinearLayout>
+
             <TextView
                 android:id="@+id/p_Quantity"
                 android:layout_width="wrap_content"

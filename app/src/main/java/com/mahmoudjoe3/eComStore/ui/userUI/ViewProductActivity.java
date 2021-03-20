@@ -27,9 +27,12 @@ import butterknife.OnClick;
 public class ViewProductActivity extends AppCompatActivity {
 
     public final static String product_Key = "ViewProductActivity.productKey";
-    public final static String inFav_Key="ViewProductActivity.favKey";
-    public final static String inCart_Key="ViewProductActivity.cartKey";;
-    public final static String user_Key="ViewProductActivity.userKey";;
+    public final static String inFav_Key = "ViewProductActivity.favKey";
+    public final static String inCart_Key = "ViewProductActivity.cartKey";
+    ;
+    public final static String user_Key = "ViewProductActivity.userKey";
+    ;
+    public SliderAdapter mSliderAdapter;
     @BindView(R.id.p_my_toolbar)
     Toolbar pMyToolbar;
     @BindView(R.id.slider)
@@ -55,10 +58,9 @@ public class ViewProductActivity extends AppCompatActivity {
     @BindView(R.id.p_addCart)
     Button pAddCart;
     private Product product;
-    private Boolean inFav,inCart;
+    private Boolean inFav, inCart;
     private AuthorizedUser user;
     private CategoryViewModel viewModel;
-    public SliderAdapter mSliderAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +68,10 @@ public class ViewProductActivity extends AppCompatActivity {
         setContentView(R.layout.user_activity_view_product);
         ButterKnife.bind(this);
         product = (Product) getIntent().getSerializableExtra(product_Key);
-        inFav= getIntent().getBooleanExtra(inFav_Key,false);
-        inCart= getIntent().getBooleanExtra(inCart_Key,false);
-        user=(AuthorizedUser) getIntent().getSerializableExtra(user_Key);
-        viewModel=new ViewModelProvider(this).get(CategoryViewModel.class);
+        inFav = getIntent().getBooleanExtra(inFav_Key, false);
+        inCart = getIntent().getBooleanExtra(inCart_Key, false);
+        user = (AuthorizedUser) getIntent().getSerializableExtra(user_Key);
+        viewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
 
         setSupportActionBar(pMyToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -98,7 +100,7 @@ public class ViewProductActivity extends AppCompatActivity {
     }
 
     private void updateFav_and_Cart() {
-        if(product.getQuantity()==0){
+        if (product.getQuantity() == 0) {
             pAddCart.setEnabled(false);
             pCartAdded.setEnabled(false);
         }
@@ -118,12 +120,12 @@ public class ViewProductActivity extends AppCompatActivity {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void updateCart() {
-        if(inCart){
+        if (inCart) {
             pCartAdded.setTag("on");
             pCartAdded.setImageResource(R.drawable.ic_remove_cart);
             pAddCart.setText("Remove from Cart");
             pAddCart.setBackground(getDrawable(R.drawable.solid_button_layout_ripple));
-        }else {
+        } else {
             pCartAdded.setTag("of");
             pCartAdded.setImageResource(R.drawable.ic_add_cart);
             pAddCart.setText("Add to Cart");
@@ -143,12 +145,12 @@ public class ViewProductActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.p_fav:
-                inFav=(!inFav);
+                inFav = (!inFav);
                 updateFav();
-                if(!inFav)
-                    viewModel.RemoveFav(product.getmId(),user);
+                if (!inFav)
+                    viewModel.RemoveFav(product.getmId(), user);
                 else
-                    viewModel.addFav(product.getmId(),user);
+                    viewModel.addFav(product.getmId(), user);
                 break;
             case R.id.p_cartAdded:
             case R.id.p_addCart:

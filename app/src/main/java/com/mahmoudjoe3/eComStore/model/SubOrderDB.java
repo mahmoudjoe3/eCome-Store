@@ -4,7 +4,7 @@ public class SubOrderDB {
     private String product_Key;
     private int Qty;
 
-    public SubOrderDB(String product_Key,int Qty) {
+    public SubOrderDB(String product_Key, int Qty) {
         this.product_Key = product_Key;
         this.Qty = Qty;
     }

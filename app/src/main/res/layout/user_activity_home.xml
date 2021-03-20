@@ -14,11 +14,11 @@
         android:layout_height="match_parent" />
 
     <com.google.android.material.navigation.NavigationView
-        android:background="@color/colorRegBG"
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/colorRegBG"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/user_nav_header_main"
         app:menu="@menu/activity_main_drawer" />

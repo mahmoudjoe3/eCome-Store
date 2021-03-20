@@ -47,6 +47,7 @@ public class WishlistViewModel extends ViewModel {
     public void addFav(String fav, AuthorizedUser user) {
         repo.addFav(fav, user);
     }
+
     public void RemoveFav(String fav, AuthorizedUser user) {
         repo.removeFav(fav, user);
     }

@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 public class ShardViewModel extends ViewModel {
     private static final String TAG = "ShardViewModel.me";
-    private final MutableLiveData<String> liveSearch=new MutableLiveData<>();
+    private final MutableLiveData<String> liveSearch = new MutableLiveData<>();
 
     public LiveData<String> getLiveSearch() {
         return liveSearch;
@@ -16,7 +16,7 @@ public class ShardViewModel extends ViewModel {
 
     public void setLiveSearch(String Search) {
         this.liveSearch.setValue(Search);
-        Log.d(TAG, "setLiveSearch: "+liveSearch.getValue());
+        Log.d(TAG, "setLiveSearch: " + liveSearch.getValue());
     }
 
 

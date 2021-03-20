@@ -34,6 +34,6 @@ class PagerAdapter extends FragmentPagerAdapter {
     // Returns the page title for the top indicator
     @Override
     public CharSequence getPageTitle(int position) {
-        return ""+ (position+1);
+        return "" + (position + 1);
     }
 }

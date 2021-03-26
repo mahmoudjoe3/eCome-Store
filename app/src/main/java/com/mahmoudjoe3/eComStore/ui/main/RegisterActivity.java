@@ -1,8 +1,10 @@
 package com.mahmoudjoe3.eComStore.ui.main;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -44,25 +46,28 @@ public class RegisterActivity extends AppCompatActivity {
     @BindView(R.id.Edtxt_birthDate)
     TextInputEditText EdtxtBirthDate;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
         mFirebaseAuthViewModel = new ViewModelProvider(this).get(FirebaseAuthViewModel.class);
-        EdtxtBirthDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        EdtxtBirthDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus)
-                    openCalender();
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_RIGHT = 2;
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (EdtxtBirthDate.getRight() - EdtxtBirthDate.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        // your action here
+                        openCalender();
+                        return true;
+                    }
+                }
+                return false;
             }
         });
-        EdtxtBirthDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openCalender();
-            }
-        });
+
     }
 
     @OnClick({R.id.Btn_createAccount})

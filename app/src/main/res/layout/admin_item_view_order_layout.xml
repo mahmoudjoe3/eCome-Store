@@ -93,7 +93,7 @@
             android:text="    Show Delivered Location on map"
             android:textColor="@color/colorOpenMap"
             android:textStyle="bold"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/vo_expectedDate"

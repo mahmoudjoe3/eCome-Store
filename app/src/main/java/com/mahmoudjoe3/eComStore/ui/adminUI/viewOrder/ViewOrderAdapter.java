@@ -117,7 +117,7 @@ public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.Trac
             @SuppressLint("UseCompatLoadingForDrawables")
             @Override
             public void onClick(View v) {
-                holder.vo_Location.setVisibility(View.VISIBLE);
+
                 holder.vo_approveOrder.setBackground(context.getDrawable(R.drawable.solid_button_layout_ripple_red));
                 holder.vo_approveOrder.setText("ORDER APPROVED long click to delivery");
                 holder.vo_SeekBar.setProgress(2);

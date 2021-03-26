@@ -47,6 +47,7 @@ public class FirebaseAuthRepo {
         this.onVersionListener = onVersionListener;
     }
 
+
     public void checkVersionName(String version) {
         DatabaseReference Reference = FirebaseDatabase.getInstance().getReference("APP_VERSION");
         Reference.addValueEventListener(new ValueEventListener() {
@@ -143,6 +144,32 @@ public class FirebaseAuthRepo {
         });
     }
 
+    OnUserValidationListener onUserValidationListener;
+
+    public void setOnUserValidationListener(OnUserValidationListener onUserValidationListener) {
+        this.onUserValidationListener = onUserValidationListener;
+    }
+
+    public void IsUser(String phone){
+        mReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child(Prevalent.refColName_Admin).child(phone).exists()||
+                        snapshot.child(Prevalent.refColName_User).child(phone).exists()){
+                    onUserValidationListener.onUserValid();
+                }else {
+                    onUserValidationListener.onUserNotValid();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     public void login(boolean admin, String phone, String password, boolean rememberMe) {
 
         String refCollectionName = (admin) ? Prevalent.refColName_Admin : Prevalent.refColName_User;
@@ -226,6 +253,11 @@ public class FirebaseAuthRepo {
         void onRealVersion();
 
         void onOldVersion(String NewVersion);
+    }
+    public interface OnUserValidationListener {
+        void onUserValid();
+
+        void onUserNotValid();
     }
 }
 

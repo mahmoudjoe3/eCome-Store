@@ -50,6 +50,10 @@ public class FirebaseAuthViewModel extends ViewModel {
             }
         });
     }
+    public void isUser(String phone, FirebaseAuthRepo.OnUserValidationListener validationListener){
+        repo.IsUser(phone);
+        repo.setOnUserValidationListener(validationListener);
+    }
 
     public void setOnLoginListener(FirebaseAuthRepo.OnLoginListener onLoginListener) {
         mOnLoginListener = onLoginListener;

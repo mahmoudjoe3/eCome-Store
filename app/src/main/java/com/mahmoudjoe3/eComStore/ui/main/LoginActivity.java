@@ -17,8 +17,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -60,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.txt_not_admin)
     TextView mNotAdminTxt;
     AlertDialog mAlertDialog;
-    String VerificationPhoneCode = "";
+    String VerificationId = "";
     String phone_Dialog;
     AlertDialog progress;
     String TAG = "kkkkkkk";
@@ -184,12 +188,24 @@ public class LoginActivity extends AppCompatActivity {
                 .setPositiveButton("Get Code", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
+
                         phone_Dialog = ((TextView) view.findViewById(R.id.forget_dialog_hint)).getText().toString();
                         if (phone_Dialog.isEmpty() || phone_Dialog.length() != STANDARD_PHONE_SIZE)
                             Toast.makeText(LoginActivity.this, "invalid Phone Number", Toast.LENGTH_SHORT).show();
                         else {
-                            progress.show();
-                            sendVerificationPhoneCodeMSG();
+                            mFirebaseAuthViewModel.isUser(phone_Dialog, new FirebaseAuthRepo.OnUserValidationListener() {
+                                @Override
+                                public void onUserValid() {
+                                    progress.show();
+                                    sendVerificationPhoneCodeMSG();
+                                }
+
+                                @Override
+                                public void onUserNotValid() {
+                                    Toast.makeText(LoginActivity.this, "You are not a User Please register first", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
                         }
                     }
                 })
@@ -202,16 +218,30 @@ public class LoginActivity extends AppCompatActivity {
                 PhoneAuthOptions.newBuilder()
                         .setPhoneNumber("+20" + phone_Dialog)
                         .setActivity(LoginActivity.this)
-                        .setTimeout(60L, TimeUnit.SECONDS).setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                        .setTimeout(20L, TimeUnit.SECONDS).setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+                    @Override
+                    public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                        super.onCodeSent(s, forceResendingToken);
+                        VerificationId=s;
+                        progress.dismiss();
+                        createVerifyDialog().show();
+                    }
+
+                    @Override
+                    public void onCodeAutoRetrievalTimeOut(@NonNull String s) {
+                        super.onCodeAutoRetrievalTimeOut(s);
+                        Toast.makeText(LoginActivity.this, "Request time out", Toast.LENGTH_SHORT).show();
+                        progress.dismiss();
+                    }
 
                     @Override
                     public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                        Log.d(TAG, "onVerificationCompleted: Verification-->" + phoneAuthCredential.getSmsCode());
-                        if (phoneAuthCredential.getSmsCode() == null || phoneAuthCredential.getSmsCode().equals(""))
-                            Toast.makeText(LoginActivity.this, "OTP Error Try again latter.", Toast.LENGTH_SHORT).show();
-                        VerificationPhoneCode = phoneAuthCredential.getSmsCode();
-                        progress.dismiss();
-                        createVerifyDialog().show();
+                        if (phoneAuthCredential.getSmsCode() == null || phoneAuthCredential.getSmsCode().equals("")) {
+                            verifyCode(phoneAuthCredential.getSmsCode());
+                            Log.d(TAG, "onVerificationCompleted: " + VerificationId);
+                        }
+
                     }
 
                     @Override
@@ -224,32 +254,57 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private void verifyCode(String smsCode) {
+        AlertDialog progress2 = createDialoge("OTP Verify", "Please Wait Until Code is verified...").create();
+        progress2.show();
+        FirebaseAuth auth= FirebaseAuth.getInstance();
+        PhoneAuthCredential credential=PhoneAuthProvider.getCredential(VerificationId,smsCode);
+        auth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    progress.dismiss();
+                    createResetPasswordDialog().show();
+                    progress2.dismiss();
+                    Toast.makeText(LoginActivity.this, "Verified Successfully", Toast.LENGTH_SHORT).show();
+
+                }
+                else {
+                    progress.dismiss();
+                    progress2.dismiss();
+                    Toast.makeText(LoginActivity.this, "verification Code Failed", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+    }
+
     private AlertDialog createVerifyDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.forget_pass_dialog, null);
         ((TextView) view.findViewById(R.id.forget_dialog_title)).setText("Verification");
         ((TextView) view.findViewById(R.id.forget_dialog_hint)).setHint("Enter Verification Code");
-        builder.setView(view)
+        builder.setCancelable(false).setView(view)
                 .setPositiveButton("Verify", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         String enteredCode = ((TextView) view.findViewById(R.id.forget_dialog_hint)).getText().toString();
-                        if (enteredCode.equals(VerificationPhoneCode)) {
-                            createResetPasswordDialog().show();
-                            Toast.makeText(LoginActivity.this, "Verified Successfully", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(LoginActivity.this, "verification Code incorrect", Toast.LENGTH_SHORT).show();
-                        }
+                        verifyCode(enteredCode);
                     }
                 })
-                .setNegativeButton("Back", null);
+                .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
         return builder.create();
     }
 
     private AlertDialog createResetPasswordDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.forget_password_reset_dialog, null);
-        builder.setView(view)
+        builder.setCancelable(false).setView(view)
                 .setPositiveButton("Reset", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
@@ -260,7 +315,12 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Password rest successfully", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton("Back", null);
+                .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
         return builder.create();
     }
 
@@ -292,7 +352,12 @@ public class LoginActivity extends AppCompatActivity {
 
         return new AlertDialog.Builder(this)
                 .setView(view)
-                .setCancelable(false);
+                .setCancelable(false).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
     }
 
 }

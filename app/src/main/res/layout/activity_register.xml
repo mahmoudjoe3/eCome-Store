@@ -51,6 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Birthday click twice"
+                android:drawableRight="@drawable/ic_baseline_calendar_today_24"
                 android:inputType="date"
                 android:padding="@dimen/_13sdp"
                 android:textColor="@color/colorPrimaryDark"

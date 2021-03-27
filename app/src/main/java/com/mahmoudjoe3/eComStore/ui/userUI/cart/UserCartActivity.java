@@ -38,7 +38,6 @@ public class UserCartActivity extends AppCompatActivity {
 
 
     public final static String UserCartActivity_User_Key = "UserCartActivity.userKey";
-    private static final String TAG = "UserCartActivity.me";
     @BindView(R.id.o_my_toolbar)
     Toolbar oMyToolbar;
     @BindView(R.id.o_listview)
@@ -74,12 +73,12 @@ public class UserCartActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Snackbar snackbar = Snackbar.make(this.findViewById(android.R.id.content), "No internet connection..", Snackbar.LENGTH_INDEFINITE);
+        Snackbar snackbar = Snackbar.make(this.findViewById(android.R.id.content), R.string.No_internet_connection, Snackbar.LENGTH_INDEFINITE);
         if (!MyLogic.haveNetworkConnection(this)) {
             card1.setVisibility(View.GONE);
             card2.setVisibility(View.GONE);
             snackbar.setActionTextColor(getResources().getColor(R.color.red))
-                    .setAction("Exit", new View.OnClickListener() {
+                    .setAction(R.string.Exit, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             UserCartActivity.this.finish();
@@ -122,11 +121,11 @@ public class UserCartActivity extends AppCompatActivity {
                 total = totalPrice;
                 String temp = "";
                 if (totalPrice < 350) {
-                    temp = "Add " + "<b style=\"color:black;\">" + (350 - totalPrice) + "EGP" + "</b>"
-                            + " of eligible items to your order to qualify for " +
-                            "<b style=\"color:black;\">" + "FREE Shipping." + "</b>";
+                    temp = getString(R.string.add) + "<b style=\"color:black;\">" + (350 - totalPrice) + "EGP" + "</b>"
+                            + getString(R.string.of_eligible_items_to_your_order_to_qualify_for) +
+                            "<b style=\"color:black;\">" + getString(R.string.FREE_Shipping) + "</b>";
                 } else
-                    temp = "Your order qualifies for " + "<b style=\"color:black;\">" + "FREE Shipping." + "</b>";
+                    temp = getString(R.string.Your_order_qualifies_for)+" " + "<b style=\"color:black;\">" + getString(R.string.FREE_Shipping) + "</b>";
 
                 oFreeShipTXT.setText(Html.fromHtml(temp));
             }
@@ -149,9 +148,9 @@ public class UserCartActivity extends AppCompatActivity {
             public void onDelete(Product product) {
                 new AlertDialog.Builder(UserCartActivity.this)
                         .setIcon(R.drawable.ic_delete)
-                        .setMessage("Are you sure? ")
-                        .setTitle("Remove Form Cart")
-                        .setNegativeButton("Remove", new DialogInterface.OnClickListener() {
+                        .setMessage(getString(R.string.Are_you_sure))
+                        .setTitle(R.string.Remove_Form_Cart)
+                        .setNegativeButton(R.string.Remove, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //delete here
@@ -165,7 +164,7 @@ public class UserCartActivity extends AppCompatActivity {
                                 supOrderAdapter.setList(supOrderAdapter.getList());
                             }
                         })
-                        .setPositiveButton("Back", null)
+                        .setPositiveButton(R.string.back, null)
                         .create().show();
             }
 
@@ -183,7 +182,7 @@ public class UserCartActivity extends AppCompatActivity {
                     intent.putExtra(OrderSummaryActivity.TotalPrice_KEY, totalPrice);
                     startActivity(intent);
                 } else
-                    Toast.makeText(UserCartActivity.this, "There is No Cart", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserCartActivity.this, R.string.There_is_No_Cart, Toast.LENGTH_SHORT).show();
             }
         });
     }

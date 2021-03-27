@@ -10,7 +10,7 @@
         android:background="@color/colorAccent"
         android:gravity="center"
         android:scaleType="center"
-        android:text="Sort By"
+        android:text="@string/sort_by"
         android:textAllCaps="true"
         android:textColor="@color/colorBG"
         android:textSize="@dimen/_16sdp" />
@@ -28,7 +28,7 @@
             android:layout_marginEnd="@dimen/_16sdp"
             android:layout_marginBottom="@dimen/_10sdp"
             android:layoutDirection="rtl"
-            android:text="Price : High to Low"
+            android:text="@string/price_high_to_low"
             android:textColor="@color/colorOutStoke"
             android:textSize="18sp" />
 
@@ -40,7 +40,7 @@
             android:layout_marginEnd="@dimen/_16sdp"
             android:fontFamily="sans-serif"
             android:layoutDirection="rtl"
-            android:text="Price : Low to High"
+            android:text="@string/price_low_to_high"
             android:textColor="@color/colorOutStoke"
             android:textSize="18sp" />
     </RadioGroup>

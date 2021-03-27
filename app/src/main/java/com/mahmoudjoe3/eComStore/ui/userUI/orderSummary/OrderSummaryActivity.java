@@ -115,7 +115,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
     private void init_Data() {
         sTotal1.setText(totalPrice + " EGP");
         if (totalPrice >= 350) {
-            sFreeShipping.setText("FREE Shipping");
+            sFreeShipping.setText(getString(R.string.FREE_Shipping));
             finalPrice = totalPrice + 5;
         } else {
             sFreeShipping.setText("25.0 EGP");
@@ -137,7 +137,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
         calendar.add(Calendar.DATE, 3);  // number of days to add
         delivaryDate = DateFormat.format(calendar.getTime());  // dt is now the new date
 
-        sDeliveryDate.setText("Delivered by " + delivaryDate);
+        sDeliveryDate.setText(getString(R.string.Delivered_by)+" " + delivaryDate);
 
 
     }
@@ -167,25 +167,24 @@ public class OrderSummaryActivity extends AppCompatActivity {
 
     private void placeOrder() {
         new AlertDialog.Builder(OrderSummaryActivity.this)
-                .setMessage("Once you place order you can’t remove it")
-                .setTitle("placing an order")
-                .setNegativeButton("Place", new DialogInterface.OnClickListener() {
+                .setMessage(R.string.Once_you_place_order_you_cant_remove_it)
+                .setTitle(R.string.placing_an_order)
+                .setNegativeButton(R.string.Place, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (!sUserAddress.getText().toString().toLowerCase().equals("no address"))
+                        if (!sUserAddress.getTag().toString().toLowerCase().equals("no"))
                             upLoadOrder();
                         else {
-                            sPickLocationBtn.setError("you should enter your address!");
+                            sPickLocationBtn.setError(getString(R.string.you_should_enter_your_address));
                         }
                     }
                 })
-                .setPositiveButton("Back", null)
+                .setPositiveButton(R.string.back, null)
                 .create().show();
 
     }
 
     private void upLoadOrder() {
-        //OrderDB orderDB=createDBOrder();
         List<OrderDB> orderDBList = new ArrayList<>();
         List<OrderUI> orderUIList = createOrderList(order);
         for (OrderUI o : orderUIList) {
@@ -198,7 +197,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
 
     private void insertOrder_rec(int i, List<OrderDB> orderDBList) {
         if (i >= orderDBList.size()) {
-            Snackbar.make(findViewById(android.R.id.content), "Order Placed successfully ", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(android.R.id.content), getString(R.string.Order_Placed_successfully)+" ", Snackbar.LENGTH_LONG).show();
             return;
         }
         viewModel.insertOrder(orderDBList.get(i));
@@ -211,8 +210,8 @@ public class OrderSummaryActivity extends AppCompatActivity {
             @Override
             public void onFailure() {
                 if (!MyLogic.haveNetworkConnection(OrderSummaryActivity.this)) {
-                    Snackbar.make(findViewById(android.R.id.content), "Error No internet connection", Snackbar.LENGTH_LONG)
-                            .setAction("Exit", new View.OnClickListener() {
+                    Snackbar.make(findViewById(android.R.id.content), R.string.Error_No_internet_connection, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.Exit, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     finish();
@@ -268,7 +267,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
                 Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 startActivity(unrestrictedIntent);
             } catch (ActivityNotFoundException innerEx) {
-                Toast.makeText(this, "Please install a maps application", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.Please_install_a_maps_application, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -296,13 +295,14 @@ public class OrderSummaryActivity extends AppCompatActivity {
                             longitude = String.valueOf(addresses.get(0).getLongitude());
                             addressLine = addresses.get(0).getAddressLine(0);
                             sUserAddress.setText(addressLine);
+                            sUserAddress.setTag("yes");
                             sShowInMap.setVisibility(View.VISIBLE);
 
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     } else {
-                        Toast.makeText(OrderSummaryActivity.this, "open the GPS please!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(OrderSummaryActivity.this, R.string.open_the_GPS_please, Toast.LENGTH_SHORT).show();
                     }
                 }
             });

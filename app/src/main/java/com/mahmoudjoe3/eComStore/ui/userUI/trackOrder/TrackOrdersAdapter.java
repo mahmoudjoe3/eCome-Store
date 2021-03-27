@@ -38,7 +38,8 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
             //performed in BG thread
             List<OrderUI> filteredList = new ArrayList<>();
             if (constraint == null || constraint.length() == 0
-                    || constraint.toString().toLowerCase().trim().contains("all")) {
+                    || constraint.toString().toLowerCase().trim().contains("all")
+                    || constraint.toString().toLowerCase().trim().contains("كل")) {
                 filteredList.addAll(listFull);
             } else {
                 String pattern = constraint.toString().toLowerCase().trim();
@@ -108,7 +109,7 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
         String orderDate = getDateBefore(orderUI.getDeliveryDate(), -3);
         holder.rOrderDate.setText(orderDate);
 
-        holder.rOrderExpectedDate.setText("    Expected delivery " + orderUI.getDeliveryDate());
+        holder.rOrderExpectedDate.setText("    "+context.getString(R.string.Expected_delivery)+" " + orderUI.getDeliveryDate());
         holder.rTotalPrice.setText(orderUI.getTotalPrice() + " EGP");
         holder.rLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,9 +126,9 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
             @Override
             public SparseArray<String> onCustomize(int sectionCount, @NonNull SparseArray<String> array) {
                 array.clear();
-                array.put(0, "InProcessing");
-                array.put(1, "Shipped");
-                array.put(2, "Delivered");
+                array.put(0, context.getString(R.string.InProcessing));
+                array.put(1, context.getString(R.string.Shipped));
+                array.put(2, context.getString(R.string.Delivered));
                 return array;
             }
         });

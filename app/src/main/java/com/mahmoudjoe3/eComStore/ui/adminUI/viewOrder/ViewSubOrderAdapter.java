@@ -63,7 +63,7 @@ public class ViewSubOrderAdapter extends RecyclerView.Adapter<ViewSubOrderAdapte
         Product product = subOrder.getProduct();
         holder.pTitle.setText(product.getmTitle());
         holder.pOwner.setText(product.getmAdmin().getName());
-        holder.pQty.setText("Qty:" + subOrder.getQty());
+        holder.pQty.setText(context.getString(R.string.Qty) + subOrder.getQty());
         Picasso.get()
                 .load(product.getmImageUri().get(0))
                 .fit()

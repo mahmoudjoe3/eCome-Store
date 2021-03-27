@@ -84,10 +84,10 @@ public class MainActivity extends AppCompatActivity {
                     public void onOldVersion(String NewVersion) {
                         mAlertDialog = new AlertDialog
                                 .Builder(MainActivity.this)
-                                .setTitle("Update Version")
+                                .setTitle(R.string.Update_Version)
                                 .setCancelable(false)
-                                .setMessage(getResources().getString(R.string.app_name) + " has new Version " + NewVersion + " Please Update..")
-                                .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                                .setMessage(getResources().getString(R.string.app_name) + getString(R.string.has_new_version) + NewVersion + getString(R.string.please_update))
+                                .setPositiveButton(R.string.Update, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                                         startActivity(intent);
                                     }
                                 })
-                                .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                                .setNegativeButton(R.string.Exit, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         MainActivity.this.finish();
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void FireStore(String phone, String password) {
         if (password != null && phone != null) {
-            mAlertDialog = createDialoge("User Login", "Please wait while Authentication checked...").create();
+            mAlertDialog = createDialoge(getString(R.string.User_Login), getString(R.string.Please_wait_while_Authentication_checked)).create();
             mAlertDialog.show();
             if (MyLogic.haveNetworkConnection(this)) {
                 mFirebaseAuthViewModel.login(isAdmin, phone, password, false);
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             } else {
-                Toast.makeText(getApplicationContext(), "Network error please try again latter..", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.Network_error_please_try_again_latter, Toast.LENGTH_SHORT).show();
             }
 
         }

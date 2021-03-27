@@ -19,11 +19,11 @@ import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
 
 public class FirebaseAuthRepo {
 
-    private static final String TAG = "FirebaseAuthRepoTag";
     static FirebaseAuthRepo instance;
     static DatabaseReference mReference;
     ///////////////check Version/////////////////
     OnVersionListener onVersionListener;
+
     private OnLoginListener mOnLoginListener;
     private OnRegisterListener mOnRegisterListener;
 
@@ -56,11 +56,8 @@ public class FirebaseAuthRepo {
                 String netVersion = snapshot.child("VER_NAME").getValue(String.class);
                 if (netVersion.equals(version)) {
                     onVersionListener.onRealVersion();
-                    Log.d(TAG, "onDataChange: RealVersion -->" + version);
                 } else {
                     onVersionListener.onOldVersion(netVersion);
-                    Log.d(TAG, "onDataChange: OldVersion -->" + version);
-                    Log.d(TAG, "onDataChange: RealVersion -->" + netVersion);
                 }
             }
 

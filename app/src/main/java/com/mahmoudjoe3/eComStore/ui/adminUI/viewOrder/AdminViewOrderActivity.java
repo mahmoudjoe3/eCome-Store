@@ -79,7 +79,7 @@ public class AdminViewOrderActivity extends AppCompatActivity {
                 Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 startActivity(unrestrictedIntent);
             } catch (ActivityNotFoundException innerEx) {
-                Toast.makeText(this, "Please install a maps application", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.Please_install_a_maps_application, Toast.LENGTH_LONG).show();
             }
         }
     }

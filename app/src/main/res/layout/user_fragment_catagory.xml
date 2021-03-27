@@ -26,7 +26,7 @@
                 android:background="@color/colorPrimary"
                 android:drawableEnd="@drawable/ic_sort"
                 android:paddingStart="@dimen/_10sdp"
-                android:text="sort "
+                android:text="@string/sort"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorBG" />
 

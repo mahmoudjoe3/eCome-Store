@@ -22,7 +22,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Shipment no"
+                android:text="@string/shipment_no"
                 android:textAllCaps="true"
                 android:textColor="@color/colorBG" />
 
@@ -46,7 +46,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="order date"
+                android:text="@string/order_date"
                 android:textAllCaps="true"
                 android:textColor="@color/colorBG" />
 
@@ -90,7 +90,7 @@
             android:layout_marginStart="@dimen/_2sdp"
             android:layout_marginTop="@dimen/_5sdp"
             android:drawableLeft="@drawable/ic_baseline_pin_drop_24"
-            android:text="    Show Delivered Location on map"
+            android:text="@string/show_delivered_location_on_map"
             android:textColor="@color/colorOpenMap"
             android:textStyle="bold"
             android:visibility="visible" />
@@ -141,7 +141,7 @@
             android:layout_marginStart="@dimen/_2sdp"
             android:layout_marginTop="@dimen/_10sdp"
             android:drawableLeft="@drawable/ic_baseline_monetization_on_24"
-            android:text="  GRAND TOTAL"
+            android:text="@string/grand_total"
             android:textColor="@color/indicator_1"
             android:textSize="@dimen/_13sdp" />
 
@@ -165,7 +165,7 @@
             android:layout_below="@id/vo_totalPrice"
             android:layout_marginTop="@dimen/_11sdp"
             android:background="@drawable/solid_button_layout_ripple_green"
-            android:text="Approve Order"
+            android:text="@string/approve_order"
             android:textAllCaps="false"
             android:textColor="@color/colorLoginBG" />
 

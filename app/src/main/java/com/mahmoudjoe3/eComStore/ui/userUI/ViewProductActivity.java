@@ -29,9 +29,8 @@ public class ViewProductActivity extends AppCompatActivity {
     public final static String product_Key = "ViewProductActivity.productKey";
     public final static String inFav_Key = "ViewProductActivity.favKey";
     public final static String inCart_Key = "ViewProductActivity.cartKey";
-    ;
     public final static String user_Key = "ViewProductActivity.userKey";
-    ;
+
     public SliderAdapter mSliderAdapter;
     @BindView(R.id.p_my_toolbar)
     Toolbar pMyToolbar;
@@ -90,10 +89,10 @@ public class ViewProductActivity extends AppCompatActivity {
         pDesc.setText(product.getmDescription());
 
         if (product.getQuantity() > 0) {
-            pQuantity.setText(product.getQuantity() + " in stoke");
+            pQuantity.setText(product.getQuantity() + " "+getString(R.string.in_stoke));
             pQuantity.setTextColor(getResources().getColor(R.color.red));
         } else {
-            pQuantity.setText("SOLD OUT");
+            pQuantity.setText(getString(R.string.SOLD_OUT));
             pQuantity.setTextColor(getResources().getColor(R.color.colorOutStoke));
         }
         updateFav_and_Cart();
@@ -123,12 +122,12 @@ public class ViewProductActivity extends AppCompatActivity {
         if (inCart) {
             pCartAdded.setTag("on");
             pCartAdded.setImageResource(R.drawable.ic_remove_cart);
-            pAddCart.setText("Remove from Cart");
+            pAddCart.setText(R.string.Remove_from_Cart);
             pAddCart.setBackground(getDrawable(R.drawable.solid_button_layout_ripple));
         } else {
             pCartAdded.setTag("of");
             pCartAdded.setImageResource(R.drawable.ic_add_cart);
-            pAddCart.setText("Add to Cart");
+            pAddCart.setText(R.string.Add_to_Cart);
             pAddCart.setBackground(getDrawable(R.drawable.solid_button_layout_ripple_green));
         }
     }

@@ -39,7 +39,6 @@ import butterknife.ButterKnife;
 
 public class UserHomeActivity extends AppCompatActivity {
 
-    private static final String TAG = "UserHomeActivityppppp";
     private static final int RECOGNIZER_RES = 0;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -83,11 +82,11 @@ public class UserHomeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Snackbar snackbar = Snackbar.make(this.findViewById(android.R.id.content), "No internet connection..", Snackbar.LENGTH_INDEFINITE);
+        Snackbar snackbar = Snackbar.make(this.findViewById(android.R.id.content), getString(R.string.No_internet_connection), Snackbar.LENGTH_INDEFINITE);
 
         if (!MyLogic.haveNetworkConnection(this)) {
             snackbar.setActionTextColor(getResources().getColor(R.color.red))
-                    .setAction("Exit", new View.OnClickListener() {
+                    .setAction(R.string.Exit, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             UserHomeActivity.this.finish();
@@ -121,10 +120,8 @@ public class UserHomeActivity extends AppCompatActivity {
                 item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionExpand(MenuItem item) {
-                        Log.d(TAG, "onMenuItemActionExpand: ");
                         cart_item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                         voice_item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                        //search.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM);
                         return true;
                     }
 
@@ -164,7 +161,6 @@ public class UserHomeActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.d(TAG, "onQueryTextChange: " + newText);
                 shardViewModel.setLiveSearch(newText);
                 return false;
             }
@@ -175,7 +171,8 @@ public class UserHomeActivity extends AppCompatActivity {
     private void openVoiceRecognizerInent() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say what you wanna...\nSay all for all Product!");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.Say_what_you_wanna)
+                +"\n"+getString(R.string.Say_all_for_all_Product));
         startActivityForResult(intent, RECOGNIZER_RES);
     }
 

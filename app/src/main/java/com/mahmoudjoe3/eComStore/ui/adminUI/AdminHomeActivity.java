@@ -81,13 +81,14 @@ public class AdminHomeActivity extends AppCompatActivity {
 
                 new AlertDialog.Builder(AdminHomeActivity.this)
                         .setIcon(R.drawable.ic_delete)
-                        .setMessage("Are you sure? ")
-                        .setTitle("Delete")
-                        .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                        .setMessage(R.string.Are_you_sure)
+                        .setTitle(R.string.delete)
+                        .setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //delete here
-                                AlertDialog mAlertDialog = createDialoge("Delete Product", "Please wait while Deleting Product...").create();
+                                AlertDialog mAlertDialog = createDialoge(getString(R.string.Delete_Product)
+                                        , getString(R.string.Please_wait_while_Deleting_Product)).create();
                                 mAlertDialog.show();
                                 mViewModel.deleteProduct(product);
                                 mViewModel.setOnProductDeleted(new FirebaseRepo.onProductDeleted() {
@@ -98,7 +99,7 @@ public class AdminHomeActivity extends AppCompatActivity {
                                 });
                             }
                         })
-                        .setPositiveButton("Back", null)
+                        .setPositiveButton(R.string.back, null)
                         .create().show();
             }
         });

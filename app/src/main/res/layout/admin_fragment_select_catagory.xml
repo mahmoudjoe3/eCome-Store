@@ -18,7 +18,7 @@
             android:layout_gravity="top"
             android:gravity="center"
             android:paddingBottom="@dimen/_50sdp"
-            android:text="Select Product Category"
+            android:text="@string/select_product_category"
             android:textColor="@color/colorBG"
             android:textSize="@dimen/_20ssp" />
 
@@ -54,7 +54,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="0.5"
                         android:gravity="center"
-                        android:text="Fashion"
+                        android:text="@string/fashion"
                         android:textColor="@color/colorBG" />
                 </LinearLayout>
 
@@ -85,7 +85,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="0.5"
                         android:gravity="center"
-                        android:text="Furniture"
+                        android:text="@string/furniture"
                         android:textColor="@color/colorBG" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -115,7 +115,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="0.5"
                         android:gravity="center"
-                        android:text="Healthy &amp; Beauty"
+                        android:text="@string/healthy_amp_beauty"
                         android:textColor="@color/colorBG" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -154,7 +154,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="0.5"
                         android:gravity="center"
-                        android:text="Watches"
+                        android:text="@string/watches"
                         android:textColor="@color/colorBG" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -184,7 +184,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="0.5"
                         android:gravity="center"
-                        android:text="PC &amp; Accessories"
+                        android:text="@string/pc_amp_accessories"
                         android:textColor="@color/colorBG" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -214,7 +214,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="0.5"
                         android:gravity="center"
-                        android:text="TVs"
+                        android:text="@string/tvs"
                         android:textColor="@color/colorBG" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -252,7 +252,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="0.5"
                         android:gravity="center"
-                        android:text="Mobiles &amp; Tablets"
+                        android:text="@string/mobiles_amp_tablets"
                         android:textColor="@color/colorBG" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -282,7 +282,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="0.5"
                         android:gravity="center"
-                        android:text="Sports"
+                        android:text="@string/sports"
                         android:textColor="@color/colorBG" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

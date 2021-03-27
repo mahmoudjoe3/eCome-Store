@@ -24,7 +24,7 @@
         android:background="@drawable/rounded_button_shap"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:text="Show Summary"
+        android:text="@string/show_summary"
         android:textColor="#ffffff" />
 
 </RelativeLayout>

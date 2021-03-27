@@ -27,10 +27,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.TrackOrderViewHolder> {
-    private static final String TAG = "ViewOrderAdapter";
     private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
     private List<OrderUI> list;
     private Context context;
@@ -44,23 +44,25 @@ public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.Trac
     }
 
     public void setList(List<OrderUI> list) {
-        if (list != null)
+
+        if (list != null) {
+            Collections.reverse(list);
             this.list = list;
-        List<OrderUI> removedList = new ArrayList<>();
-        for (OrderUI orderUI : list) {
-            int ii = 0;
-            for (SubOrderUI subOrderUI : orderUI.getOrderList()) {
-                if (!subOrderUI.getProduct().getmAdmin().getName().equals(adminName)) {
-                    ii++;
+            List<OrderUI> removedList = new ArrayList<>();
+            for (OrderUI orderUI : list) {
+                int ii = 0;
+                for (SubOrderUI subOrderUI : orderUI.getOrderList()) {
+                    if (!subOrderUI.getProduct().getmAdmin().getName().equals(adminName)) {
+                        ii++;
+                    }
+                }
+                if (ii == orderUI.getOrderList().size()) {
+                    removedList.add(orderUI);
                 }
             }
-            if (ii == orderUI.getOrderList().size()) {
-                removedList.add(orderUI);
-            }
+            list.removeAll(removedList);
+            notifyDataSetChanged();
         }
-        list.removeAll(removedList);
-        Log.d(TAG, "setList: list size-->" + list.size());
-        notifyDataSetChanged();
     }
 
     @NonNull
@@ -94,16 +96,16 @@ public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.Trac
             holder.vo_Location.setVisibility(View.VISIBLE);
             holder.vo_approveOrder.setBackground(context.getDrawable(R.drawable.solid_button_layout_ripple_red));
             //holder.vo_approveOrder.setEnabled(false);
-            holder.vo_approveOrder.setText("ORDER APPROVED");
+            holder.vo_approveOrder.setText(R.string.ORDER_APPROVED);
         }
         if (orderUI.isDelivered()) {
             holder.vo_approveOrder.setBackground(context.getDrawable(R.drawable.solid_button_layout_ripple));
             holder.vo_approveOrder.setEnabled(false);
-            holder.vo_approveOrder.setText("ORDER DELIVERED");
+            holder.vo_approveOrder.setText(R.string.ORDER_DELIVERED);
         }
-        holder.vo_OrderExpectedDate.setText("    Expected delivery " + orderUI.getDeliveryDate());
+        holder.vo_OrderExpectedDate.setText(String.format("    %s %s", context.getString(R.string.Expected_delivery), orderUI.getDeliveryDate()));
 
-        holder.vo_TotalPrice.setText(adapter.getTotal() + " EGP");
+        holder.vo_TotalPrice.setText(String.format("%s EGP", adapter.getTotal()));
         holder.vo_Location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,7 +121,7 @@ public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.Trac
             public void onClick(View v) {
 
                 holder.vo_approveOrder.setBackground(context.getDrawable(R.drawable.solid_button_layout_ripple_red));
-                holder.vo_approveOrder.setText("ORDER APPROVED long click to delivery");
+                holder.vo_approveOrder.setText(R.string.ORDER_APPROVED_long_click_to_delivery);
                 holder.vo_SeekBar.setProgress(2);
                 if (onClickListener != null)
                     onClickListener.onApproveClick(createDBOrder(orderUI, false, true));
@@ -132,20 +134,20 @@ public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.Trac
                 if (holder.vo_Location.getVisibility() == View.VISIBLE) {
                     if (onClickListener != null) {
                         new AlertDialog.Builder(context)
-                                .setMessage("You Want To Delivery This Order ?")
-                                .setTitle("Order Delivery")
-                                .setNegativeButton("Delivery", new DialogInterface.OnClickListener() {
+                                .setMessage(R.string.You_Want_To_Delivery_This_Order)
+                                .setTitle(R.string.Order_Delivery)
+                                .setNegativeButton(R.string.Delivery, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         //TODO you can cheek the distance between the delivery boy and the customer
-                                        holder.vo_approveOrder.setText("ORDER DELIVERED");
+                                        holder.vo_approveOrder.setText(R.string.ORDER_DELIVERED);
                                         holder.vo_SeekBar.setProgress(3);
                                         holder.vo_approveOrder.setEnabled(false);
                                         holder.vo_approveOrder.setBackground(context.getDrawable(R.drawable.solid_button_layout_ripple));
                                         onClickListener.onDeliverClick(createDBOrder(orderUI, true, true));
                                     }
                                 })
-                                .setPositiveButton("No", null)
+                                .setPositiveButton(R.string.No, null)
                                 .create().show();
 
                     }
@@ -160,9 +162,9 @@ public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.Trac
             @Override
             public SparseArray<String> onCustomize(int sectionCount, @NonNull SparseArray<String> array) {
                 array.clear();
-                array.put(0, "InProcessing");
-                array.put(1, "Shipped");
-                array.put(2, "Delivered");
+                array.put(0, context.getString(R.string.InProcessing));
+                array.put(1, context.getString(R.string.Shipped));
+                array.put(2, context.getString(R.string.Delivered));
                 return array;
             }
         });

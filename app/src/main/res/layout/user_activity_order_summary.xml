@@ -19,7 +19,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="Order Summary"
+            app:title="@string/Order_Summary"
             app:titleTextColor="@color/colorBG" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_18sdp"
                 android:layout_marginStart="@dimen/_18sdp"
-                android:text="Specify Delivery Location"
+                android:text="@string/specify_delivery_location"
                 android:textColor="@color/colorBG"
                 android:textSize="@dimen/_14ssp" />
 
@@ -74,7 +74,8 @@
                         android:layout_marginStart="@dimen/_30sdp"
                         android:layout_marginTop="@dimen/_3sdp"
                         android:layout_marginBottom="@dimen/_3sdp"
-                        android:text="No address"
+                        android:text="@string/no_address"
+                        android:tag="no"
                         android:textColor="@color/colorBG" />
 
                     <TextView
@@ -99,7 +100,7 @@
                             android:layout_gravity="end"
                             android:layout_marginStart="@dimen/_30sdp"
                             android:layout_marginTop="@dimen/_6sdp"
-                            android:text="Git My Location"
+                            android:text="@string/git_my_location"
                             android:textColor="#0368FF"
                             android:textSize="@dimen/_14ssp"
                             android:textStyle="bold" />
@@ -112,7 +113,7 @@
                             android:layout_gravity="end"
                             android:paddingTop="@dimen/_6sdp"
                             android:paddingEnd="@dimen/_5sdp"
-                            android:text="Show in map"
+                            android:text="@string/show_in_map"
                             android:textColor="@color/colorOpenMap"
                             android:textSize="@dimen/_14ssp"
                             android:visibility="gone" />
@@ -127,7 +128,7 @@
                 android:layout_marginStart="@dimen/_18sdp"
                 android:layout_marginTop="@dimen/_18sdp"
                 android:layout_marginBottom="@dimen/_18sdp"
-                android:text="Shipment (Shipped locally)"
+                android:text="@string/shipment_shipped_locally"
                 android:textColor="@color/colorBG"
 
                 android:textSize="@dimen/_14ssp" />
@@ -170,7 +171,7 @@
                 android:layout_marginStart="@dimen/_18sdp"
                 android:layout_marginTop="@dimen/_18sdp"
                 android:layout_marginBottom="@dimen/_18sdp"
-                android:text="Payment Summary"
+                android:text="@string/payment_summary"
                 android:textColor="@color/colorBG"
                 android:textSize="@dimen/_14ssp" />
 
@@ -193,28 +194,28 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/_10sdp"
-                            android:text="Payment option"
+                            android:text="@string/payment_option"
                             android:textColor="@color/colorBG" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/_10sdp"
-                            android:text="Sub Total"
+                            android:text="@string/sub_total"
                             android:textColor="@color/colorBG" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/_10sdp"
-                            android:text="+ COD Fees"
+                            android:text="@string/cod_fees"
                             android:textColor="@color/colorBG" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/_10sdp"
-                            android:text="+ Shipping"
+                            android:text="@string/shipping"
                             android:textColor="@color/colorBG" />
 
                     </LinearLayout>
@@ -230,7 +231,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/_10sdp"
-                            android:text="Cash On Delivary (COD)"
+                            android:text="@string/cash_on_delivery_cod"
                             android:textColor="@color/indicator" />
 
                         <TextView
@@ -253,7 +254,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/_10sdp"
-                            android:text="FREE Shipping"
+                            android:text="@string/FREE_Shipping"
                             android:textColor="@color/indicator" />
 
                     </LinearLayout>
@@ -280,7 +281,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Grand Total"
+                android:text="@string/grand_total"
                 android:textColor="@color/colorBG" />
 
             <TextView
@@ -288,6 +289,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_16sdp"
+                android:paddingStart="@dimen/_6sdp"
                 android:text="1,175.0 EGP"
                 android:textColor="@color/indicator"
                 android:textSize="@dimen/_16sdp" />
@@ -297,7 +299,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/solid_button_layout_ripple_green"
-                android:text="Place Order"
+                android:text="@string/place_order"
                 android:textAllCaps="false"
                 android:textColor="@color/colorWhite" />
         </LinearLayout>

@@ -26,7 +26,6 @@ import java.util.List;
 
 public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductViewHolder> implements Filterable {
 
-    private static final String TAG = "productAdapter";
     AuthorizedUser mUser;
     ///////////////////////////////////////  listener  /////////////////////////////////
     onClickListener listener;
@@ -42,7 +41,8 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductV
             //performed in BG thread
             List<Product> filteredList = new ArrayList<>();
             if (constraint == null || constraint.length() == 0
-                    || constraint.toString().toLowerCase().trim().contains("all")) {
+                    || constraint.toString().toLowerCase().trim().contains("all")
+                    || constraint.toString().toLowerCase().trim().contains("كل")) {
                 filteredList.addAll(productListFull);
             } else {
                 String pattern = constraint.toString().toLowerCase().trim();
@@ -121,10 +121,10 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductV
         if (admin) {
             holder.mProductDate.setText(currentProduct.getmDate());
             if (currentProduct.getQuantity() > 0) {
-                holder.mProductStoke.setText(currentProduct.getQuantity() + " in stoke");
+                holder.mProductStoke.setText(currentProduct.getQuantity() + " "+context.getString(R.string.in_stoke));
                 holder.mProductStoke.setTextColor(context.getResources().getColor(R.color.indicator_1));
             } else {
-                holder.mProductStoke.setText("SOLD OUT");
+                holder.mProductStoke.setText(R.string.SOLD_OUT);
                 holder.mProductStoke.setTextColor(context.getResources().getColor(R.color.colorOutStoke));
             }
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -137,7 +137,7 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductV
                 }
             });
         } else {//user
-            String temp = "sold by " + "<b style=\"color:black;\">" + currentProduct.getmAdmin().getName() + "</b>";
+            String temp = context.getString(R.string.sold_by)+ "<b style=\"color:black;\">" + currentProduct.getmAdmin().getName() + "</b>";
             holder.mProductStoke.setText(Html.fromHtml(temp));
             if (currentProduct.getQuantity() == 0) {
                 holder.mAdd_cart.setEnabled(false);
@@ -178,7 +178,6 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductV
                 public void onClick(View v) {
                     if (onImageButtonClickListener != null) {
                         onImageButtonClickListener.onFavClick(currentProduct, (ImageButton) v);
-                        Log.d(TAG, "onClick: fav");
                     }
                 }
             });

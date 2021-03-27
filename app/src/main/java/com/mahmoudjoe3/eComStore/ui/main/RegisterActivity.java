@@ -70,13 +70,21 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    @OnClick({R.id.Btn_createAccount})
+    @OnClick({R.id.Btn_createAccount,R.id.reg_back})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.Btn_createAccount:
                 createAccount();
                 break;
+            case R.id.reg_back:
+                startActivity(new Intent(RegisterActivity.this,MainActivity.class));
+                break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(RegisterActivity.this,MainActivity.class));
     }
 
     private void openCalender() {
@@ -103,48 +111,48 @@ public class RegisterActivity extends AppCompatActivity {
         String password = mPassword.getText().toString();
 
         if (name.isEmpty()) {
-            mName.setError("Name is Empty!");
+            mName.setError(getString(R.string.Name_is_Empty));
         } else if (phone.isEmpty()) {
-            mPhone.setError("Phone is Empty!");
+            mPhone.setError(getString(R.string.PhoneisEmpty));
         } else if (phone.length() != 11) {
             for (int i = 0; i < phone.length(); i++) {
                 char c = phone.charAt(i);
                 if ((int) c < 0 || (int) c > 9) {
-                    mPhone.setError("Phone is incorrect!");
+                    mPhone.setError(getString(R.string.Phone_is_incorrect));
                     break;
                 }
             }
         } else if (password.isEmpty()) {
-            mPassword.setError("Password is Empty!");
+            mPassword.setError(getString(R.string.Password_is_Empty));
         } else if (password.length() < 8) {
-            mPassword.setError("Weak Password!");
+            mPassword.setError(getString(R.string.Weak_Password));
         } else if (EdtxtBirthDate.getText().toString().isEmpty()) {
-            EdtxtBirthDate.setError("Enter your birthday please!");
+            EdtxtBirthDate.setError(getString(R.string.Enter_your_birthday_please));
         } else {
             if (MyLogic.haveNetworkConnection(this)) {
                 mFirebaseAuthViewModel.registerUser(name, phone, password, EdtxtBirthDate.getText().toString());
                 mFirebaseAuthViewModel.setOnRegisterListener(new FirebaseAuthRepo.OnRegisterListener() {
                     @Override
                     public void onRegisterSuccess() {
-                        Toast.makeText(RegisterActivity.this, "Congratulations!! Your Account created Successfully..", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, R.string.Congratulations_Your_Account_created_Successfully, Toast.LENGTH_SHORT).show();
                         startActivity((new Intent(RegisterActivity.this, LoginActivity.class)));
                     }
 
                     @Override
                     public void onRegisterExist() {
-                        Toast.makeText(RegisterActivity.this, "This phone number is exist try another one..", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, R.string.This_phone_number_is_exist_try_another_one, Toast.LENGTH_SHORT).show();
 
                     }
 
                     @Override
                     public void onRegisterFailure() {
-                        Toast.makeText(RegisterActivity.this, "Network error please try again latter..", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, R.string.Network_error_please_try_again_latter, Toast.LENGTH_SHORT).show();
                         startActivity((new Intent(RegisterActivity.this, MainActivity.class)));
 
                     }
                 });
             } else {
-                Toast.makeText(getApplicationContext(), "Network error please try again latter..", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.Network_error_please_try_again_latter, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         }

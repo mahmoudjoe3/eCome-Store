@@ -50,7 +50,6 @@ public class AddProductFragment extends Fragment {
 
 
     private final static int Gallary_Req = 1;
-    private static final String TAG = "Add Product";
     private static Admin mAdmin;
     private static String mCategory;
     private static Product mProduct;
@@ -139,7 +138,6 @@ public class AddProductFragment extends Fragment {
         ButterKnife.bind(this, view);
         if (mProduct != null) {
             initData();
-            //mAddProduct.setEnabled(false);
         }
         return view;
     }
@@ -282,7 +280,7 @@ public class AddProductFragment extends Fragment {
         if (requestCode == Gallary_Req && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             selectImage();
         } else {
-            Toast.makeText(getActivity(), "Permission Denied", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.PermissionDenied, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -389,24 +387,24 @@ public class AddProductFragment extends Fragment {
     private void AddProduct() {
         boolean valid = true;
         if (mImageUri[0] == null && mImageUri[1] == null && mImageUri[2] == null && mImageUri[3] == null) {
-            hintImage.setError("Please insert at least one image!");
+            hintImage.setError(getString(R.string.isert_error_msg));
             valid = false;
         } else
             hintImage.setError(null);
         if (mTitle.getText().toString().isEmpty()) {
-            mTitle.setError("Title is Required");
+            mTitle.setError(getString(R.string.TitleisRequired));
             valid = false;
         }
         if (mPrice.getText().toString().isEmpty()) {
-            mPrice.setError("Price is Required");
+            mPrice.setError(getString(R.string.Price_is_Required));
             valid = false;
         }
         if (mQuantity.getText().toString().isEmpty()) {
-            mQuantity.setError("Price is Required");
+            mQuantity.setError(getString(R.string.Quantity_is_Required));
             valid = false;
         }
         if (mDescription.getText().toString().isEmpty()) {
-            mDescription.setError("description is Required");
+            mDescription.setError(getString(R.string.description_is_Required));
             valid = false;
         }
         if (valid) {
@@ -433,7 +431,7 @@ public class AddProductFragment extends Fragment {
 
                 @Override
                 public void onSuccess() {
-                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Product Uploaded", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), R.string.Product_Uploaded, Snackbar.LENGTH_LONG).show();
                     mAddProduct.setEnabled(true);
                     mProgressBar.setVisibility(View.GONE);
                     clearData();

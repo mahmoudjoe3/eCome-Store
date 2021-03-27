@@ -18,7 +18,6 @@ import java.util.List;
 
 public class TrackOrderViewModel extends ViewModel {
 
-    private static final String TAG = "TrackOrderViewModel.me";
     private FirebaseRepo repo;
     private MutableLiveData<List<OrderUI>> orderList;
 
@@ -45,14 +44,12 @@ public class TrackOrderViewModel extends ViewModel {
     void rec(int i, List<OrderDB> orderDBList, List<OrderUI> orderUIList) {
         if (i >= orderDBList.size()) {
             orderList.setValue(orderUIList);
-            Log.d(TAG, "onComplete: final----->" + orderUIList.toString());
             return;
         }
         List<String> productsIds = new ArrayList<>();
         for (SubOrderDB subOrderDB : orderDBList.get(i).getOrderList()) {
             productsIds.add(subOrderDB.getProduct_Key());
         }
-        Log.d(TAG, "onComplete: productsIds->" + productsIds.toString());
 
         repo.getProductListByIds(productsIds);
         repo.setOnGetProductListener(new FirebaseRepo.OnGetProductListener() {
@@ -64,7 +61,6 @@ public class TrackOrderViewModel extends ViewModel {
                     subOrderUiList.add(new SubOrderUI(p, orderDBList.get(i).getOrderList().get(j).getQty()));
                     j++;
                 }
-                Log.d(TAG, "onComplete: subList->" + subOrderUiList.toString());
 
                 orderUIList.add(new OrderUI(subOrderUiList
                         , orderDBList.get(i).getId()
@@ -74,7 +70,6 @@ public class TrackOrderViewModel extends ViewModel {
                         , orderDBList.get(i).getDeliveryDate()
                         , orderDBList.get(i).isDelivered()
                         , orderDBList.get(i).isApproved()));
-                Log.d(TAG, "onComplete: orderUIList->" + orderUIList.toString());
                 rec(i + 1, orderDBList, orderUIList);
             }
         });

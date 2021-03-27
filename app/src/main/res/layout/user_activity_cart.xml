@@ -19,7 +19,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="Cart"
+            app:title="@string/cart"
             app:titleTextColor="@color/colorBG" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -92,7 +92,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:gravity="center"
-                    android:text="Sub Total: "
+                    android:text="@string/sub_total"
                     android:textColor="@color/colorBG" />
 
                 <TextView
@@ -115,7 +115,7 @@
                 android:background="@drawable/solid_button_layout_ripple_green"
                 android:paddingEnd="@dimen/_2sdp"
                 android:tag="of"
-                android:text="proceed to checkout"
+                android:text="@string/proceed_to_checkout"
                 android:textColor="@color/colorWhite" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

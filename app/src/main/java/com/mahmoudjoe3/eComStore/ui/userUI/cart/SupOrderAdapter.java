@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SupOrderAdapter extends RecyclerView.Adapter<SupOrderAdapter.SubOrderViewHolder> {
-    private static final String TAG = "SupOrderAdapter.me";
     orderOnClickListener mOrderOnClickListener;
     private List<SubOrderUI> list;
     private Context context;

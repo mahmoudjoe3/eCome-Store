@@ -110,7 +110,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:text="All prices include VAT"
+                android:text="@string/all_prices_include_vat"
                 android:textColor="@color/colorBG" />
 
             <LinearLayout
@@ -123,7 +123,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_5sdp"
-                    android:text="Receipt:"
+                    android:text="@string/receipt"
                     android:textColor="@color/colorBG" />
 
                 <TextView
@@ -190,7 +190,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Category"
+                    android:text="@string/category"
                     android:textColor="@color/colorBG" />
 
                 <TextView
@@ -221,7 +221,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Sold by:"
+                    android:text="@string/sold_by"
                     android:textColor="@color/colorBG" />
 
                 <TextView
@@ -251,7 +251,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Brand:"
+                    android:text="@string/brand"
                     android:textColor="@color/colorBG" />
 
                 <TextView
@@ -282,7 +282,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Description"
+                    android:text="@string/description"
                     android:textColor="@color/colorBG"
                     android:textSize="@dimen/_14ssp"
                     android:textStyle="bold" />

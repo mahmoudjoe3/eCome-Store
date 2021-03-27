@@ -36,7 +36,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class CategoryFragment extends Fragment {
-    private static final String TAG = "CategoryFragment.me";
     String Cat;
     RecyclerView pList;
     Button filter, sort;
@@ -103,20 +102,20 @@ public class CategoryFragment extends Fragment {
         View view = getLayoutInflater().inflate(R.layout.sortby_dialoge, null);
         RadioButton highToLow = view.findViewById(R.id.highToLow);
         builder.setView(view)
-                .setPositiveButton("Sort", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.sort, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
 
                         if (highToLow.isChecked()) {
-                            sortType = "HighToLow";
+                            sortType = getString(R.string.HighToLow);
                             SortByPrice(sortType);
                         } else {
-                            sortType = "LowToHigh";
+                            sortType = getString(R.string.LowToHigh);
                             SortByPrice(sortType);
                         }
                     }
                 })
-                .setNegativeButton("Back", null);
+                .setNegativeButton(R.string.back, null);
         return builder.create();
     }
 
@@ -176,7 +175,6 @@ public class CategoryFragment extends Fragment {
                     v.setImageResource(R.drawable.ic_fav_off);
                     categoryViewModel.RemoveFav(product.getmId(), mUser);
                 }
-                Log.d("productAdapter", "onFavClick: ");
             }
         });
 
@@ -238,7 +236,7 @@ public class CategoryFragment extends Fragment {
 
         @Override
         public int compare(Product o1, Product o2) {
-            return (type.equals("LowToHigh")) ? (int) (o1.getmPrice() - o2.getmPrice()) : (int) (o2.getmPrice() - o1.getmPrice());
+            return (type.equals(getString(R.string.LowToHigh))) ? (int) (o1.getmPrice() - o2.getmPrice()) : (int) (o2.getmPrice() - o1.getmPrice());
         }
     }
 

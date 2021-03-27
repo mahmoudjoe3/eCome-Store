@@ -13,6 +13,11 @@
         android:gravity="bottom"
         android:orientation="vertical"
         android:padding="@dimen/_16sdp">
+        <ImageButton android:id="@+id/login_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_arrow_back_24"
+            android:background="#00FFFFFF"/>
 
         <ImageView
             android:id="@+id/logo"
@@ -84,7 +89,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|end"
-                android:text="@string/forget_password"
+                android:text="@string/Forget_Password"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold" />
         </LinearLayout>

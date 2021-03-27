@@ -14,7 +14,6 @@ import java.util.List;
 
 public class CategoryViewModel extends ViewModel {
 
-    private static final String TAG = "CategoryViewModel.me";
     private FirebaseRepo repo;
     private MutableLiveData<List<Product>> productsLiveData;
     private MutableLiveData<AuthorizedUser> userLiveData;
@@ -37,7 +36,6 @@ public class CategoryViewModel extends ViewModel {
         repo.setOnFindUserListener(new FirebaseRepo.onFindUserListener() {
             @Override
             public void onSuccess(AuthorizedUser user) {
-                Log.d(TAG, "onSuccess: user->" + (user != null));
                 userLiveData.setValue(user);
             }
         });

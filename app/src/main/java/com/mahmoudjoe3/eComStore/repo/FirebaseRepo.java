@@ -28,7 +28,6 @@ import java.util.Calendar;
 import java.util.List;
 
 public class FirebaseRepo {
-    private static final String TAG = "FirebaseRepo";
     static FirebaseRepo instance;
 
     static StorageReference mProductImageReference;
@@ -194,13 +193,11 @@ public class FirebaseRepo {
                 imageUri.add(u);
 
         uploadImage(imageUri, 0, productKey);
-        Log.d(TAG, "insertProduct: " + mProduct);
     }
 
     void uploadImage(ArrayList<Uri> mImageUri, int i, String productKey) {
         if (i >= mImageUri.size()) {
             insertProductTodatabase();
-            Log.d(TAG, "onSuccess: Done");
             return;
         }
         if (mImageUri.get(i) != null) {
@@ -218,7 +215,6 @@ public class FirebaseRepo {
                                         public void onSuccess(Uri uri) {
                                             String imageUrl = uri.toString();
                                             mProduct.getmImageUri().add(imageUrl);
-                                            Log.d(TAG, "onSuccess: " + i + "  " + imageUrl);
                                             uploadImage(mImageUri, i + 1, productKey);
                                         }
                                     });
@@ -289,13 +285,11 @@ public class FirebaseRepo {
         deletedRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d(TAG, "onSuccess: ");
                 delete(product, i + 1);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "onFailure: " + e.getMessage());
             }
         });
 

@@ -41,7 +41,6 @@ import java.util.Map;
 
 public class TrackOrderFragment extends Fragment {
 
-    private static final String TAG = "TrackOrderFragment.me";
     //new
     Map<String, Integer> cat_freq = new HashMap<>();
     Button showSummary;
@@ -89,7 +88,7 @@ public class TrackOrderFragment extends Fragment {
             public void onClick(View v) {
                 if (!cat_freq.isEmpty()) {
                     BuildSheetDialog();
-                } else Toast.makeText(getActivity(), "No Orders yet..", Toast.LENGTH_SHORT).show();
+                } else Toast.makeText(getActivity(), R.string.No_Orders_yet, Toast.LENGTH_SHORT).show();
             }
         });
         return root;
@@ -109,13 +108,8 @@ public class TrackOrderFragment extends Fragment {
         Pie pie = AnyChart.pie();
         pie.data(data);
         pie.background().fill("#334253");
-        pie.title("Category Summary");
+        pie.title(getString(R.string.Category_Summary));
         pie.labels().position("outside");
-
-        pie.legend().title().enabled(true);
-        pie.legend().title()
-                .text("Retail channels")
-                .padding(0d, 0d, 10d, 0d);
 
         pie.legend()
                 .position("center-bottom")
@@ -176,7 +170,7 @@ public class TrackOrderFragment extends Fragment {
                 Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 startActivity(unrestrictedIntent);
             } catch (ActivityNotFoundException innerEx) {
-                Toast.makeText(getActivity(), "Please install a maps application", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.Please_install_a_maps_application, Toast.LENGTH_LONG).show();
             }
         }
     }

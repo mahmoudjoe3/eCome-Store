@@ -12,7 +12,6 @@ import java.util.List;
 
 public class UserCartViewModel extends ViewModel {
 
-    private static final String TAG = "UserCartViewModel.me";
     private FirebaseRepo repo;
     private MutableLiveData<AuthorizedUser> userLiveData;
     private MutableLiveData<List<Product>> productsLiveData;

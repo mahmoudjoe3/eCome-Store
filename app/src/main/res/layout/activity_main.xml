@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBG"
     android:padding="@dimen/_16sdp"
     tools:context=".ui.main.MainActivity">
 
@@ -11,6 +10,7 @@
         android:id="@+id/logo"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_250sdp"
+        android:layout_marginTop="30dp"
         android:scaleType="centerCrop"
         android:src="@drawable/logo_transparent" />
 

@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DesignSurface">
-    <option name="filePathToZoomLevelMap">
-      <map>
-        <entry key="..\:/Users/mahmoudjoe/Documents/GitHub/eCome-Store/app/src/main/res/layout/admin_fragment_add_product.xml" value="0.259375" />
-        <entry key="..\:/Users/mahmoudjoe/Documents/GitHub/eCome-Store/app/src/main/res/layout/admin_insert_image_layout.xml" value="0.259375" />
-      </map>
-    </option>
-  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

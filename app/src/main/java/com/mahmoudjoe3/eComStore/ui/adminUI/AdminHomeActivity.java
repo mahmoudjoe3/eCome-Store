@@ -2,7 +2,6 @@ package com.mahmoudjoe3.eComStore.ui.adminUI;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,8 +29,6 @@ import com.mahmoudjoe3.eComStore.ui.adminUI.viewOrder.AdminViewOrderActivity;
 import com.mahmoudjoe3.eComStore.ui.main.MainActivity;
 import com.mahmoudjoe3.eComStore.ui.userUI.productAdapter;
 import com.mahmoudjoe3.eComStore.viewModel.admin.AdminHomePageViewModel;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,21 +79,18 @@ public class AdminHomeActivity extends AppCompatActivity {
                         .setIcon(R.drawable.ic_delete)
                         .setMessage(R.string.Are_you_sure)
                         .setTitle(R.string.delete)
-                        .setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //delete here
-                                AlertDialog mAlertDialog = createDialoge(getString(R.string.Delete_Product)
-                                        , getString(R.string.Please_wait_while_Deleting_Product)).create();
-                                mAlertDialog.show();
-                                mViewModel.deleteProduct(product);
-                                mViewModel.setOnProductDeleted(new FirebaseRepo.onProductDeleted() {
-                                    @Override
-                                    public void onSuccess() {
-                                        mAlertDialog.dismiss();
-                                    }
-                                });
-                            }
+                        .setNegativeButton(R.string.delete, (dialog, which) -> {
+                            //delete here
+                            AlertDialog mAlertDialog = createDialoge(getString(R.string.Delete_Product)
+                                    , getString(R.string.Please_wait_while_Deleting_Product)).create();
+                            mAlertDialog.show();
+                            mViewModel.deleteProduct(product);
+                            mViewModel.setOnProductDeleted(new FirebaseRepo.onProductDeleted() {
+                                @Override
+                                public void onSuccess() {
+                                    mAlertDialog.dismiss();
+                                }
+                            });
                         })
                         .setPositiveButton(R.string.back, null)
                         .create().show();
@@ -121,12 +114,7 @@ public class AdminHomeActivity extends AppCompatActivity {
 
     private void fitchDataByLiveDate() {
         mViewModel = new ViewModelProvider(this).get(AdminHomePageViewModel.class);
-        mViewModel.getProductsLiveData(mAdmin.getPhone()).observe(this, new Observer<List<Product>>() {
-            @Override
-            public void onChanged(List<Product> productList) {
-                mAdapter.setProductList(productList);
-            }
-        });
+        mViewModel.getProductsLiveData(mAdmin.getPhone()).observe(this, productList -> mAdapter.setProductList(productList));
     }
 
     private void initRecycle() {

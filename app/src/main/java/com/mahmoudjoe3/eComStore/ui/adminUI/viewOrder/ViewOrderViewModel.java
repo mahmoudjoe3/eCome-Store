@@ -27,12 +27,9 @@ public class ViewOrderViewModel extends ViewModel {
 
     public LiveData<List<OrderUI>> getOrderList() {
         repo.fitchOrders(null);
-        repo.setonOrderRetrievedListener(new FirebaseRepo.onOrderRetrievedListener() {
-            @Override
-            public void onComplete(List<OrderDB> orderDBList) {
-                List<OrderUI> orderUIList = new ArrayList<>();
-                rec(0, orderDBList, orderUIList);
-            }
+        repo.setonOrderRetrievedListener(orderDBList -> {
+            List<OrderUI> orderUIList = new ArrayList<>();
+            rec(0, orderDBList, orderUIList);
         });
         return orderList;
     }
@@ -47,25 +44,22 @@ public class ViewOrderViewModel extends ViewModel {
             productsIds.add(subOrderDB.getProduct_Key());
         }
         repo.getProductListByIds(productsIds);
-        repo.setOnGetProductListener(new FirebaseRepo.OnGetProductListener() {
-            @Override
-            public void onSuccess(List<Product> products) {
-                List<SubOrderUI> subOrderUiList = new ArrayList<>();
-                int j = 0;
-                for (Product p : products) {
-                    subOrderUiList.add(new SubOrderUI(p, orderDBList.get(i).getOrderList().get(j).getQty()));
-                    j++;
-                }
-                orderUIList.add(new OrderUI(subOrderUiList
-                        , orderDBList.get(i).getId()
-                        , orderDBList.get(i).getPhone()
-                        , orderDBList.get(i).getTotalPrice()
-                        , orderDBList.get(i).getLocation()
-                        , orderDBList.get(i).getDeliveryDate()
-                        , orderDBList.get(i).isDelivered()
-                        , orderDBList.get(i).isApproved()));
-                rec(i + 1, orderDBList, orderUIList);
+        repo.setOnGetProductListener(products -> {
+            List<SubOrderUI> subOrderUiList = new ArrayList<>();
+            int j = 0;
+            for (Product p : products) {
+                subOrderUiList.add(new SubOrderUI(p, orderDBList.get(i).getOrderList().get(j).getQty()));
+                j++;
             }
+            orderUIList.add(new OrderUI(subOrderUiList
+                    , orderDBList.get(i).getId()
+                    , orderDBList.get(i).getPhone()
+                    , orderDBList.get(i).getTotalPrice()
+                    , orderDBList.get(i).getLocation()
+                    , orderDBList.get(i).getDeliveryDate()
+                    , orderDBList.get(i).isDelivered()
+                    , orderDBList.get(i).isApproved()));
+            rec(i + 1, orderDBList, orderUIList);
         });
     }
 

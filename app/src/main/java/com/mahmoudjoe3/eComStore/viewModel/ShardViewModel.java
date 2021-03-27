@@ -1,7 +1,5 @@
 package com.mahmoudjoe3.eComStore.viewModel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

@@ -1,10 +1,6 @@
 package com.mahmoudjoe3.eComStore.ui.adminUI.viewOrder;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,67 +102,50 @@ public class ViewOrderAdapter extends RecyclerView.Adapter<ViewOrderAdapter.Trac
         holder.vo_OrderExpectedDate.setText(String.format("    %s %s", context.getString(R.string.Expected_delivery), orderUI.getDeliveryDate()));
 
         holder.vo_TotalPrice.setText(String.format("%s EGP", adapter.getTotal()));
-        holder.vo_Location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String lat = orderUI.getLocation().split(",")[0];
-                String lng = orderUI.getLocation().split(",")[1];
-                if (onClickListener != null) onClickListener.onShowLocationClick(lat, lng);
-            }
+        holder.vo_Location.setOnClickListener(v -> {
+            String lat = orderUI.getLocation().split(",")[0];
+            String lng = orderUI.getLocation().split(",")[1];
+            if (onClickListener != null) onClickListener.onShowLocationClick(lat, lng);
         });
 
-        holder.vo_approveOrder.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("UseCompatLoadingForDrawables")
-            @Override
-            public void onClick(View v) {
+        holder.vo_approveOrder.setOnClickListener(v -> {
 
-                holder.vo_approveOrder.setBackground(context.getDrawable(R.drawable.solid_button_layout_ripple_red));
-                holder.vo_approveOrder.setText(R.string.ORDER_APPROVED_long_click_to_delivery);
-                holder.vo_SeekBar.setProgress(2);
-                if (onClickListener != null)
-                    onClickListener.onApproveClick(createDBOrder(orderUI, false, true));
-            }
+            holder.vo_approveOrder.setBackground(context.getDrawable(R.drawable.solid_button_layout_ripple_red));
+            holder.vo_approveOrder.setText(R.string.ORDER_APPROVED_long_click_to_delivery);
+            holder.vo_SeekBar.setProgress(2);
+            if (onClickListener != null)
+                onClickListener.onApproveClick(createDBOrder(orderUI, false, true));
         });
 
-        holder.vo_approveOrder.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (holder.vo_Location.getVisibility() == View.VISIBLE) {
-                    if (onClickListener != null) {
-                        new AlertDialog.Builder(context)
-                                .setMessage(R.string.You_Want_To_Delivery_This_Order)
-                                .setTitle(R.string.Order_Delivery)
-                                .setNegativeButton(R.string.Delivery, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //TODO you can cheek the distance between the delivery boy and the customer
-                                        holder.vo_approveOrder.setText(R.string.ORDER_DELIVERED);
-                                        holder.vo_SeekBar.setProgress(3);
-                                        holder.vo_approveOrder.setEnabled(false);
-                                        holder.vo_approveOrder.setBackground(context.getDrawable(R.drawable.solid_button_layout_ripple));
-                                        onClickListener.onDeliverClick(createDBOrder(orderUI, true, true));
-                                    }
-                                })
-                                .setPositiveButton(R.string.No, null)
-                                .create().show();
+        holder.vo_approveOrder.setOnLongClickListener(v -> {
+            if (holder.vo_Location.getVisibility() == View.VISIBLE) {
+                if (onClickListener != null) {
+                    new AlertDialog.Builder(context)
+                            .setMessage(R.string.You_Want_To_Delivery_This_Order)
+                            .setTitle(R.string.Order_Delivery)
+                            .setNegativeButton(R.string.Delivery, (dialog, which) -> {
+                                //TODO you can cheek the distance between the delivery boy and the customer
+                                holder.vo_approveOrder.setText(R.string.ORDER_DELIVERED);
+                                holder.vo_SeekBar.setProgress(3);
+                                holder.vo_approveOrder.setEnabled(false);
+                                holder.vo_approveOrder.setBackground(context.getDrawable(R.drawable.solid_button_layout_ripple));
+                                onClickListener.onDeliverClick(createDBOrder(orderUI, true, true));
+                            })
+                            .setPositiveButton(R.string.No, null)
+                            .create().show();
 
-                    }
                 }
-                return false;
             }
+            return false;
         });
 
         //init SeekBar
-        holder.vo_SeekBar.setCustomSectionTextArray(new BubbleSeekBar.CustomSectionTextArray() {
-            @NonNull
-            @Override
-            public SparseArray<String> onCustomize(int sectionCount, @NonNull SparseArray<String> array) {
-                array.clear();
-                array.put(0, context.getString(R.string.InProcessing));
-                array.put(1, context.getString(R.string.Shipped));
-                array.put(2, context.getString(R.string.Delivered));
-                return array;
-            }
+        holder.vo_SeekBar.setCustomSectionTextArray((sectionCount, array) -> {
+            array.clear();
+            array.put(0, context.getString(R.string.InProcessing));
+            array.put(1, context.getString(R.string.Shipped));
+            array.put(2, context.getString(R.string.Delivered));
+            return array;
         });
 
         if (orderUI.isDelivered())

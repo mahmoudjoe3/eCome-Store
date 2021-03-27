@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
@@ -26,7 +24,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.mahmoudjoe3.eComStore.Logic.MyLogic;
+import com.mahmoudjoe3.eComStore.logic.MyLogic;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
 import com.mahmoudjoe3.eComStore.prevalent.Prevalent;
@@ -86,12 +84,7 @@ public class UserHomeActivity extends AppCompatActivity {
 
         if (!MyLogic.haveNetworkConnection(this)) {
             snackbar.setActionTextColor(getResources().getColor(R.color.red))
-                    .setAction(R.string.Exit, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            UserHomeActivity.this.finish();
-                        }
-                    }).show();
+                    .setAction(R.string.Exit, v -> UserHomeActivity.this.finish()).show();
         } else if (snackbar.isShown()) snackbar.dismiss();
     }
 

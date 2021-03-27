@@ -1,7 +1,5 @@
 package com.mahmoudjoe3.eComStore.ui.userUI.trackOrder;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -30,13 +28,10 @@ public class TrackOrderViewModel extends ViewModel {
     public LiveData<List<OrderUI>> getOrderList(String userKey) {
         repo.fitchOrders(userKey);
 
-        repo.setonOrderRetrievedListener(new FirebaseRepo.onOrderRetrievedListener() {
-            @Override
-            public void onComplete(List<OrderDB> orderDBList) {
-                List<OrderUI> orderUIList = new ArrayList<>();
-                rec(0, orderDBList, orderUIList);
+        repo.setonOrderRetrievedListener(orderDBList -> {
+            List<OrderUI> orderUIList = new ArrayList<>();
+            rec(0, orderDBList, orderUIList);
 
-            }
         });
         return orderList;
     }
@@ -52,26 +47,23 @@ public class TrackOrderViewModel extends ViewModel {
         }
 
         repo.getProductListByIds(productsIds);
-        repo.setOnGetProductListener(new FirebaseRepo.OnGetProductListener() {
-            @Override
-            public void onSuccess(List<Product> products) {
-                List<SubOrderUI> subOrderUiList = new ArrayList<>();
-                int j = 0;
-                for (Product p : products) {
-                    subOrderUiList.add(new SubOrderUI(p, orderDBList.get(i).getOrderList().get(j).getQty()));
-                    j++;
-                }
-
-                orderUIList.add(new OrderUI(subOrderUiList
-                        , orderDBList.get(i).getId()
-                        , orderDBList.get(i).getPhone()
-                        , orderDBList.get(i).getTotalPrice()
-                        , orderDBList.get(i).getLocation()
-                        , orderDBList.get(i).getDeliveryDate()
-                        , orderDBList.get(i).isDelivered()
-                        , orderDBList.get(i).isApproved()));
-                rec(i + 1, orderDBList, orderUIList);
+        repo.setOnGetProductListener(products -> {
+            List<SubOrderUI> subOrderUiList = new ArrayList<>();
+            int j = 0;
+            for (Product p : products) {
+                subOrderUiList.add(new SubOrderUI(p, orderDBList.get(i).getOrderList().get(j).getQty()));
+                j++;
             }
+
+            orderUIList.add(new OrderUI(subOrderUiList
+                    , orderDBList.get(i).getId()
+                    , orderDBList.get(i).getPhone()
+                    , orderDBList.get(i).getTotalPrice()
+                    , orderDBList.get(i).getLocation()
+                    , orderDBList.get(i).getDeliveryDate()
+                    , orderDBList.get(i).isDelivered()
+                    , orderDBList.get(i).isApproved()));
+            rec(i + 1, orderDBList, orderUIList);
         });
     }
 }

@@ -1,7 +1,6 @@
 package com.mahmoudjoe3.eComStore.ui.userUI.trackOrder;
 
 import android.content.Context;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,26 +110,19 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
 
         holder.rOrderExpectedDate.setText("    "+context.getString(R.string.Expected_delivery)+" " + orderUI.getDeliveryDate());
         holder.rTotalPrice.setText(orderUI.getTotalPrice() + " EGP");
-        holder.rLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String lat = orderUI.getLocation().split(",")[0];
-                String lng = orderUI.getLocation().split(",")[1];
-                if (onShowLocationListener != null) onShowLocationListener.onClick(lat, lng);
-            }
+        holder.rLocation.setOnClickListener(v -> {
+            String lat = orderUI.getLocation().split(",")[0];
+            String lng = orderUI.getLocation().split(",")[1];
+            if (onShowLocationListener != null) onShowLocationListener.onClick(lat, lng);
         });
 
         //init SeekBar
-        holder.rSeekBar.setCustomSectionTextArray(new BubbleSeekBar.CustomSectionTextArray() {
-            @NonNull
-            @Override
-            public SparseArray<String> onCustomize(int sectionCount, @NonNull SparseArray<String> array) {
-                array.clear();
-                array.put(0, context.getString(R.string.InProcessing));
-                array.put(1, context.getString(R.string.Shipped));
-                array.put(2, context.getString(R.string.Delivered));
-                return array;
-            }
+        holder.rSeekBar.setCustomSectionTextArray((sectionCount, array) -> {
+            array.clear();
+            array.put(0, context.getString(R.string.InProcessing));
+            array.put(1, context.getString(R.string.Shipped));
+            array.put(2, context.getString(R.string.Delivered));
+            return array;
         });
 
         if (orderUI.isDelivered())

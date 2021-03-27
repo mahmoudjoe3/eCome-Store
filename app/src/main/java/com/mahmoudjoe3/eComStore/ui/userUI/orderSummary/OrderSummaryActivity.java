@@ -2,7 +2,6 @@ package com.mahmoudjoe3.eComStore.ui.userUI.orderSummary;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -15,7 +14,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -26,10 +24,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.mahmoudjoe3.eComStore.Logic.MyLogic;
+import com.mahmoudjoe3.eComStore.logic.MyLogic;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
 import com.mahmoudjoe3.eComStore.model.OrderDB;
@@ -169,14 +165,11 @@ public class OrderSummaryActivity extends AppCompatActivity {
         new AlertDialog.Builder(OrderSummaryActivity.this)
                 .setMessage(R.string.Once_you_place_order_you_cant_remove_it)
                 .setTitle(R.string.placing_an_order)
-                .setNegativeButton(R.string.Place, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (!sUserAddress.getTag().toString().toLowerCase().equals("no"))
-                            upLoadOrder();
-                        else {
-                            sPickLocationBtn.setError(getString(R.string.you_should_enter_your_address));
-                        }
+                .setNegativeButton(R.string.Place, (dialog, which) -> {
+                    if (!sUserAddress.getTag().toString().toLowerCase().equals("no"))
+                        upLoadOrder();
+                    else {
+                        sPickLocationBtn.setError(getString(R.string.you_should_enter_your_address));
                     }
                 })
                 .setPositiveButton(R.string.back, null)
@@ -211,12 +204,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
             public void onFailure() {
                 if (!MyLogic.haveNetworkConnection(OrderSummaryActivity.this)) {
                     Snackbar.make(findViewById(android.R.id.content), R.string.Error_No_internet_connection, Snackbar.LENGTH_LONG)
-                            .setAction(R.string.Exit, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    finish();
-                                }
-                            })
+                            .setAction(R.string.Exit, v -> finish())
                             .setActionTextColor(getResources().getColor(R.color.red)).show();
                 }
             }
@@ -241,13 +229,11 @@ public class OrderSummaryActivity extends AppCompatActivity {
             if (!tempAdmin.equals(p.getProduct().getmAdmin().getName())) {
                 tempAdmin = p.getProduct().getmAdmin().getName();
                 H.put(tempAdmin, new ArrayList<>());
-                H.get(tempAdmin).add(p);
-            } else {
-                H.get(tempAdmin).add(p);
             }
+            H.get(tempAdmin).add(p);
         }
         for (Map.Entry<String, List<SubOrderUI>> entry : H.entrySet()) {
-            Float tot = 0f;
+            float tot = 0f;
             for (SubOrderUI s : entry.getValue()) {
                 tot += (s.getProduct().getmPrice() * s.getQty());
             }
@@ -277,33 +263,30 @@ public class OrderSummaryActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(OrderSummaryActivity.this
                 , Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             //get location
-            locationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                @Override
-                public void onComplete(@NonNull Task<Location> task) {
-                    Location location = task.getResult();
-                    if (location != null) {
-                        try {
-                            Geocoder geocoder = new Geocoder(OrderSummaryActivity.this
-                                    , Locale.getDefault());
-                            List<Address> addresses = geocoder.getFromLocation(
-                                    location.getLatitude()
-                                    , location.getLongitude()
-                                    , 1
-                            );
-                            //get location
-                            latitude = String.valueOf(addresses.get(0).getLatitude());
-                            longitude = String.valueOf(addresses.get(0).getLongitude());
-                            addressLine = addresses.get(0).getAddressLine(0);
-                            sUserAddress.setText(addressLine);
-                            sUserAddress.setTag("yes");
-                            sShowInMap.setVisibility(View.VISIBLE);
+            locationProviderClient.getLastLocation().addOnCompleteListener(task -> {
+                Location location = task.getResult();
+                if (location != null) {
+                    try {
+                        Geocoder geocoder = new Geocoder(OrderSummaryActivity.this
+                                , Locale.getDefault());
+                        List<Address> addresses = geocoder.getFromLocation(
+                                location.getLatitude()
+                                , location.getLongitude()
+                                , 1
+                        );
+                        //get location
+                        latitude = String.valueOf(addresses.get(0).getLatitude());
+                        longitude = String.valueOf(addresses.get(0).getLongitude());
+                        addressLine = addresses.get(0).getAddressLine(0);
+                        sUserAddress.setText(addressLine);
+                        sUserAddress.setTag("yes");
+                        sShowInMap.setVisibility(View.VISIBLE);
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        Toast.makeText(OrderSummaryActivity.this, R.string.open_the_GPS_please, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+                } else {
+                    Toast.makeText(OrderSummaryActivity.this, R.string.open_the_GPS_please, Toast.LENGTH_SHORT).show();
                 }
             });
         } else {

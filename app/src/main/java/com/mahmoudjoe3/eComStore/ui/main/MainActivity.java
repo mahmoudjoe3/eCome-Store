@@ -1,7 +1,6 @@
 package com.mahmoudjoe3.eComStore.ui.main;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -16,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.mahmoudjoe3.eComStore.BuildConfig;
-import com.mahmoudjoe3.eComStore.Logic.MyLogic;
+import com.mahmoudjoe3.eComStore.logic.MyLogic;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.Admin;
 import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
@@ -87,21 +86,12 @@ public class MainActivity extends AppCompatActivity {
                                 .setTitle(R.string.Update_Version)
                                 .setCancelable(false)
                                 .setMessage(getResources().getString(R.string.app_name) + getString(R.string.has_new_version) + NewVersion + getString(R.string.please_update))
-                                .setPositiveButton(R.string.Update, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                                        intent.setData(Uri.parse(Prevalent.APP_URL));
-                                        startActivity(intent);
-                                    }
+                                .setPositiveButton(R.string.Update, (dialog, which) -> {
+                                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setData(Uri.parse(Prevalent.APP_URL));
+                                    startActivity(intent);
                                 })
-                                .setNegativeButton(R.string.Exit, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        MainActivity.this.finish();
-
-                                    }
-                                })
+                                .setNegativeButton(R.string.Exit, (dialog, which) -> MainActivity.this.finish())
                                 .create();
                         mAlertDialog.show();
 

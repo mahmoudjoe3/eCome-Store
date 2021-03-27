@@ -1,4 +1,4 @@
-package com.mahmoudjoe3.eComStore.Logic;
+package com.mahmoudjoe3.eComStore.logic;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

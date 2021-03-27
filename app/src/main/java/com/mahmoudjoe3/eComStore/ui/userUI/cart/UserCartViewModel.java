@@ -24,23 +24,13 @@ public class UserCartViewModel extends ViewModel {
 
     public LiveData<List<Product>> getProductsByIds(List<String> productIds) {
         repo.getProductListByIds(productIds);
-        repo.setOnGetProductListener(new FirebaseRepo.OnGetProductListener() {
-            @Override
-            public void onSuccess(List<Product> products) {
-                productsLiveData.setValue(products);
-            }
-        });
+        repo.setOnGetProductListener(products -> productsLiveData.setValue(products));
         return productsLiveData;
     }
 
     public LiveData<AuthorizedUser> getUserLiveData(String userId) {
         repo.getUserById(userId);
-        repo.setOnFindUserListener(new FirebaseRepo.onFindUserListener() {
-            @Override
-            public void onSuccess(AuthorizedUser user) {
-                userLiveData.setValue(user);
-            }
-        });
+        repo.setOnFindUserListener(user -> userLiveData.setValue(user));
         return userLiveData;
     }
 

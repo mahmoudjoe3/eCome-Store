@@ -1,6 +1,5 @@
 package com.mahmoudjoe3.eComStore.ui.userUI.cart;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -13,13 +12,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.mahmoudjoe3.eComStore.Logic.MyLogic;
+import com.mahmoudjoe3.eComStore.logic.MyLogic;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
 import com.mahmoudjoe3.eComStore.model.OrderUI;
@@ -78,12 +76,7 @@ public class UserCartActivity extends AppCompatActivity {
             card1.setVisibility(View.GONE);
             card2.setVisibility(View.GONE);
             snackbar.setActionTextColor(getResources().getColor(R.color.red))
-                    .setAction(R.string.Exit, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            UserCartActivity.this.finish();
-                        }
-                    }).show();
+                    .setAction(R.string.Exit, v -> UserCartActivity.this.finish()).show();
         } else if (snackbar.isShown()) {
             card1.setVisibility(View.VISIBLE);
             card2.setVisibility(View.VISIBLE);
@@ -93,42 +86,33 @@ public class UserCartActivity extends AppCompatActivity {
 
         supOrderAdapter = new SupOrderAdapter(UserCartActivity.this);
 
-        cartViewModel.getUserLiveData(userKey).observe(UserCartActivity.this, new Observer<AuthorizedUser>() {
-            @Override
-            public void onChanged(AuthorizedUser user) {
-                mUser = user;
-                cartViewModel.getProductsByIds(mUser.getCartList()).observe(UserCartActivity.this, new Observer<List<Product>>() {
-                    @Override
-                    public void onChanged(List<Product> products) {
-                        List<SubOrderUI> list = new ArrayList<>();
-                        for (Product p : products) {
-                            list.add(new SubOrderUI(p, 1));
-                        }
-                        supOrderAdapter.setList(list);
-                    }
-                });
-            }
+        cartViewModel.getUserLiveData(userKey).observe(UserCartActivity.this, user -> {
+            mUser = user;
+            cartViewModel.getProductsByIds(mUser.getCartList()).observe(UserCartActivity.this, products -> {
+                List<SubOrderUI> list = new ArrayList<>();
+                for (Product p : products) {
+                    list.add(new SubOrderUI(p, 1));
+                }
+                supOrderAdapter.setList(list);
+            });
         });
 
 
         oListview.setAdapter(supOrderAdapter);
         oListview.setLayoutManager(new LinearLayoutManager(this));
-        supOrderAdapter.getTotalPriceLiveData().observe(this, new Observer<Float>() {
-            @Override
-            public void onChanged(Float totalPrice) {
+        supOrderAdapter.getTotalPriceLiveData().observe(this, totalPrice -> {
 
-                oSubTotal.setText(totalPrice + " EGP");
-                total = totalPrice;
-                String temp = "";
-                if (totalPrice < 350) {
-                    temp = getString(R.string.add) + "<b style=\"color:black;\">" + (350 - totalPrice) + "EGP" + "</b>"
-                            + getString(R.string.of_eligible_items_to_your_order_to_qualify_for) +
-                            "<b style=\"color:black;\">" + getString(R.string.FREE_Shipping) + "</b>";
-                } else
-                    temp = getString(R.string.Your_order_qualifies_for)+" " + "<b style=\"color:black;\">" + getString(R.string.FREE_Shipping) + "</b>";
+            oSubTotal.setText(totalPrice + " EGP");
+            total = totalPrice;
+            String temp = "";
+            if (totalPrice < 350) {
+                temp = getString(R.string.add) + "<b style=\"color:black;\">" + (350 - totalPrice) + "EGP" + "</b>"
+                        + getString(R.string.of_eligible_items_to_your_order_to_qualify_for) +
+                        "<b style=\"color:black;\">" + getString(R.string.FREE_Shipping) + "</b>";
+            } else
+                temp = getString(R.string.Your_order_qualifies_for)+" " + "<b style=\"color:black;\">" + getString(R.string.FREE_Shipping) + "</b>";
 
-                oFreeShipTXT.setText(Html.fromHtml(temp));
-            }
+            oFreeShipTXT.setText(Html.fromHtml(temp));
         });
 
         supOrderAdapter.setmOrderOnClickListener(new SupOrderAdapter.orderOnClickListener() {
@@ -150,19 +134,16 @@ public class UserCartActivity extends AppCompatActivity {
                         .setIcon(R.drawable.ic_delete)
                         .setMessage(getString(R.string.Are_you_sure))
                         .setTitle(R.string.Remove_Form_Cart)
-                        .setNegativeButton(R.string.Remove, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //delete here
-                                cartViewModel.removeCart(product.getmId(), mUser);
-                                for (SubOrderUI s : supOrderAdapter.getList()) {
-                                    if (s.getProduct().getmId() == product.getmId()) {
-                                        supOrderAdapter.getList().remove(s);
-                                        break;
-                                    }
+                        .setNegativeButton(R.string.Remove, (dialog, which) -> {
+                            //delete here
+                            cartViewModel.removeCart(product.getmId(), mUser);
+                            for (SubOrderUI s : supOrderAdapter.getList()) {
+                                if (s.getProduct().getmId() == product.getmId()) {
+                                    supOrderAdapter.getList().remove(s);
+                                    break;
                                 }
-                                supOrderAdapter.setList(supOrderAdapter.getList());
                             }
+                            supOrderAdapter.setList(supOrderAdapter.getList());
                         })
                         .setPositiveButton(R.string.back, null)
                         .create().show();
@@ -170,20 +151,17 @@ public class UserCartActivity extends AppCompatActivity {
 
         });
 
-        oGoToCheckout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (supOrderAdapter.getList().size() > 0) {
-                    OrderUI order = new OrderUI(supOrderAdapter.getList());
-                    Float totalPrice = total;
-                    Intent intent = new Intent(UserCartActivity.this, OrderSummaryActivity.class);
-                    intent.putExtra(OrderSummaryActivity.USER_KEY, mUser);
-                    intent.putExtra(OrderSummaryActivity.ORDER_KEY, order);
-                    intent.putExtra(OrderSummaryActivity.TotalPrice_KEY, totalPrice);
-                    startActivity(intent);
-                } else
-                    Toast.makeText(UserCartActivity.this, R.string.There_is_No_Cart, Toast.LENGTH_SHORT).show();
-            }
+        oGoToCheckout.setOnClickListener(v -> {
+            if (supOrderAdapter.getList().size() > 0) {
+                OrderUI order = new OrderUI(supOrderAdapter.getList());
+                Float totalPrice = total;
+                Intent intent = new Intent(UserCartActivity.this, OrderSummaryActivity.class);
+                intent.putExtra(OrderSummaryActivity.USER_KEY, mUser);
+                intent.putExtra(OrderSummaryActivity.ORDER_KEY, order);
+                intent.putExtra(OrderSummaryActivity.TotalPrice_KEY, totalPrice);
+                startActivity(intent);
+            } else
+                Toast.makeText(UserCartActivity.this, R.string.There_is_No_Cart, Toast.LENGTH_SHORT).show();
         });
     }
 }

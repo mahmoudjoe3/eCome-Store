@@ -21,13 +21,11 @@ import java.util.List;
 public class ViewSubOrderAdapter extends RecyclerView.Adapter<ViewSubOrderAdapter.ViewOrderViewHolder> {
     private List<SubOrderUI> list;
     private Context context;
-    private String admin;
     private Float Total;
 
     public ViewSubOrderAdapter(Context context, String admin, List<SubOrderUI> list) {
         this.list = new ArrayList<>();
         this.context = context;
-        this.admin = admin;
         Total = 0f;
         this.list = getListByAdminName(list, admin);
     }

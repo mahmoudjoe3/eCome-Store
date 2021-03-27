@@ -5,7 +5,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 class PagerAdapter extends FragmentPagerAdapter {
-    private int NUM_ITEMS = 2;
 
     public PagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
@@ -14,7 +13,7 @@ class PagerAdapter extends FragmentPagerAdapter {
     // Returns total number of pages
     @Override
     public int getCount() {
-        return NUM_ITEMS;
+        return 2;
     }
 
     // Returns the fragment to display for that page

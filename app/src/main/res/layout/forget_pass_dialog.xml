@@ -25,10 +25,10 @@
         android:layout_marginBottom="4dp"
         android:hint="@string/enter_your_phone_number"
         android:inputType="textEmailAddress"
-        android:maxLength="11" />
+        android:maxLength="11"
+        android:autofillHints="" />
 
     <ProgressBar
-        android:id="@+id/forget_dialog_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

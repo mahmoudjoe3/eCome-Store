@@ -2,7 +2,6 @@ package com.mahmoudjoe3.eComStore.ui.userUI;
 
 import android.content.Context;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,12 +109,9 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductV
         holder.mProductTitle.setText(currentProduct.getmTitle());
         holder.mProductPrice.setText(currentProduct.getmPrice() + " EGP");
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onClick(currentProduct);
-                }
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onClick(currentProduct);
             }
         });
         if (admin) {
@@ -127,14 +123,11 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductV
                 holder.mProductStoke.setText(R.string.SOLD_OUT);
                 holder.mProductStoke.setTextColor(context.getResources().getColor(R.color.colorOutStoke));
             }
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (listener != null) {
-                        listener.onDelete(currentProduct);
-                    }
-                    return false;
+            holder.itemView.setOnLongClickListener(v -> {
+                if (listener != null) {
+                    listener.onDelete(currentProduct);
                 }
+                return false;
             });
         } else {//user
             String temp = context.getString(R.string.sold_by)+ "<b style=\"color:black;\">" + currentProduct.getmAdmin().getName() + "</b>";
@@ -164,21 +157,15 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.ProductV
                 holder.mAdd_cart.setImageResource(R.drawable.ic_add_cart);
             }
 
-            holder.mAdd_cart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onImageButtonClickListener != null) {
-                        onImageButtonClickListener.onCartClick(currentProduct, (ImageButton) v);
-                    }
+            holder.mAdd_cart.setOnClickListener(v -> {
+                if (onImageButtonClickListener != null) {
+                    onImageButtonClickListener.onCartClick(currentProduct, (ImageButton) v);
                 }
             });
 
-            holder.mAdd_fav.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onImageButtonClickListener != null) {
-                        onImageButtonClickListener.onFavClick(currentProduct, (ImageButton) v);
-                    }
+            holder.mAdd_fav.setOnClickListener(v -> {
+                if (onImageButtonClickListener != null) {
+                    onImageButtonClickListener.onFavClick(currentProduct, (ImageButton) v);
                 }
             });
         }

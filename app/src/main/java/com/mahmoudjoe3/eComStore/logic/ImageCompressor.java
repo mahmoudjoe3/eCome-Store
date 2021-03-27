@@ -1,4 +1,4 @@
-package com.mahmoudjoe3.eComStore.Logic;
+package com.mahmoudjoe3.eComStore.logic;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,8 +22,8 @@ public class ImageCompressor {
         //convert Base64 to byte array
         byte[] bytes = Base64.decode(code, Base64.DEFAULT);
         //convert byte array to bitmap
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        return bitmap;
+
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
 
     //                new Handler().postDelayed(new Runnable() {

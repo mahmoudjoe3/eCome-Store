@@ -1,7 +1,6 @@
 package com.mahmoudjoe3.eComStore.ui.main;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,16 +15,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.mahmoudjoe3.eComStore.Logic.MyLogic;
+import com.mahmoudjoe3.eComStore.logic.MyLogic;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.Admin;
 import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
@@ -186,28 +182,25 @@ public class LoginActivity extends AppCompatActivity {
         ((TextView) view.findViewById(R.id.forget_dialog_hint)).setHint(R.string.Enter_Your_Phone_Number);
         progress = createDialoge(getString(R.string.OTP_Request), getString(R.string.Wait_till_we_send_OTP_Code)).create();
         builder.setView(view)
-                .setPositiveButton(R.string.Get_Code, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
+                .setPositiveButton(R.string.Get_Code, (dialog, id) -> {
 
-                        phone_Dialog = ((TextView) view.findViewById(R.id.forget_dialog_hint)).getText().toString();
-                        if (phone_Dialog.isEmpty() || phone_Dialog.length() != STANDARD_PHONE_SIZE)
-                            Toast.makeText(LoginActivity.this, R.string.invalid_Phone_Number, Toast.LENGTH_SHORT).show();
-                        else {
-                            mFirebaseAuthViewModel.isUser(phone_Dialog, new FirebaseAuthRepo.OnUserValidationListener() {
-                                @Override
-                                public void onUserValid() {
-                                    progress.show();
-                                    sendVerificationPhoneCodeMSG();
-                                }
+                    phone_Dialog = ((TextView) view.findViewById(R.id.forget_dialog_hint)).getText().toString();
+                    if (phone_Dialog.isEmpty() || phone_Dialog.length() != STANDARD_PHONE_SIZE)
+                        Toast.makeText(LoginActivity.this, R.string.invalid_Phone_Number, Toast.LENGTH_SHORT).show();
+                    else {
+                        mFirebaseAuthViewModel.isUser(phone_Dialog, new FirebaseAuthRepo.OnUserValidationListener() {
+                            @Override
+                            public void onUserValid() {
+                                progress.show();
+                                sendVerificationPhoneCodeMSG();
+                            }
 
-                                @Override
-                                public void onUserNotValid() {
-                                    Toast.makeText(LoginActivity.this, R.string.You_are_not_a_User_Please_register_first, Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                            @Override
+                            public void onUserNotValid() {
+                                Toast.makeText(LoginActivity.this, R.string.You_are_not_a_User_Please_register_first, Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
-                        }
                     }
                 })
                 .setNegativeButton(R.string.back, null);
@@ -258,21 +251,18 @@ public class LoginActivity extends AppCompatActivity {
         progress2.show();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(VerificationId, smsCode);
-        auth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    progress.dismiss();
-                    createResetPasswordDialog().show();
-                    progress2.dismiss();
-                    Toast.makeText(LoginActivity.this, R.string.Verified_Successfully, Toast.LENGTH_SHORT).show();
+        auth.signInWithCredential(credential).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                progress.dismiss();
+                createResetPasswordDialog().show();
+                progress2.dismiss();
+                Toast.makeText(LoginActivity.this, R.string.Verified_Successfully, Toast.LENGTH_SHORT).show();
 
-                } else {
-                    progress.dismiss();
-                    progress2.dismiss();
-                    Toast.makeText(LoginActivity.this, R.string.verification_Code_Failed, Toast.LENGTH_SHORT).show();
+            } else {
+                progress.dismiss();
+                progress2.dismiss();
+                Toast.makeText(LoginActivity.this, R.string.verification_Code_Failed, Toast.LENGTH_SHORT).show();
 
-                }
             }
         });
     }
@@ -283,19 +273,11 @@ public class LoginActivity extends AppCompatActivity {
         ((TextView) view.findViewById(R.id.forget_dialog_title)).setText(R.string.Verification);
         ((TextView) view.findViewById(R.id.forget_dialog_hint)).setHint(R.string.Enter_Verification_Code);
         builder.setCancelable(false).setView(view)
-                .setPositiveButton(R.string.Verify, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        String enteredCode = ((TextView) view.findViewById(R.id.forget_dialog_hint)).getText().toString();
-                        verifyCode(enteredCode);
-                    }
+                .setPositiveButton(R.string.Verify, (dialog, id) -> {
+                    String enteredCode = ((TextView) view.findViewById(R.id.forget_dialog_hint)).getText().toString();
+                    verifyCode(enteredCode);
                 })
-                .setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                .setNegativeButton(R.string.back, (dialog, which) -> dialog.dismiss());
         return builder.create();
     }
 
@@ -303,22 +285,14 @@ public class LoginActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.forget_password_reset_dialog, null);
         builder.setCancelable(false).setView(view)
-                .setPositiveButton(R.string.Reset, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        String newPassword = ((TextView) view.findViewById(R.id.dialog_reset_pass)).getText().toString();
-                        boolean isAdmin = mNotAdminTxt.getVisibility() == View.VISIBLE;
-                        mFirebaseAuthViewModel.forgetPassword(isAdmin, phone_Dialog, newPassword);
-                        //TODO phone not exist hundaling
-                        Toast.makeText(LoginActivity.this, R.string.Password_rest_successfully, Toast.LENGTH_SHORT).show();
-                    }
+                .setPositiveButton(R.string.Reset, (dialog, id) -> {
+                    String newPassword = ((TextView) view.findViewById(R.id.dialog_reset_pass)).getText().toString();
+                    boolean isAdmin = mNotAdminTxt.getVisibility() == View.VISIBLE;
+                    mFirebaseAuthViewModel.forgetPassword(isAdmin, phone_Dialog, newPassword);
+                    //TODO phone not exist hundaling
+                    Toast.makeText(LoginActivity.this, R.string.Password_rest_successfully, Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                .setNegativeButton(R.string.back, (dialog, which) -> dialog.dismiss());
         return builder.create();
     }
 
@@ -358,12 +332,7 @@ public class LoginActivity extends AppCompatActivity {
 
         return new AlertDialog.Builder(this)
                 .setView(view)
-                .setCancelable(false).setNegativeButton(R.string.Cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                .setCancelable(false).setNegativeButton(R.string.Cancel, (dialog, which) -> dialog.dismiss());
     }
 
 

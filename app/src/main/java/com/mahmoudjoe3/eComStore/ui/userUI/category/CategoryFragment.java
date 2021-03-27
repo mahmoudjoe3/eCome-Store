@@ -1,9 +1,7 @@
 package com.mahmoudjoe3.eComStore.ui.userUI.category;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -77,21 +74,13 @@ public class CategoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        sort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sortByDialog().show();
-            }
-        });
+        sort.setOnClickListener(v -> sortByDialog().show());
 
-        showAsGrid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (showAsGrid.getTag().equals("grid")) {
-                    MakeGrid();
-                } else MakeList();
-                AdapterListener();
-            }
+        showAsGrid.setOnClickListener(v -> {
+            if (showAsGrid.getTag().equals("grid")) {
+                MakeGrid();
+            } else MakeList();
+            AdapterListener();
         });
 
         AdapterListener();
@@ -102,17 +91,14 @@ public class CategoryFragment extends Fragment {
         View view = getLayoutInflater().inflate(R.layout.sortby_dialoge, null);
         RadioButton highToLow = view.findViewById(R.id.highToLow);
         builder.setView(view)
-                .setPositiveButton(R.string.sort, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
+                .setPositiveButton(R.string.sort, (dialog, id) -> {
 
-                        if (highToLow.isChecked()) {
-                            sortType = getString(R.string.HighToLow);
-                            SortByPrice(sortType);
-                        } else {
-                            sortType = getString(R.string.LowToHigh);
-                            SortByPrice(sortType);
-                        }
+                    if (highToLow.isChecked()) {
+                        sortType = getString(R.string.HighToLow);
+                        SortByPrice(sortType);
+                    } else {
+                        sortType = getString(R.string.LowToHigh);
+                        SortByPrice(sortType);
                     }
                 })
                 .setNegativeButton(R.string.back, null);
@@ -201,29 +187,16 @@ public class CategoryFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        categoryViewModel.getProductsLiveData(null, Cat).observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
-            @Override
-            public void onChanged(List<Product> products) {
-                categoryViewModel.getUserLiveData(userId).observe(getViewLifecycleOwner(), new Observer<AuthorizedUser>() {
-                    @Override
-                    public void onChanged(AuthorizedUser user) {
-                        mUser = user;
-                        if (mProducts == null || mProducts.isEmpty())
-                            mProducts = products;
+        categoryViewModel.getProductsLiveData(null, Cat).observe(getViewLifecycleOwner(), products -> categoryViewModel.getUserLiveData(userId).observe(getViewLifecycleOwner(), user -> {
+            mUser = user;
+            if (mProducts == null || mProducts.isEmpty())
+                mProducts = products;
 
-                        productAdapter.setProductList(mProducts, user);
-                    }
-                });
-            }
-        });
+            productAdapter.setProductList(mProducts, user);
+        }));
 
         ShardViewModel shardViewModel = new ViewModelProvider(getActivity()).get(ShardViewModel.class);
-        shardViewModel.getLiveSearch().observe(getActivity(), new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                productAdapter.getFilter().filter(s);
-            }
-        });
+        shardViewModel.getLiveSearch().observe(getActivity(), s -> productAdapter.getFilter().filter(s));
 
     }
 

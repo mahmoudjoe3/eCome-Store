@@ -1,7 +1,5 @@
 package com.mahmoudjoe3.eComStore.ui.userUI.category;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -33,12 +31,7 @@ public class CategoryViewModel extends ViewModel {
 
     public LiveData<AuthorizedUser> getUserLiveData(String userId) {
         repo.getUserById(userId);
-        repo.setOnFindUserListener(new FirebaseRepo.onFindUserListener() {
-            @Override
-            public void onSuccess(AuthorizedUser user) {
-                userLiveData.setValue(user);
-            }
-        });
+        repo.setOnFindUserListener(user -> userLiveData.setValue(user));
         return userLiveData;
     }
 

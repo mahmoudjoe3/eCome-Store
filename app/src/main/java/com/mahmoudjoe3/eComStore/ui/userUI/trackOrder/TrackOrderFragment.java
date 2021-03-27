@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,51 +44,38 @@ public class TrackOrderFragment extends Fragment {
     Map<String, Integer> cat_freq = new HashMap<>();
     Button showSummary;
     ProgressBar progressBar;
-    private TrackOrderViewModel trackOrderViewModel;
     private RecyclerView mContainer;
     private TrackOrdersAdapter trackOrdersAdapter;
-    private String userId;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        trackOrderViewModel = new ViewModelProvider(this).get(TrackOrderViewModel.class);
+        TrackOrderViewModel trackOrderViewModel = new ViewModelProvider(this).get(TrackOrderViewModel.class);
         View root = inflater.inflate(R.layout.user_fragment_track_order, container, false);
 
         NavigationView navView = (NavigationView) getActivity().findViewById(R.id.nav_view);
-        userId = ((TextView) navView.getHeaderView(0).findViewById(R.id.profile_phone)).getText().toString();
+        String userId = ((TextView) navView.getHeaderView(0).findViewById(R.id.profile_phone)).getText().toString();
         mContainer = root.findViewById(R.id.track_container);
 
         trackOrdersAdapter = new TrackOrdersAdapter(getActivity());
 
-        trackOrderViewModel.getOrderList(userId).observe(getViewLifecycleOwner(), new Observer<List<OrderUI>>() {
-            @Override
-            public void onChanged(List<OrderUI> orderUIS) {
-                trackOrdersAdapter.setList(orderUIS);
-                mContainer.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-                mContainer.setAdapter(trackOrdersAdapter);
-                //new
-                if (!orderUIS.isEmpty()) {
-                    cat_freq = fill_cat_freq_Map(orderUIS);
-                }
+        trackOrderViewModel.getOrderList(userId).observe(getViewLifecycleOwner(), orderUIS -> {
+            trackOrdersAdapter.setList(orderUIS);
+            mContainer.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            mContainer.setAdapter(trackOrdersAdapter);
+            //new
+            if (!orderUIS.isEmpty()) {
+                cat_freq = fill_cat_freq_Map(orderUIS);
+            }
 
-            }
         });
-        trackOrdersAdapter.setOnShowLocationListener(new TrackOrdersAdapter.onShowLocationListener() {
-            @Override
-            public void onClick(String Lat, String Long) {
-                showMap(Lat, Long);
-            }
-        });
+        trackOrdersAdapter.setOnShowLocationListener((Lat, Long) -> showMap(Lat, Long));
 
         //new
         showSummary = root.findViewById(R.id.showSummary);
-        showSummary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!cat_freq.isEmpty()) {
-                    BuildSheetDialog();
-                } else Toast.makeText(getActivity(), R.string.No_Orders_yet, Toast.LENGTH_SHORT).show();
-            }
+        showSummary.setOnClickListener(v -> {
+            if (!cat_freq.isEmpty()) {
+                BuildSheetDialog();
+            } else Toast.makeText(getActivity(), R.string.No_Orders_yet, Toast.LENGTH_SHORT).show();
         });
         return root;
     }
@@ -181,11 +167,6 @@ public class TrackOrderFragment extends Fragment {
     public void onStart() {
         super.onStart();
         ShardViewModel shardViewModel = new ViewModelProvider(getActivity()).get(ShardViewModel.class);
-        shardViewModel.getLiveSearch().observe(getActivity(), new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                trackOrdersAdapter.getFilter().filter(s);
-            }
-        });
+        shardViewModel.getLiveSearch().observe(getActivity(), s -> trackOrdersAdapter.getFilter().filter(s));
     }
 }

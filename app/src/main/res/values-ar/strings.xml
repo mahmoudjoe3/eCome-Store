@@ -24,7 +24,7 @@
     <string name="Are_you_sure">هل أنت متأكد؟</string>
     <string name="delete">حذف</string>
     <string name="Delete_Product">حذف المنتج</string>
-    <string name="Please_wait_while_Deleting_Product">الرجاء الانتظار أثناء حذف المنتج ...</string>
+    <string name="Please_wait_while_Deleting_Product">الرجاء الانتظار أثناء حذف المنتج …</string>
     <string name="Please_install_a_maps_application">الرجاء تثبيت تطبيق الخرائط</string>
     <string name="ORDER_APPROVED_long_click_to_delivery">تمت الموافقة على طلب انقر لفترة طويلة للتسليم</string>
     <string name="Expected_delivery">توصيلة متوقعة</string>
@@ -42,14 +42,14 @@
     <string name="Phone_is_incorrect">الهاتف غير صحيح!</string>
     <string name="Password_is_Empty">كلمة المرور فارغة!</string>
     <string name="User_Login">تسجيل دخول المستخدم</string>
-    <string name="Please_wait_while_Authentication_checked">الرجاء الانتظار حتى يتم التحقق من المصادقة ...</string>
+    <string name="Please_wait_while_Authentication_checked">الرجاء الانتظار حتى يتم التحقق من المصادقة …</string>
     <string name="password_incorrect">كلمة المرور خاطئة</string>
     <string name="Login_Failed_You_should_have_account">فشل تسجيل الدخول ، يجب أن يكون لديك حساب</string>
     <string name="Network_error_please_try_again_latter">خطأ في الشبكة ، يرجى المحاولة مرة أخرى في وقت لاحق ..</string>
     <string name="Forget_Password">" نسيت كلمة السر"</string>
     <string name="Enter_Your_Phone_Number">أدخل رقم هاتفك</string>
     <string name="OTP_Request">طلب OTP</string>
-    <string name="Wait_till_we_send_OTP_Code">انتظر حتى نرسل رمز OTP ...</string>
+    <string name="Wait_till_we_send_OTP_Code">انتظر حتى نرسل رمز OTP …</string>
     <string name="Get_Code">الحصول على رمز</string>
     <string name="invalid_Phone_Number">رقم الهاتف غير صحيح</string>
     <string name="You_are_not_a_User_Please_register_first">أنت لست مستخدم الرجاء التسجيل أولا</string>
@@ -57,7 +57,7 @@
     <string name="Request_time_out">نفذ الوقت</string>
     <string name="Verification_Failed">فشل التحقق</string>
     <string name="OTP_Verify">تحقق من OTP</string>
-    <string name="Please_Wait_Until_Code_is_verified">الرجاء الانتظار حتى يتم التحقق من الرمز ...</string>
+    <string name="Please_Wait_Until_Code_is_verified">الرجاء الانتظار حتى يتم التحقق من الرمز …</string>
     <string name="Verified_Successfully">تم التحقق بنجاح</string>
     <string name="verification_Code_Failed">رمز التحقق فشل</string>
     <string name="Verification">تحقق</string>

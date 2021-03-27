@@ -90,10 +90,10 @@
             android:layout_below="@id/r_location"
             android:layout_marginStart="@dimen/_2sdp"
             android:layout_marginTop="@dimen/_5sdp"
-            android:drawableLeft="@drawable/ic_baseline_local_shipping_24"
             android:text="    Expected delivery 22 Feb 2020"
             android:textColor="@color/indicator"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:drawableLeftCompat="@drawable/ic_baseline_local_shipping_24" />
 
         <TextView
             android:id="@+id/r_location"
@@ -102,10 +102,10 @@
             android:layout_below="@id/r_seekBar"
             android:layout_marginStart="@dimen/_2sdp"
             android:layout_marginTop="@dimen/_5sdp"
-            android:drawableLeft="@drawable/ic_baseline_pin_drop_24"
             android:text="@string/show_delivered_location_on_map"
             android:textColor="@color/colorOpenMap"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:drawableLeftCompat="@drawable/ic_baseline_pin_drop_24" />
 
         <View
             android:id="@+id/divider"
@@ -133,16 +133,15 @@
             android:background="@color/indicator_1" />
 
         <TextView
-            android:id="@+id/tp_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/divider2"
             android:layout_marginStart="@dimen/_2sdp"
             android:layout_marginTop="@dimen/_10sdp"
-            android:drawableLeft="@drawable/ic_baseline_monetization_on_24"
             android:text="@string/grand_total"
             android:textColor="@color/indicator_1"
-            android:textSize="@dimen/_13sdp" />
+            android:textSize="@dimen/_13sdp"
+            app:drawableLeftCompat="@drawable/ic_baseline_monetization_on_24" />
 
         <TextView
             android:id="@+id/r_totalPrice"

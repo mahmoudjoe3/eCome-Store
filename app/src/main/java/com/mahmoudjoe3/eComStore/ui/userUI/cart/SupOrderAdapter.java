@@ -77,51 +77,39 @@ public class SupOrderAdapter extends RecyclerView.Adapter<SupOrderAdapter.SubOrd
             holder.pIsFreeShip.setVisibility(View.VISIBLE);
 
 
-        holder.pIncrease.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int last = Integer.parseInt(holder.pQty.getText().toString());
-                if (product.getQuantity() > last) {
-                    holder.pQty.setText((last + 1) + "");
-                    subOrder.setQty(last + 1);
-                    if (((last + 1) * product.getmPrice()) >= 350)
-                        holder.pIsFreeShip.setVisibility(View.GONE);
-                    totalPriceLiveData.setValue(totalPriceLiveData.getValue() + product.getmPrice());
-                }
+        holder.pIncrease.setOnClickListener(v -> {
+            int last = Integer.parseInt(holder.pQty.getText().toString());
+            if (product.getQuantity() > last) {
+                holder.pQty.setText((last + 1) + "");
+                subOrder.setQty(last + 1);
+                if (((last + 1) * product.getmPrice()) >= 350)
+                    holder.pIsFreeShip.setVisibility(View.GONE);
+                totalPriceLiveData.setValue(totalPriceLiveData.getValue() + product.getmPrice());
+            }
 
+        });
+
+        holder.pDecrease.setOnClickListener(v -> {
+            int last = Integer.parseInt(holder.pQty.getText().toString());
+            if (last != 1) {
+                holder.pQty.setText((last - 1) + "");
+                subOrder.setQty(last - 1);
+                if (((last - 1) * product.getmPrice()) < 350)
+                    holder.pIsFreeShip.setVisibility(View.VISIBLE);
+                totalPriceLiveData.setValue(totalPriceLiveData.getValue() - product.getmPrice());
             }
         });
 
-        holder.pDecrease.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int last = Integer.parseInt(holder.pQty.getText().toString());
-                if (last != 1) {
-                    holder.pQty.setText((last - 1) + "");
-                    subOrder.setQty(last - 1);
-                    if (((last - 1) * product.getmPrice()) < 350)
-                        holder.pIsFreeShip.setVisibility(View.VISIBLE);
-                    totalPriceLiveData.setValue(totalPriceLiveData.getValue() - product.getmPrice());
-                }
-            }
+        holder.itemView.setOnClickListener(v -> {
+            if (mOrderOnClickListener != null)
+                mOrderOnClickListener.onClick(product);
         });
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOrderOnClickListener != null)
-                    mOrderOnClickListener.onClick(product);
+        holder.itemView.setOnLongClickListener(v -> {
+            if (mOrderOnClickListener != null) {
+                mOrderOnClickListener.onDelete(product);
             }
-        });
-
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (mOrderOnClickListener != null) {
-                    mOrderOnClickListener.onDelete(product);
-                }
-                return false;
-            }
+            return false;
         });
     }
 

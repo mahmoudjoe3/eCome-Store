@@ -1,12 +1,9 @@
 package com.mahmoudjoe3.eComStore.repo;
 
 import android.net.Uri;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -15,7 +12,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.mahmoudjoe3.eComStore.model.AuthorizedUser;
 import com.mahmoudjoe3.eComStore.model.OrderDB;
 import com.mahmoudjoe3.eComStore.model.Product;
@@ -204,30 +200,21 @@ public class FirebaseRepo {
             mProductImageReference
                     .child(productKey + "_" + i)
                     .putFile(mImageUri.get(i))
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            if (taskSnapshot.getMetadata() != null) {
-                                if (taskSnapshot.getMetadata().getReference() != null) {
-                                    Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
-                                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
-                                            String imageUrl = uri.toString();
-                                            mProduct.getmImageUri().add(imageUrl);
-                                            uploadImage(mImageUri, i + 1, productKey);
-                                        }
-                                    });
-                                }
+                    .addOnSuccessListener(taskSnapshot -> {
+                        if (taskSnapshot.getMetadata() != null) {
+                            if (taskSnapshot.getMetadata().getReference() != null) {
+                                Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                                result.addOnSuccessListener(uri -> {
+                                    String imageUrl = uri.toString();
+                                    mProduct.getmImageUri().add(imageUrl);
+                                    uploadImage(mImageUri, i + 1, productKey);
+                                });
                             }
                         }
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            if (mOnAddProductListener != null)
-                                mOnAddProductListener.onFailure(e.getMessage());
-                        }
+                    .addOnFailureListener(e -> {
+                        if (mOnAddProductListener != null)
+                            mOnAddProductListener.onFailure(e.getMessage());
                     });
         }
     }
@@ -252,11 +239,8 @@ public class FirebaseRepo {
 
     void delete(Product product, int i) {
         if (i >= product.getmImageUri().size()) {
-            mReference.child(product.getmId()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    if (onProductDeleted != null) onProductDeleted.onSuccess();
-                }
+            mReference.child(product.getmId()).removeValue().addOnSuccessListener(aVoid -> {
+                if (onProductDeleted != null) onProductDeleted.onSuccess();
             });
             DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_User);
             mRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -282,15 +266,7 @@ public class FirebaseRepo {
             return;
         }
         StorageReference deletedRef = FirebaseStorage.getInstance().getReferenceFromUrl(product.getmImageUri().get(i));
-        deletedRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                delete(product, i + 1);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
+        deletedRef.delete().addOnSuccessListener(aVoid -> delete(product, i + 1)).addOnFailureListener(e -> {
         });
 
     }
@@ -299,18 +275,12 @@ public class FirebaseRepo {
         DatabaseReference mRef = FirebaseDatabase.getInstance().getReference(Prevalent.refColName_order);
         String key = mRef.push().getKey();
         orderDB.setId(key);
-        mRef.child(orderDB.getId()).setValue(orderDB).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                decreaseQty(orderDB.getOrderList());
-                deleteCart(orderDB.getPhone());
-                if (mOnOrderAddedListener != null) mOnOrderAddedListener.onSuccess();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if (mOnOrderAddedListener != null) mOnOrderAddedListener.onFailure();
-            }
+        mRef.child(orderDB.getId()).setValue(orderDB).addOnSuccessListener(aVoid -> {
+            decreaseQty(orderDB.getOrderList());
+            deleteCart(orderDB.getPhone());
+            if (mOnOrderAddedListener != null) mOnOrderAddedListener.onSuccess();
+        }).addOnFailureListener(e -> {
+            if (mOnOrderAddedListener != null) mOnOrderAddedListener.onFailure();
         });
     }
 

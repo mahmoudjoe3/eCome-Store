@@ -1,12 +1,8 @@
 package com.mahmoudjoe3.eComStore.repo;
 
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -94,19 +90,13 @@ public class FirebaseAuthRepo {
 
     private void insertNewUser(String name, String phone, String password, String date) {
         AuthorizedUser user = new AuthorizedUser(name, phone, password, date);
-        mReference.child(phone).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                if (mOnRegisterListener != null) {
-                    mOnRegisterListener.onRegisterSuccess();
-                }
+        mReference.child(phone).setValue(user).addOnSuccessListener(aVoid -> {
+            if (mOnRegisterListener != null) {
+                mOnRegisterListener.onRegisterSuccess();
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if (mOnRegisterListener != null) {
-                    mOnRegisterListener.onRegisterFailure();
-                }
+        }).addOnFailureListener(e -> {
+            if (mOnRegisterListener != null) {
+                mOnRegisterListener.onRegisterFailure();
             }
         });
 

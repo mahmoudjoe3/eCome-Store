@@ -1,4 +1,4 @@
-package com.mahmoudjoe3.eComStore.App;
+package com.mahmoudjoe3.eComStore.app;
 
 import android.app.Application;
 

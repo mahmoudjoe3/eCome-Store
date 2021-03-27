@@ -47,11 +47,8 @@ public class AdminHomePageViewModel extends AndroidViewModel {
 
     public void deleteProduct(Product product) {
         repo.deleteProduct(product);
-        repo.setOnProductDeleted(new FirebaseRepo.onProductDeleted() {
-            @Override
-            public void onSuccess() {
-                if (onProductDeleted != null) onProductDeleted.onSuccess();
-            }
+        repo.setOnProductDeleted(() -> {
+            if (onProductDeleted != null) onProductDeleted.onSuccess();
         });
     }
 

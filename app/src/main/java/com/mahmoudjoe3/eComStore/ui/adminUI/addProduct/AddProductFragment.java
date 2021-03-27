@@ -30,7 +30,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.mahmoudjoe3.eComStore.Logic.ImageCompressor;
+import com.mahmoudjoe3.eComStore.logic.ImageCompressor;
 import com.mahmoudjoe3.eComStore.R;
 import com.mahmoudjoe3.eComStore.model.Admin;
 import com.mahmoudjoe3.eComStore.model.Product;
@@ -320,42 +320,40 @@ public class AddProductFragment extends Fragment {
             mImageUri[mCurrentImgIndex] = data.getData();
             //new
             showProgress(mCurrentImgIndex);
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    // do something...
+            new Handler().postDelayed(() -> {
+                // do something...
 
-                    // compress image
-                    //[1] convert uri to bitmap
-                    Bitmap bitmap = uriToBitmap(mImageUri[mCurrentImgIndex]);
-                    //[2] encode image
-                    String code = ImageCompressor.encode_Image_To_String(bitmap, 55);
-                    //[3] decode image
-                    Bitmap CodedBitmap = ImageCompressor.decode_String_To_Image(code);
-                    //[4] convert bitmap to uri
-                    mImageUri[mCurrentImgIndex] = bitMapToUri(CodedBitmap);
+                // compress image
+                //[1] convert uri to bitmap
+                Bitmap bitmap = uriToBitmap(mImageUri[mCurrentImgIndex]);
+                //[2] encode image
+                String code = ImageCompressor.encode_Image_To_String(bitmap, 55);
+                //[3] decode image
+                Bitmap CodedBitmap = ImageCompressor.decode_String_To_Image(code);
+                //[4] convert bitmap to uri
+                mImageUri[mCurrentImgIndex] = bitMapToUri(CodedBitmap);
 
-                    switch (mCurrentImgIndex) {
-                        case 0:
-                            imgProgressBar1.setVisibility(View.GONE);
-                            Picasso.get().load(mImageUri[mCurrentImgIndex]).fit().centerCrop().into(mImg1);
-                            mRemoveImg1.setVisibility(View.VISIBLE);
-                            break;
-                        case 1:
-                            imgProgressBar2.setVisibility(View.GONE);
-                            Picasso.get().load(mImageUri[mCurrentImgIndex]).fit().centerCrop().into(mImg2);
-                            mRemoveImg2.setVisibility(View.VISIBLE);
-                            break;
-                        case 2:
-                            imgProgressBar3.setVisibility(View.GONE);
-                            Picasso.get().load(mImageUri[mCurrentImgIndex]).fit().centerCrop().into(mImg3);
-                            mRemoveImg3.setVisibility(View.VISIBLE);
-                            break;
-                        case 3:
-                            imgProgressBar4.setVisibility(View.GONE);
-                            Picasso.get().load(mImageUri[mCurrentImgIndex]).fit().centerCrop().into(mImg4);
-                            mRemoveImg4.setVisibility(View.VISIBLE);
-                            break;
-                    }
+                switch (mCurrentImgIndex) {
+                    case 0:
+                        imgProgressBar1.setVisibility(View.GONE);
+                        Picasso.get().load(mImageUri[mCurrentImgIndex]).fit().centerCrop().into(mImg1);
+                        mRemoveImg1.setVisibility(View.VISIBLE);
+                        break;
+                    case 1:
+                        imgProgressBar2.setVisibility(View.GONE);
+                        Picasso.get().load(mImageUri[mCurrentImgIndex]).fit().centerCrop().into(mImg2);
+                        mRemoveImg2.setVisibility(View.VISIBLE);
+                        break;
+                    case 2:
+                        imgProgressBar3.setVisibility(View.GONE);
+                        Picasso.get().load(mImageUri[mCurrentImgIndex]).fit().centerCrop().into(mImg3);
+                        mRemoveImg3.setVisibility(View.VISIBLE);
+                        break;
+                    case 3:
+                        imgProgressBar4.setVisibility(View.GONE);
+                        Picasso.get().load(mImageUri[mCurrentImgIndex]).fit().centerCrop().into(mImg4);
+                        mRemoveImg4.setVisibility(View.VISIBLE);
+                        break;
                 }
             }, 100);
         }

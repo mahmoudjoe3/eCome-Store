@@ -42,7 +42,6 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/fashion_img"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginTop="@dimen/_5sdp"
@@ -73,7 +72,6 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/furniture_img"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginTop="@dimen/_5sdp"
@@ -103,7 +101,6 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/healthy_img"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginTop="@dimen/_5sdp"
@@ -142,7 +139,6 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/watches_img"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginTop="@dimen/_5sdp"
@@ -172,7 +168,6 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/pc_img"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginTop="@dimen/_5sdp"
@@ -202,7 +197,6 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/tv_img"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginTop="@dimen/_5sdp"
@@ -240,7 +234,6 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/phones_img"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginTop="@dimen/_5sdp"
@@ -270,7 +263,6 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/sports_img"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginTop="@dimen/_5sdp"

@@ -1,6 +1,6 @@
 
 # eCome-Store
-is an online shopping store, the user can show the products, search for product by writing the name in the search bar or by voice, add to cart, add to wishlist, and make an order and receive an email with order details. (using java, firebase, mvvm architecture pattern). </br>
+is an online shopping store, the user can show the products, search for product by writing the name in the search bar or by voice, add to cart, add to wishlist, and make an order . (using java, firebase, mvvm architecture pattern). </br>
 
 <span>
 <h3>eCom Store futures</h3></br>
